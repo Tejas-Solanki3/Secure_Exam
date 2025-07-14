@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExamLite - Admin Dashboard</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!-- Dedicated Admin CSS will be linked here -->
+    <link rel="stylesheet" href="../static/css/admin.css">
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Temporary inline styles for specific elements or overrides */
+        /* These should be moved to admin.css later if appropriate */
+
+        /* Style for empty state messages */
+        .empty-state-message {
+            text-align: center;
+            color: var(--text-medium);
+            padding: 20px;
+            background-color: var(--primary-blue-lightest);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* Style for loading indicators (placeholders) */
+        .loading-indicator {
+            text-align: center;
+            color: var(--primary-blue-dark);
+            padding: 20px;
+             display: none; /* Initially hidden */
+        }
+
+         .loading-indicator .fas {
+             animation: spin 1s linear infinite; /* Simple spin animation */
+         }
+
+         @keyframes spin {
+             0% { transform: rotate(0deg); }
+             100% { transform: rotate(360deg); }
+         }
+    </style>
+</head>
+<body>
+    <div class="admin-dashboard-container"> <!-- Reusing container style -->
+        <header class="dashboard-header">
+            <h1>Proctoring Dashboard</h1>
+            <!-- Optional: Add a notification icon -->
+            <!-- <div class="notification-icon"><i class="fas fa-bell"></i> <span class="badge">3</span></div> -->
+        </header>
+
+        <main class="dashboard-main-content">
+             <div class="dashboard-summary">
+                 <div class="summary-card">
+                     <h3>Active Sessions</h3>
+                     <p id="activeSessionsCount">12</p> <!-- Added ID -->
+                 </div>
+                 <div class="summary-card">
+                      <h3>Pending Alerts</h3>
+                     <p class="alert-count" id="pendingAlertsCount">5</p> <!-- Added ID -->
+                 </div>
+             </div>
+
+            <div class="dashboard-controls">
+                <select id="courseFilterSelect"> <!-- Added ID for JS -->
+                    <option value="">All Courses</option>
+                    <option value="course-a">Course A</option>
+                    <option value="course-b">Course B</option>
+                     <!-- Options will be loaded by JS from backend -->
+                </select>
+                 <!-- Optional: Add other controls like date range picker -->
+            </div>
+
+
+            <div class="dashboard-main">
+                <section class="recent-sessions-section">
+                    <h2 class="section-title">Recent Sessions</h2>
+                    <div id="sessionsLoadingIndicator" class="loading-indicator">
+                         <i class="fas fa-spinner fa-spin"></i> Loading sessions...
+                    </div>
+                     <div id="noSessionsMessage" class="empty-state-message" style="display: none;">
+                         No active sessions found.
+                    </div>
+                    <div class="session-list" id="sessionList">
+                        <!-- Session List Items will be loaded here by JS -->
+                        <!-- Placeholder items removed to be loaded dynamically -->
+                    </div>
+                </section>
+
+                <section class="session-details-section" id="sessionDetailsSection">
+                     <h2 class="section-title">Session Details</h2>
+                     <!-- Content for selected session details will be loaded here by JS -->
+                     <div id="selectSessionMessage" style="text-align: center; color: var(--text-medium); padding: 20px;">
+                         Select a session from the list to view details.
+                    </div>
+                     <div id="detailsLoadingIndicator" class="loading-indicator">
+                         <i class="fas fa-spinner fa-spin"></i> Loading details...
+                    </div>
+
+                     <div id="selectedSessionDetailsContent" style="display: none;"> <!-- Container for loaded details -->
+                         <div class="detail-item" id="detailsBasicInfo">
+                             <h4><span id="detailStudentName"></span></h4>
+                             <p style="font-size: 0.9em; color: var(--text-medium);"><span id="detailExamName"></span> - <span id="detailExamTime"></span></p>
+                         </div>
+
+                         <div class="detail-item" id="detailsAlerts">
+                             <h4>Alerts (<span id="detailAlertCount">0</span>)</h4>
+                              <ul class="alert-list" id="detailAlertList">
+                                   <!-- Alerts will be loaded here by JS -->
+                              </ul>
+                              <div id="noAlertsMessage" class="empty-state-message" style="display: none; padding: 10px; margin-top: 10px;">No alerts for this session.</div>
+                         </div>
+
+                         <div class="detail-item" id="detailsDownloads">
+                             <h4>Downloads</h4>
+                             <ul class="download-items" id="detailDownloadList">
+                                  <!-- Download links will be loaded here by JS -->
+                             </ul>
+                              <div id="noDownloadsMessage" class="empty-state-message" style="display: none; padding: 10px; margin-top: 10px;">No downloads available.</div>
+                         </div>
+
+                         <div class="session-actions-detail" id="detailsActions">
+                             <button class="btn btn-primary" id="reviewSessionBtn"><i class="fas fa-play-circle"></i> Review Session</button>
+                             <button class="btn btn-secondary" id="flagSessionBtn"><i class="fas fa-flag"></i> Flag for Review</button>
+                         </div>
+                     </div>
+                </section>
+            </div>
+
+             <!-- Placeholder for "Make New Test" section - could be a separate page or modal -->
+             <section style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light);">
+                 <h2 class="section-title">Test Management</h2>
+                 <p>Placeholder for Make New Test section and viewing past student answers.</p>
+                 <!-- Add buttons or links for Create New Test, View Student Answers -->
+                 <div style="display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+                     <button class="btn btn-primary" id="createTestBtn">Create New Test</button> <!-- Added ID -->
+                     <button class="btn btn-secondary" id="viewPastAnswersBtn">View Past Answers</button> <!-- Added ID -->
+                 </div>
+             </section>
+
+
+        </main>
+
+         <footer style="margin-top: 40px; text-align: center; font-size: 0.9em; color: #777;">
+            <p>© 2023 SecureExamLite</p>
+        </footer>
+
+    </div> <!-- End admin-dashboard-container -->
+
+    <!-- Link Admin Dashboard JS -->
+     <script src="../static/js/admin.js"></script>
+
+    <script>
+        // The basic placeholder JS block can be kept or removed as logic moves to admin.js
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     console.log('Admin Dashboard page loaded (inline script).');
+        // });
+    </script>
+</body>
+</html>

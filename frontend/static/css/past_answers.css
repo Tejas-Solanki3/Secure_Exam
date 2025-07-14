@@ -1,0 +1,138 @@
+/* --- Past Answers Page Specific Styles --- */
+
+/* Note: Some general styles (like .container, .btn) come from style.css */
+/* Note: Some admin-specific layout styles come from admin.css (e.g., admin-dashboard-container, dashboard-header) */
+
+.answers-section {
+    margin-top: 20px;
+}
+
+.answers-section h2 {
+    margin-bottom: 20px;
+    color: var(--primary-blue-dark);
+}
+
+.filter-controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-controls select,
+.filter-controls input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--border-light);
+    font-family: inherit; /* Inherit font from body */
+    font-size: 1em;
+}
+
+.submission-list {
+    /* Styles for the list of submissions */
+}
+
+.submission-item {
+    background-color: var(--primary-blue-lightest);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submission-item:hover {
+    background-color: #f9f9f9;
+}
+
+/* Style for selected submission item */
+.submission-item.selected {
+    background-color: var(--primary-blue-light); /* Highlight selected item */
+    border-color: var(--primary-blue);
+}
+
+
+.submission-info .student-name {
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.submission-info .exam-details {
+    font-size: 0.9em;
+    color: var(--text-medium);
+}
+
+.view-answers-btn {
+    background-color: var(--primary-blue);
+    color: var(--primary-white);
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9em;
+    border: none; /* Ensure button has no default border */
+    cursor: pointer;
+}
+
+/* Styles for individual answer display (could be a modal or separate section) */
+.answer-details {
+    margin-top: 20px;
+    border-top: 1px solid var(--border-light);
+    padding-top: 20px;
+}
+
+.answer-details h3 {
+    margin-bottom: 15px;
+    color: var(--primary-blue-dark);
+}
+
+.question-answer-pair {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed var(--border-light);
+}
+
+.question-answer-pair:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.question-text {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-dark);
+}
+
+.student-answer {
+    color: var(--text-medium);
+    font-size: 0.9em; /* Slightly smaller font for answer text */
+}
+
+.student-answer.correct {
+    color: green;
+}
+
+.student-answer.incorrect {
+    color: var(--error-red);
+}
+
+/* Responsive adjustments if needed for past_answers.html */
+@media (max-width: 600px) {
+    .filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+     .filter-controls label,
+     .filter-controls select,
+     .filter-controls input[type="text"],
+     .filter-controls button {
+         width: 100%; /* Full width on mobile */
+         box-sizing: border-box;
+     }
+}

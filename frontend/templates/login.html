@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExamLite - Student Login</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!-- Using Font Awesome for icons as seen in the UI. You'll need to include the library. -->
+    <!-- For local development, you can use a CDN: -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header style="margin-bottom: 30px;">
+             <!-- Placeholder for the camera icon at the top -->
+            <div style="display: inline-block; background-color: var(--primary-blue-light); border-radius: 50%; padding: 15px;">
+                 <i class="fas fa-camera fa-2x" style="color: var(--primary-blue-dark);"></i>
+            </div>
+            <h1>Welcome to SecureExamLite</h1>
+            <p style="color: var(--text-medium); font-size: 1em;">Please sign in to start your exam</p>
+        </header>
+        <main>
+            <!-- Student Login Form Section -->
+            <section id="loginFormSection">
+                 <form id="studentLoginForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name:</label>
+                        <div style="position: relative;">
+                             <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                             <i class="fas fa-user" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentId">Student ID:</label>
+                         <div style="position: relative;">
+                            <input type="text" id="studentId" name="studentId" required placeholder="Enter your student ID">
+                            <i class="fas fa-id-card" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                         </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Verify Identity</button>
+                </form>
+                 <p style="margin-top: 20px; font-size: 0.9em;"><a href="#" class="btn-secondary">Need Help?</a></p>
+            </section>
+
+
+            <!-- Identity Verification / Take a Selfie Section (Initially hidden) -->
+            <section class="selfie-verification-section" id="selfieSection" style="display: none;">
+                 <header>
+                     <h2>Identity Verification</h2>
+                     <p style="color: var(--text-medium); font-size: 1em;">Please take a clear selfie</p>
+                 </header>
+                <div class="selfie-camera-placeholder">
+                    <!-- Placeholder for the live camera feed for selfie -->
+                    <video id="selfieVideo" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                     <div class="selfie-circle-overlay"></div>
+                     <i class="fas fa-camera fa-3x" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255, 255, 255, 0.3);"></i>
+                </div>
+                 <!-- Optional: Add capture button -->
+                <button id="captureSelfieBtn" class="btn btn-primary" style="margin-top: 20px;">Capture Selfie</button>
+
+                <div class="progress-indicator">
+                     Step 2 of 2 <!-- Placeholder step indicator -->
+                 </div>
+                <div class="progress-bar-container">
+                     <div class="progress-bar" style="width: 50%;"></div> <!-- Placeholder progress (e.g., 50% after step 1) -->
+                 </div>
+
+
+                 <button id="continueToChecklistBtn" class="btn btn-primary" style="margin-top: 30px;">Continue</button>
+                 <p style="margin-top: 20px; font-size: 0.9em;"><a href="login.html" class="btn-secondary">Back to Login</a></p> <!-- Link back to login -->
+            </section>
+
+
+        </main>
+        <footer>
+            <!-- Footer content -->
+        </footer>
+    </div>
+
+    <style>
+        /* Adjust input padding to make space for icons */
+        #studentLoginForm input {
+            padding-left: 40px; /* Make space for the icon */
+        }
+
+        /* Style for the selfie verification section */
+        .selfie-verification-section {
+             margin-top: 40px;
+             padding-top: 30px;
+             border-top: 1px solid var(--border-light);
+             /* display: none; */ /* Initially hidden via JS, keep for fallback */
+             text-align: center;
+        }
+
+        .selfie-camera-placeholder {
+            width: 100%;
+             /* Adjust height as needed, could use aspect ratio tricks too */
+            height: 300px;
+            background-color: #1a1a2e; /* Dark background */
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* For positioning the circle and icon */
+             overflow: hidden; /* Ensure video stays within bounds */
+        }
+
+         .selfie-camera-placeholder video {
+             display: block;
+             width: 100%;
+             height: 100%;
+             object-fit: cover; /* Cover the container while maintaining aspect ratio */
+         }
+
+
+         .selfie-circle-overlay {
+             position: absolute;
+             top: 0; /* Position from top left */
+             left: 0;
+             width: 100%;
+             height: 100%;
+              /* Use masking or radial-gradient for the circle effect if needed */
+             border: 2px dashed rgba(255, 255, 255, 0.6); /* Example: dashed border */
+             border-radius: 50%;
+             box-sizing: border-box;
+             pointer-events: none; /* Allow clicks to pass through to the video */
+         }
+
+          .selfie-camera-placeholder .fas {
+             color: rgba(255, 255, 255, 0.3); /* Faded icon */
+             font-size: 4em;
+             position: absolute; /* Keep icon centered */
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             z-index: 1; /* Ensure icon is above the video */
+         }
+
+
+         .progress-indicator {
+             margin-top: 20px;
+             font-size: 0.9em;
+             color: var(--text-medium);
+         }
+
+         .progress-bar-container {
+             width: 100%;
+             height: 8px;
+             background-color: var(--border-light);
+             border-radius: 4px;
+             overflow: hidden;
+             margin-top: 10px;
+         }
+
+         .progress-bar {
+             height: 100%;
+             width: 50%; /* Placeholder width, will be updated by JS */
+             background-color: var(--primary-blue);
+             border-radius: 4px;
+             transition: width 0.5s ease-in-out; /* Smooth transition */
+         }
+
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginFormSection = document.getElementById('loginFormSection');
+            const studentLoginForm = document.getElementById('studentLoginForm');
+            const selfieSection = document.getElementById('selfieSection');
+            const verifyIdentityBtn = document.querySelector('#studentLoginForm button[type="submit"]');
+            const continueToChecklistBtn = document.getElementById('continueToChecklistBtn');
+            const captureSelfieBtn = document.getElementById('captureSelfieBtn'); // Get capture button
+            const selfieVideo = document.getElementById('selfieVideo'); // Get video element
+
+            // Initially hide the selfie section
+            selfieSection.style.display = 'none';
+
+
+            if (studentLoginForm) {
+                studentLoginForm.addEventListener('submit', async (event) => { // Added async
+                    event.preventDefault(); // Prevent default form submission
+                    console.log('Login form submitted.');
+
+                    // TODO: Collect form data (fullName, studentId)
+                    // const fullName = document.getElementById('fullName').value;
+                    // const studentId = document.getElementById('studentId').value;
+                    // console.log('Attempting login for:', { fullName, studentId });
+
+                    // TODO: Implement Fetch API call to backend endpoint for student authentication.
+                    // Example (replace with your actual endpoint and method):
+                    /*
+                    try {
+                        const response = await fetch('/api/student/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ fullName, studentId })
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log('Login successful:', result);
+
+                             // Proceed to show selfie section
+                            loginFormSection.style.display = 'none'; // Hide login section
+                            selfieSection.style.display = 'block'; // Show selfie section
+
+                            // TODO: Start camera for selfie capture here or via a function
+                             await startSelfieCamera(); // Placeholder function
+
+                        } else {
+                            const error = await response.json();
+                            console.error('Login failed:', error);
+                            alert('Login failed: ' + (error.message || 'Invalid credentials')); // Show error to user
+                        }
+                    } catch (error) {
+                        console.error('Error during login fetch:', error);
+                         alert('An error occurred during login.');
+                    }
+                    */
+
+                    // --- For Demo: Simulate successful login and show selfie section immediately ---
+                    console.log('Simulating successful login, showing selfie verification.');
+                    loginFormSection.style.display = 'none'; // Hide login section
+                    selfieSection.style.display = 'block'; // Show selfie section
+
+                     // Simulate starting camera for selfie
+                    await startSelfieCamera(); // Placeholder function for camera access
+                    // --- End Demo Simulation ---
+
+                });
+            }
+
+            // Add navigation from the "Continue" button in the selfie section to checklist.html
+             if (continueToChecklistBtn) {
+                 continueToChecklistBtn.addEventListener('click', () => {
+                     console.log('Continue button clicked in selfie section. Navigating to checklist.');
+                     // TODO: Ensure selfie capture/upload/verification is complete before navigating
+                     // TODO: Stop the selfie camera stream before navigating
+                      stopSelfieCamera(); // Placeholder function
+                     window.location.href = 'checklist.html'; // Navigate to the checklist page
+                 });
+             }
+
+             // Placeholder for Capture Selfie button
+             if(captureSelfieBtn) {
+                 captureSelfieBtn.addEventListener('click', () => {
+                     console.log('Capture Selfie button clicked (placeholder).');
+                     // TODO: Implement logic to capture frame from selfieVideo
+                     // TODO: Send image data to backend for identity verification
+                 });
+             }
+
+
+             // --- Placeholder Camera Functions for Selfie ---
+             async function startSelfieCamera() {
+                  console.log('Attempting to start camera for selfie...');
+                  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                      console.error('getUserMedia is not supported in this browser');
+                      alert('Camera is not supported in this browser.');
+                       // TODO: Handle lack of camera support - maybe redirect to error page
+                      return false;
+                  }
+
+                  try {
+                       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                       if (selfieVideo) {
+                           selfieVideo.srcObject = stream;
+                           console.log('Selfie camera stream started.');
+                           return true;
+                       } else {
+                            console.error('Selfie video element not found!');
+                             stream.getTracks().forEach(track => track.stop()); // Stop stream if video element missing
+                            return false;
+                       }
+                  } catch (err) {
+                       console.error('Error accessing selfie camera: ', err);
+                       alert('Error accessing camera. Please check permissions.'); // Inform user
+                       // TODO: Handle specific errors like permission denied
+                       // TODO: Maybe redirect to error page
+                       return false;
+                  }
+             }
+
+             function stopSelfieCamera() {
+                 if (selfieVideo && selfieVideo.srcObject) {
+                     const tracks = selfieVideo.srcObject.getTracks();
+                     tracks.forEach(track => track.stop());
+                     selfieVideo.srcObject = null;
+                     console.log('Selfie camera stream stopped.');
+                 }
+             }
+
+
+        });
+    </script>
+</body>
+</html>

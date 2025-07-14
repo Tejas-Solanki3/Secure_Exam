@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExamLite - Submission Success</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+     <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Additional styles specific to the submission success page */
+        .success-icon-container {
+            color: var(--accent-green); /* Using green from initial style, can map to a blue palette green if preferred */
+            margin-bottom: 20px;
+        }
+
+        .summary-section {
+            text-align: left;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .summary-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--primary-blue-dark);
+        }
+
+        .summary-details p {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+         .summary-details span {
+             font-weight: normal;
+             color: var(--text-medium);
+             margin-left: 10px;
+         }
+
+        .timeline ul, .report-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .timeline li {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .timeline li::before {
+            content: '\2022'; /* Bullet point character */
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue); /* Blue bullet */
+            font-weight: bold;
+            font-size: 1.2em;
+            top: 0;
+        }
+
+        .timeline .event-time {
+            font-weight: bold;
+            margin-right: 10px;
+            color: var(--text-dark);
+        }
+
+         .timeline .event-description {
+             color: var(--text-medium);
+         }
+
+
+        .report-items li {
+            background-color: var(--primary-blue-lightest);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .report-icon {
+            color: var(--accent-green); /* Green for success icons */
+            font-size: 1.5em;
+        }
+
+         .report-items li .report-icon-warning {
+             color: orange; /* Warning icon color */
+         }
+
+         .report-details {
+             flex-grow: 1;
+             color: var(--text-dark);
+         }
+
+         .report-details .detail-value {
+             font-weight: bold;
+         }
+
+        .submission-actions {
+            margin-top: 30px;
+             display: flex;
+             flex-direction: column;
+             gap: 15px;
+        }
+
+         .submission-actions .btn {
+             width: 100%;
+             box-sizing: border-box;
+         }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="success-icon-container">
+                 <i class="fas fa-check-circle fa-5x"></i> <!-- Large checkmark icon -->
+            </div>
+            <h1>Exam Submitted</h1> <!-- Changed heading to be more appropriate -->
+        </header>
+        <main>
+            <p style="color: var(--text-medium); font-size: 1em;">Your exam has been successfully submitted.</p>
+             <p style="font-size: 0.9em; color: var(--error-red); margin-top: 15px;">Please note that once you submit your exam, you cannot make any changes or return to the exam.</p>
+
+
+            <div class="summary-section">
+                <h3>Exam Details</h3>
+                <div class="summary-details">
+                    <p>Exam: <span>Advanced Mathematics 101</span></p>
+                    <p>Duration: <span>2 hours 30 minutes</span></p>
+                    <p>Questions Attempted: <span>45/50</span></p>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h3>Exam Complete</h3>
+                 <p style="color: var(--text-dark);">Submitted at: <span style="font-weight: bold;">14:30</span></p> <!-- Placeholder -->
+            </div>
+
+
+             <div class="summary-section">
+                <h3>Session Overview</h3>
+                 <ul class="timeline">
+                     <li>
+                        <span class="event-time">14:30</span> <span class="event-description">Exam submitted</span>
+                     </li>
+                     <li>
+                        <span class="event-time">14:25</span> <span class="event-description">Question 50 answered</span>
+                     </li>
+                      <li>
+                        <span class="event-time">12:00</span> <span class="event-description">Exam started</span>
+                     </li>
+                     <!-- Add more timeline events here -->
+                 </ul>
+            </div>
+
+             <div class="summary-section">
+                <h3>Proctoring Report</h3>
+                 <ul class="report-items">
+                     <li>
+                         <i class="fas fa-check-circle report-icon"></i>
+                         <span class="report-details">No suspicious activities detected</span>
+                     </li>
+                      <li>
+                         <i class="fas fa-video report-icon"></i>
+                         <span class="report-details">Camera remained active: <span class="detail-value">100%</span></span>
+                     </li>
+                      <li>
+                         <i class="fas fa-microphone report-icon"></i>
+                         <span class="report-details">Microphone functioning: <span class="detail-value">100%</span></span>
+                     </li>
+                      <!-- Example warning report item -->
+                      <!--
+                       <li>
+                         <i class="fas fa-exclamation-triangle report-icon report-icon-warning"></i>
+                         <span class="report-details">Multiple face detections detected: <span class="detail-value">3 times</span></span>
+                     </li>
+                     -->
+                 </ul>
+            </div>
+
+
+        </main>
+        <footer>
+            <div class="submission-actions">
+                 <button class="btn btn-primary"><i class="fas fa-download"></i> Download Report</button>
+                 <button class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+            <p style="margin-top: 20px;">© 2023 SecureExamLite</p>
+        </footer>
+    </div>
+</body>
+</html>

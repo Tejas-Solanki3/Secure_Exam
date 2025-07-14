@@ -1,0 +1,399 @@
+/* --- Admin Dashboard Modern Styling --- */
+
+body {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.admin-dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #fefefe 100%);
+    border-radius: 20px;
+    box-shadow: var(--shadow-xl);
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-subtle);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-secondary) 100%);
+    border-radius: 16px;
+    margin: -32px -32px 40px -32px;
+    box-shadow: var(--shadow-sm);
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.summary-card h3 {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.summary-card .count {
+    color: var(--primary-blue);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.summary-card p {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Session management styling */
+.session-management {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 40px;
+}
+
+.sessions-panel, .session-details-panel {
+    background: var(--bg-primary);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+}
+
+.sessions-panel h3, .session-details-panel h3 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.session-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.list-item {
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-subtle);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.list-item:hover, .list-item.selected {
+    background: var(--bg-accent);
+    border-color: var(--primary-blue-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.list-item h4 {
+    margin: 0 0 8px 0;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.list-item p {
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+}
+
+/* Test management section */
+.test-management {
+    background: var(--bg-primary);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 32px;
+}
+
+.test-management h3 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.test-management-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.test-management-buttons .btn {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.dashboard-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+ .dashboard-controls select {
+     padding: 10px;
+     border-radius: 5px;
+     border: 1px solid var(--border-light);
+     font-family: inherit; /* Inherit font from body */
+     font-size: 1em;
+ }
+
+
+.dashboard-main {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap; /* Allow sections to wrap */
+}
+
+.recent-sessions-section {
+    flex-basis: 60%; /* Allocate more space to the list */
+    flex-grow: 1;
+    min-width: 300px; /* Minimum width before wrapping */
+}
+
+.session-details-section {
+    flex-basis: 30%; /* Allocate less space to details */
+    flex-grow: 1;
+     min-width: 300px; /* Minimum width before wrapping */
+    background-color: var(--primary-blue-lightest); /* Light background for details */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+ .section-title {
+     font-size: 1.2em;
+     font-weight: bold;
+     margin-bottom: 15px;
+     color: var(--primary-blue-dark);
+ }
+
+ .session-list .list-item,
+ .alert-list .list-item,
+ .download-items .list-item {
+     background-color: var(--primary-white);
+     padding: 15px;
+     border-radius: 8px;
+     margin-bottom: 10px;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     border: 1px solid var(--border-light);
+     cursor: pointer;
+     transition: background-color 0.2s ease;
+ }
+
+ .session-list .list-item:hover {
+     background-color: #f9f9f9;
+ }
+
+ .list-item .item-info {
+     flex-grow: 1;
+ }
+
+ .list-item .item-title {
+     font-weight: bold;
+     color: var(--text-dark);
+ }
+
+ .list-item .item-meta {
+     font-size: 0.9em;
+     color: var(--text-medium);
+ }
+
+ .list-item .status-indicator {
+     display: inline-block;
+     width: 10px;
+     height: 10px;
+     border-radius: 50%;
+     margin-right: 10px;
+ }
+
+ .status-indicator.active {
+     background-color: green;
+ }
+
+  .status-indicator.alert {
+     background-color: var(--error-red);
+ }
+
+ .list-item .action-icon {
+     color: var(--text-medium);
+ }
+
+
+ .session-details-content .detail-item {
+     margin-bottom: 15px;
+     padding-bottom: 15px;
+     border-bottom: 1px solid var(--border-light);
+ }
+
+  .session-details-content .detail-item:last-child {
+     border-bottom: none;
+     padding-bottom: 0;
+     margin-bottom: 0;
+ }
+
+
+ .detail-item h4 {
+     margin: 0 0 10px 0;
+     font-size: 1em;
+     color: var(--text-dark);
+ }
+
+ .detail-item ul {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+     font-size: 0.9em;
+ }
+
+ .detail-item li {
+     margin-bottom: 8px;
+     color: var(--text-medium);
+ }
+
+  .detail-item .alert-icon {
+     color: var(--error-red);
+     margin-right: 5px;
+  }
+
+ .download-items .list-item {
+     background-color: var(--primary-white); /* White background for download items */
+     border: none; /* No border for download items */
+     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+ }
+
+ .download-items .list-item .item-info .item-title {
+     color: var(--primary-blue-dark);
+ }
+
+
+ .session-actions-detail {
+     margin-top: 20px;
+     display: flex;
+     flex-direction: column;
+     gap: 10px;
+ }
+
+  .session-actions-detail .btn {
+     width: 100%;
+     box-sizing: border-box;
+     padding: 10px; /* Slightly smaller padding for detail buttons */
+  }
+
+
+/* Responsive adjustments for Admin Dashboard */
+@media (max-width: 768px) {
+    .admin-dashboard-container {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .dashboard-summary {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .summary-card {
+         flex-basis: 100%; /* Stack cards on mobile */
+    }
+
+    .dashboard-main {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+     .recent-sessions-section,
+     .session-details-section {
+         flex-basis: 100%; /* Take full width on mobile */
+         min-width: 0;
+     }
+
+     .dashboard-controls {
+         flex-direction: column;
+         align-items: flex-start;
+     }
+
+     .dashboard-controls select {
+         width: 100%; /* Full width select on mobile */
+     }
+}
+ /* Adjust body padding for smaller screens */
+@media (max-width: 600px) {
+     body {
+         padding: 10px;
+     }
+     .admin-dashboard-container {
+         padding: 10px;
+     }
+     .dashboard-summary {
+         gap: 10px;
+     }
+     .dashboard-main {
+         gap: 15px;
+     }
+      .summary-card {
+          padding: 15px;
+      }
+}

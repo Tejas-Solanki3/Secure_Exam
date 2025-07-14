@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExamLite - Create New Test</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/admin.css"> <!-- Use admin styles -->
+     <link rel="stylesheet" href="../static/css/create_test.css"> <!-- Link NEW CSS -->
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- REMOVE THE <style>...</style> BLOCK -->
+</head>
+<body>
+    <div class="admin-dashboard-container"> <!-- Reusing container style -->
+        <header class="dashboard-header">
+            <h1>Create New Test</h1>
+            <!-- Optional: Link back to dashboard -->
+             <a href="admin_dashboard.html" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+        </header>
+
+        <main class="test-form-section">
+            <form id="createTestForm">
+                <div class="form-group">
+                    <label for="testTitle">Test Title:</label>
+                    <input type="text" id="testTitle" name="testTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="testDuration">Duration (minutes):</label>
+                    <input type="number" id="testDuration" name="testDuration" required min="1">
+                </div>
+
+                <h2>Add Questions</h2>
+                 <div class="question-type-select">
+                     <label for="questionType">Select Question Type:</label>
+                     <select id="questionType">
+                         <option value="mcq">Multiple Choice</option>
+                         <option value="subjective">Subjective</option>
+                     </select>
+                     <button type="button" class="btn btn-primary btn-sm" id="addQuestionTypeBtn" style="margin-left: 10px;">Add Question</button>
+                 </div>
+
+                 <div id="questionsArea">
+                     <!-- Question forms will be added here by JS -->
+                 </div>
+
+                <button type="submit" class="btn btn-primary save-test-btn">Save Test</button>
+            </form>
+        </main>
+
+         <footer style="margin-top: 40px; text-align: center; font-size: 0.9em; color: #777;">
+            <p>© 2023 SecureExamLite</p>
+        </footer>
+
+    </div>
+
+     <!-- Link NEW JavaScript file -->
+     <script src="../static/js/create_test.js"></script>
+     <!-- REMOVE THE <script>...</script> BLOCK -->
+</body>
+</html>

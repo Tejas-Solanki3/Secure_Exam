@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExamLite - Past Answers</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/admin.css"> <!-- Use admin styles -->
+    <link rel="stylesheet" href="../static/css/past_answers.css"> <!-- Link NEW CSS -->
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- REMOVE THE <style>...</style> BLOCK -->
+</head>
+<body>
+    <div class="admin-dashboard-container"> <!-- Reusing container style -->
+        <header class="dashboard-header">
+            <h1>Past Student Answers</h1>
+            <!-- Optional: Link back to dashboard -->
+            <a href="admin_dashboard.html" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+        </header>
+
+        <main class="answers-section">
+            <div class="filter-controls">
+                <label for="filterExam">Filter by Exam:</label>
+                <select id="filterExam">
+                    <option value="">All Exams</option>
+                    <!-- Exam options loaded by JS -->
+                </select>
+                 <label for="filterStudent">Filter by Student ID/Name:</label>
+                 <input type="text" id="filterStudent" placeholder="Enter ID or Name">
+                 <button class="btn btn-secondary btn-sm" id="applyFilterBtn">Apply Filter</button>
+            </div>
+
+            <div id="submissionsLoadingIndicator" class="loading-indicator">
+                <i class="fas fa-spinner fa-spin"></i> Loading submissions...
+            </div>
+            <div id="noSubmissionsMessage" class="empty-state-message" style="display: none;">
+                No submissions found matching criteria.
+            </div>
+
+            <div class="submission-list" id="submissionList">
+                 <!-- Submission items will be loaded here by JS -->
+                 <!-- Placeholder Submission Item -->
+                  <div class="submission-item" data-submission-id="sub123">
+                      <div class="submission-info">
+                          <div class="student-name">Sarah Johnson</div>
+                          <div class="exam-details">Advanced Mathematics - Submitted 14:30</div>
+                      </div>
+                      <button class="btn view-answers-btn btn-sm" data-submission-id="sub123">View Answers</button> <!-- Added data-id -->
+                  </div>
+                   <!-- More items here -->
+            </div>
+
+             <!-- Area to display selected submission answers -->
+             <div class="answer-details" id="answerDetailsArea" style="display: none;">
+                 <h3>Answers for <span id="answerDetailsStudentName"></span> - <span id="answerDetailsExamName"></span></h3>
+                 <div id="questionAnswerPairs">
+                     <!-- Question/Answer pairs loaded by JS -->
+                     <!-- Placeholder Pair -->
+                      <div class="question-answer-pair">
+                          <div class="question-text">Q1: What is the derivative of x²?</div>
+                          <div class="student-answer correct">Student Answer: a) 2x</div>
+                      </div>
+                       <div class="question-answer-pair">
+                          <div class="question-text">Q2: Describe the process of photosynthesis.</div>
+                          <div class="student-answer">Student Answer: Photosynthesis is the process where plants use sunlight...</div>
+                      </div>
+                     <!-- More pairs -->
+                 </div>
+             </div>
+
+
+        </main>
+
+         <footer style="margin-top: 40px; text-align: center; font-size: 0.9em; color: #777;">
+            <p>© 2023 SecureExamLite</p>
+        </footer>
+
+    </div>
+
+     <!-- Link NEW JavaScript file -->
+     <script src="../static/js/past_answers.js"></script>
+     <!-- REMOVE THE <script>...</script> BLOCK -->
+</body>
+</html>

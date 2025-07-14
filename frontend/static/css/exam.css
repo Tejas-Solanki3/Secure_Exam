@@ -1,0 +1,681 @@
+/* --- Exam Page Specific Styles --- */
+
+/* Professional, calming exam environment */
+body {
+    align-items: flex-start;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); /* Subtle gradient */
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    color: var(--text-secondary);
+}
+
+.exam-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 32px;
+    box-sizing: border-box;
+    background-color: var(--bg-primary);
+    border-radius: 16px; /* Softer, modern corners */
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
+}
+
+.exam-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 32px;
+    background: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-secondary) 100%);
+    border-radius: 12px;
+    margin: -32px -32px 32px -32px;
+    box-shadow: var(--shadow-sm);
+}
+
+.exam-title h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.exam-title p {
+    margin: 8px 0 0 0;
+    font-size: 0.95rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.exam-timer {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-blue-dark);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-accent) 100%);
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 2px solid var(--primary-blue-light);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.exam-timer .fas {
+    color: var(--primary-blue);
+}
+
+.recording-status {
+    font-size: 0.9rem;
+    color: var(--success-green);
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--success-green);
+    box-shadow: var(--shadow-sm);
+    gap: 8px;
+}
+
+.recording-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: var(--success-green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.exam-main {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.exam-content {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.question-area {
+    flex-grow: 1;
+    flex-basis: 65%;
+    min-width: 350px;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #fefefe 100%);
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-md);
+}
+
+.question-area h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.question-area p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    font-weight: 400;
+}
+
+/* Improved option styling */
+.options {
+    margin: 24px 0;
+}
+
+.options label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-subtle);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.options label:hover {
+    background: var(--bg-accent);
+    border-color: var(--primary-blue-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.options input[type="radio"] {
+    margin: 4px 0 0 0;
+    accent-color: var(--primary-blue);
+}
+
+.question-area h3 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: var(--text-dark);
+    font-size: 1.2rem; /* Clear, readable size */
+    font-weight: 700; /* Bold for question headers */
+    letter-spacing: -0.025em;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-blue-light);
+}
+
+.question-area p {
+    font-size: 1.05rem; /* Clear, readable question text */
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin-bottom: 28px;
+    font-weight: 400;
+}
+
+.options {
+    margin-bottom: 28px;
+}
+
+.options label {
+    display: block;
+    margin-bottom: 14px;
+    padding: 16px 20px;
+    background-color: var(--bg-card);
+    border: 2px solid var(--border-light);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem; /* Clear, readable option text */
+    color: var(--text-dark);
+    font-weight: 400;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.options label:hover {
+    background-color: var(--primary-blue-light);
+    border-color: var(--primary-blue);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.options input[type="radio"] {
+    margin-right: 14px;
+    transform: scale(1.2); /* Larger radio buttons for better usability */
+    accent-color: var(--primary-blue); /* Modern radio button styling */
+}
+
+/* Webcam area styling - calming and professional */
+.webcam-area {
+    flex-basis: 30%;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.camera-feed {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    height: 240px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
+}
+
+.camera-feed video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+.camera-status {
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.activity-log {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+}
+
+.activity-log h4 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.activity-log ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.activity-log li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.activity-log li:last-child {
+    border-bottom: none;
+}
+
+.log-time {
+    font-weight: 600;
+    color: var(--text-tertiary);
+}
+
+.log-message {
+    flex-grow: 1;
+    margin: 0 12px;
+}
+
+.log-icon-success {
+    color: var(--success-green);
+}
+
+.question-navigation {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.question-navigation button {
+    flex: 1;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.question-navigation .btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 2px solid var(--border-subtle);
+}
+
+.question-navigation .btn-secondary:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.question-navigation .btn-primary {
+    background: var(--primary-blue);
+    color: var(--bg-primary);
+    border: 2px solid var(--primary-blue);
+}
+
+.question-navigation .btn-primary:hover {
+    background: var(--primary-blue-dark);
+    border-color: var(--primary-blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+}
+
+/* Exam action buttons - less intimidating */
+.exam-actions {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.exam-actions button {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.exam-actions .btn-secondary {
+    background: var(--info-blue);
+    color: var(--bg-primary);
+}
+
+.exam-actions .btn-secondary:hover {
+    background: #0369a1;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.exam-actions .btn-danger {
+    background: var(--warning-amber);
+    color: var(--bg-primary);
+}
+
+.exam-actions .btn-danger:hover {
+    background: #b45309;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* --- Modal Styles --- */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #fefefe 100%);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid var(--border-subtle);
+    animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-content h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.modal-content p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.modal-actions .btn {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.close-button {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    transition: color 0.2s ease;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.close-button:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+}
+
+/* Professional alert styling - less intimidating */
+.proctoring-alert {
+    width: 100%;
+    background: linear-gradient(135deg, var(--warning-amber) 0%, #f59e0b 100%);
+    color: var(--bg-primary);
+    padding: 16px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid #d97706;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-icon {
+    font-size: 1.2rem;
+    color: var(--bg-primary);
+}
+
+.alert-message {
+    flex-grow: 1;
+    color: var(--bg-primary);
+}
+
+.close-alert {
+    background: none;
+    border: none;
+    color: var(--bg-primary);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.close-alert:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Test Locked Styles --- */
+/* Apply these styles when the test is locked */
+body.test-locked {
+    overflow: hidden; /* Prevent scrolling of the background content */
+}
+
+body.test-locked .exam-container {
+    /* Dim the background content when test is locked */
+    opacity: 0.6;
+    pointer-events: none; /* Prevent interaction with background content */
+}
+
+/* Disable text selection on the content behind the modal when test is locked */
+body.test-locked .exam-container * { /* Apply to all elements within the exam container */
+    user-select: none; /* Standard property */
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10+ */
+     -moz-user-select: none; /* Firefox */
+}
+
+
+/* Disable pointer events on the content *behind* the locked modal */
+body.test-locked > *:not(.modal) {
+    pointer-events: none;
+}
+
+/* --- Add this rule to ensure interaction *within* the modal when locked --- */
+body.test-locked .modal {
+    pointer-events: auto; /* Re-enable pointer events for the modal itself */
+}
+
+/* Ensure text selection is allowed within the reason input in the locked modal */
+body.test-locked .modal-content textarea {
+     user-select: text !important; /* Re-enable selection for the textarea */
+     -webkit-user-select: text !important;
+    -ms-user-select: text !important;
+    -moz-user-select: text !important;
+}
+
+
+/* --- Responsive Adjustments --- */
+
+/* Adjust layout for tablets and smaller desktops */
+@media (max-width: 1024px) {
+    .exam-main {
+        flex-direction: column; /* Stack question and webcam areas */
+        gap: 20px;
+    }
+
+    .question-area,
+    .webcam-area {
+        flex-basis: auto; /* Remove base width */
+        min-width: 0; /* Remove min-width constraint */
+        width: 100%; /* Take full width when stacked */
+    }
+
+    .webcam-area {
+        flex-direction: column; /* Ensure webcam elements stay stacked */
+        gap: 20px;
+    }
+
+     .camera-feed {
+        height: auto; /* Allow height to be determined by video aspect ratio */
+    }
+
+    .activity-log {
+        width: auto; /* Auto width when stacked */
+    }
+}
+
+
+/* Adjust layout for mobile phones */
+@media (max-width: 600px) {
+    .exam-container {
+        padding: 15px;
+    }
+
+    .exam-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .exam-title h2 {
+        font-size: 1.3em;
+    }
+
+    .exam-timer {
+        font-size: 1em;
+    }
+
+    .recording-status {
+         font-size: 0.8em;
+    }
+
+    .exam-main {
+         gap: 15px;
+    }
+
+    .question-area h3 {
+        font-size: 1.2em;
+    }
+
+    .question-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .question-navigation button {
+        max-width: none; /* Allow buttons to take full width on mobile */
+    }
+
+    .exam-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .exam-actions button {
+         width: 100%; /* Full width buttons */
+         max-width: none;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .close-button {
+        top: 10px;
+        right: 15px;
+        font-size: 1.5em;
+    }
+}
