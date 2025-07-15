@@ -151,6 +151,8 @@ p {
     margin: 4rem auto;
     padding: 2rem;
     gap: 2rem;
+    background-color: #fafcff; /* Extremely gentle, subtle blue */
+    border-radius: 16px;
 }
 
 .hero-content {
@@ -905,17 +907,24 @@ form {
 
 .carousel-track {
     display: flex;
-    transition: transform 0.4s ease-in-out;
+    position: relative;
+    width: 100%;
 }
 
 .carousel-slide {
     min-width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
     opacity: 0;
-    transition: opacity 0.4s ease;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .carousel-slide.active {
     opacity: 1;
+    visibility: visible;
+    position: relative;
 }
 
 .carousel-card {
@@ -1253,5 +1262,320 @@ form {
     
     .step-card {
         padding: 2rem 1.5rem;
+    }
+}
+
+/* --- Animated Illustrations --- */
+
+/* Hero Section - Animated Security Shield */
+.animated-security-illustration {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shield-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.shield-main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    color: var(--primary-blue);
+    animation: pulse 2s ease-in-out infinite;
+    z-index: 3;
+}
+
+.security-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ring {
+    position: absolute;
+    border: 2px solid var(--primary-blue-light);
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.ring-1 {
+    width: 120px;
+    height: 120px;
+    top: -60px;
+    left: -60px;
+    animation: expand 3s ease-in-out infinite;
+}
+
+.ring-2 {
+    width: 160px;
+    height: 160px;
+    top: -80px;
+    left: -80px;
+    animation: expand 3s ease-in-out infinite 1s;
+}
+
+.ring-3 {
+    width: 200px;
+    height: 200px;
+    top: -100px;
+    left: -100px;
+    animation: expand 3s ease-in-out infinite 2s;
+}
+
+.floating-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.floating-icon {
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--primary-blue-medium);
+    animation: float 4s ease-in-out infinite;
+}
+
+.icon-1 {
+    top: 20px;
+    right: 20px;
+    animation-delay: 0s;
+}
+
+.icon-2 {
+    bottom: 20px;
+    left: 20px;
+    animation-delay: 1.5s;
+}
+
+.icon-3 {
+    top: 50%;
+    right: -20px;
+    animation-delay: 3s;
+}
+
+/* Dashboard Illustration */
+.animated-dashboard-illustration {
+    width: 400px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-screen {
+    width: 320px;
+    height: 240px;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border-radius: 12px;
+    border: 3px solid var(--primary-blue-light);
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-header {
+    width: 100%;
+    height: 20px;
+    background: var(--primary-blue-light);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.chart-container {
+    height: 80px;
+    display: flex;
+    align-items: end;
+    gap: 8px;
+    padding: 10px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+}
+
+.animated-chart {
+    display: flex;
+    align-items: end;
+    gap: 6px;
+    width: 100%;
+    height: 100%;
+}
+
+.chart-bar {
+    background: var(--primary-blue);
+    border-radius: 2px;
+    flex: 1;
+    min-height: 20%;
+    animation: chartGrow 3s ease-in-out infinite;
+}
+
+.bar-1 { animation-delay: 0s; }
+.bar-2 { animation-delay: 0.5s; }
+.bar-3 { animation-delay: 1s; }
+.bar-4 { animation-delay: 1.5s; }
+
+.status-indicators {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+}
+
+.status-dot.active {
+    background: var(--success-green);
+}
+
+.status-dot.warning {
+    background: var(--warning-amber);
+    animation-delay: 1s;
+}
+
+/* Privacy/Vault Illustration */
+.animated-privacy-illustration {
+    width: 400px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.data-vault {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.vault-door {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(145deg, var(--text-secondary), var(--text-primary));
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+        inset 0 5px 15px rgba(0,0,0,0.3),
+        0 8px 24px rgba(0,0,0,0.2);
+}
+
+.vault-lock {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    animation: lockShine 3s ease-in-out infinite;
+}
+
+.encryption-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--primary-blue);
+    border-radius: 50%;
+    animation: particleFloat 4s ease-in-out infinite;
+}
+
+.particle-1 { top: 20%; left: 10%; animation-delay: 0s; }
+.particle-2 { top: 30%; right: 15%; animation-delay: 0.8s; }
+.particle-3 { bottom: 20%; left: 20%; animation-delay: 1.6s; }
+.particle-4 { bottom: 30%; right: 10%; animation-delay: 2.4s; }
+.particle-5 { top: 50%; left: 5%; animation-delay: 3.2s; }
+
+/* Animation Keyframes */
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes expand {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 0.3; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes chartGrow {
+    0%, 100% { height: 30%; }
+    50% { height: 80%; }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+@keyframes lockShine {
+    0%, 100% { color: var(--primary-blue); }
+    50% { color: var(--primary-blue-light); text-shadow: 0 0 20px var(--primary-blue-light); }
+}
+
+@keyframes particleFloat {
+    0%, 100% { 
+        transform: translateY(0px) translateX(0px); 
+        opacity: 0.7; 
+    }
+    25% { 
+        transform: translateY(-15px) translateX(5px); 
+        opacity: 1; 
+    }
+    50% { 
+        transform: translateY(-10px) translateX(-8px); 
+        opacity: 0.8; 
+    }
+    75% { 
+        transform: translateY(-20px) translateX(3px); 
+        opacity: 0.9; 
+    }
+}
+
+/* Responsive adjustments for animations */
+@media (max-width: 768px) {
+    .animated-security-illustration,
+    .animated-dashboard-illustration,
+    .animated-privacy-illustration {
+        width: 300px;
+        height: auto;
+    }
+    
+    .shield-main {
+        font-size: 3rem;
+    }
+    
+    .dashboard-screen {
+        width: 280px;
+        height: 200px;
     }
 }

@@ -49,9 +49,25 @@
                 <a href="#features" class="btn btn-secondary btn-large">Learn More</a>
             </div>
         </div>
-         <!-- Optional: Add a hero image or illustration -->
+         <!-- Animated Security Shield Hero Illustration -->
         <div class="hero-image">
-            <img src="https://via.placeholder.com/400" alt="Illustration of a secure online exam environment">
+            <div class="animated-security-illustration">
+                <div class="shield-container">
+                    <div class="shield-main">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="security-rings">
+                        <div class="ring ring-1"></div>
+                        <div class="ring ring-2"></div>
+                        <div class="ring ring-3"></div>
+                    </div>
+                    <div class="floating-icons">
+                        <div class="floating-icon icon-1"><i class="fas fa-camera"></i></div>
+                        <div class="floating-icon icon-2"><i class="fas fa-lock"></i></div>
+                        <div class="floating-icon icon-3"><i class="fas fa-eye"></i></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -106,7 +122,26 @@
         <!-- Alternating Layout Section (Example) -->
          <section class="alternating-section">
             <div class="section-image">
-                 <img src="https://via.placeholder.com/400" alt="Illustration of admin dashboard">
+                <div class="animated-dashboard-illustration">
+                    <div class="dashboard-screen">
+                        <div class="dashboard-header"></div>
+                        <div class="dashboard-content">
+                            <div class="chart-container">
+                                <div class="animated-chart">
+                                    <div class="chart-bar bar-1"></div>
+                                    <div class="chart-bar bar-2"></div>
+                                    <div class="chart-bar bar-3"></div>
+                                    <div class="chart-bar bar-4"></div>
+                                </div>
+                            </div>
+                            <div class="status-indicators">
+                                <div class="status-dot active"></div>
+                                <div class="status-dot active"></div>
+                                <div class="status-dot warning"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
              <div class="section-content">
                 <h2>Real-Time Proctoring & Alerts</h2>
@@ -121,8 +156,23 @@
 
         <section class="alternating-section reverse">
              <div class="section-image">
-                 <img src="https://via.placeholder.com/400" alt="Illustration of data privacy shield">
-            </div>
+                <div class="animated-privacy-illustration">
+                    <div class="data-vault">
+                        <div class="vault-door">
+                            <div class="vault-lock">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+                        <div class="encryption-particles">
+                            <div class="particle particle-1"></div>
+                            <div class="particle particle-2"></div>
+                            <div class="particle particle-3"></div>
+                            <div class="particle particle-4"></div>
+                            <div class="particle particle-5"></div>
+                        </div>
+                    </div>
+                </div>
+             </div>
             <div class="section-content">
                 <h2>Privacy First Approach</h2>
                 <p>We are committed to protecting student privacy. All data is encrypted and handled with the utmost care, ensuring compliance with privacy regulations. Your institution retains full control over the data and who has access to it.</p>
@@ -444,128 +494,7 @@
         </div>
     </footer>
 
-
-     <!-- Basic JS for mobile nav toggle and carousel -->
-     <script>
-         document.addEventListener('DOMContentLoaded', () => {
-             // Mobile navigation toggle
-             const navToggleBtn = document.getElementById('navToggleBtn');
-             const mobileNavMenu = document.getElementById('mobileNavMenu');
-
-             if (navToggleBtn && mobileNavMenu) {
-                 navToggleBtn.addEventListener('click', () => {
-                     mobileNavMenu.classList.toggle('active');
-                     navToggleBtn.classList.toggle('active');
-                 });
-             }
-
-             // Features Carousel Functionality
-             const carousel = document.getElementById('featuresCarousel');
-             const slides = carousel.querySelectorAll('.carousel-slide');
-             const prevBtn = document.getElementById('prevBtn');
-             const nextBtn = document.getElementById('nextBtn');
-             const indicatorsContainer = document.getElementById('carouselIndicators');
-             
-             let currentSlide = 0;
-             const totalSlides = slides.length;
-
-             // Create indicators
-             function createIndicators() {
-                 for (let i = 0; i < totalSlides; i++) {
-                     const indicator = document.createElement('div');
-                     indicator.classList.add('indicator');
-                     if (i === 0) indicator.classList.add('active');
-                     indicator.addEventListener('click', () => goToSlide(i));
-                     indicatorsContainer.appendChild(indicator);
-                 }
-             }
-
-             // Update slide visibility and indicators
-             function updateCarousel() {
-                 slides.forEach((slide, index) => {
-                     slide.classList.toggle('active', index === currentSlide);
-                 });
-
-                 const indicators = indicatorsContainer.querySelectorAll('.indicator');
-                 indicators.forEach((indicator, index) => {
-                     indicator.classList.toggle('active', index === currentSlide);
-                 });
-
-                 // Update button states
-                 prevBtn.disabled = currentSlide === 0;
-                 nextBtn.disabled = currentSlide === totalSlides - 1;
-             }
-
-             // Go to specific slide
-             function goToSlide(slideIndex) {
-                 currentSlide = slideIndex;
-                 updateCarousel();
-             }
-
-             // Next slide
-             function nextSlide() {
-                 if (currentSlide < totalSlides - 1) {
-                     currentSlide++;
-                     updateCarousel();
-                 }
-             }
-
-             // Previous slide
-             function prevSlide() {
-                 if (currentSlide > 0) {
-                     currentSlide--;
-                     updateCarousel();
-                 }
-             }
-
-             // Event listeners
-             if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-             if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-
-             // Auto-advance carousel (optional)
-             let autoAdvance = setInterval(() => {
-                 if (currentSlide < totalSlides - 1) {
-                     nextSlide();
-                 } else {
-                     currentSlide = 0;
-                     updateCarousel();
-                 }
-             }, 5000); // Change slide every 5 seconds
-
-             // Pause auto-advance on hover
-             const carouselContainer = document.querySelector('.carousel-container');
-             if (carouselContainer) {
-                 carouselContainer.addEventListener('mouseenter', () => {
-                     clearInterval(autoAdvance);
-                 });
-
-                 carouselContainer.addEventListener('mouseleave', () => {
-                     autoAdvance = setInterval(() => {
-                         if (currentSlide < totalSlides - 1) {
-                             nextSlide();
-                         } else {
-                             currentSlide = 0;
-                             updateCarousel();
-                         }
-                     }, 5000);
-                 });
-             }
-
-             // Initialize carousel
-             if (carousel && slides.length > 0) {
-                 createIndicators();
-                 updateCarousel();
-             }
-
-             // Keyboard navigation
-             document.addEventListener('keydown', (e) => {
-                 if (e.key === 'ArrowLeft') {
-                     prevSlide();
-                 } else if (e.key === 'ArrowRight') {
-                     nextSlide();
-                 }
-             });
-         });
-     </script>
+    <!-- JavaScript -->
+    <script src="../static/js/homepage.js"></script>
 </body>
 </html>
