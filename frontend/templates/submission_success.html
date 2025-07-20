@@ -187,10 +187,22 @@
         <footer>
             <div class="submission-actions">
                  <button class="btn btn-primary"><i class="fas fa-download"></i> Download Report</button>
-                 <button class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                 <button class="btn btn-secondary" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
             <p style="margin-top: 20px;">© 2023 SecureExamLite</p>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    // Redirect to homepage
+                    window.location.href = 'homepage.html';
+                });
+            }
+        });
+    </script>
 </body>
 </html>

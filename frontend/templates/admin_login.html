@@ -5,62 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureExamLite - Administrator Login</title>
     <link rel="stylesheet" href="../static/css/style.css">
-    <!-- Using Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header style="margin-bottom: 30px;">
-             <!-- Icon for admin login - maybe a gear or shield? Using shield as example -->
             <div style="display: inline-block; background-color: var(--primary-blue-light); border-radius: 50%; padding: 15px;">
-                 <i class="fas fa-shield-alt fa-2x" style="color: var(--primary-blue-dark);"></i>
+                <i class="fas fa-shield-alt fa-2x" style="color: var(--primary-blue-dark);"></i>
             </div>
             <h1>Administrator Login</h1>
             <p style="color: var(--text-medium); font-size: 1em;">Please sign in to manage exams</p>
         </header>
+        
         <main>
             <form id="adminLoginForm">
                 <div class="form-group">
                     <label for="adminEmail">Email:</label>
                     <div style="position: relative;">
-                         <input type="email" id="adminEmail" name="adminEmail" required placeholder="Enter your email">
-                         <i class="fas fa-envelope" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                        <input type="email" id="adminEmail" name="adminEmail" required placeholder="Enter your email">
+                        <i class="fas fa-envelope" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label for="adminPassword">Password:</label>
-                     <div style="position: relative;">
+                    <div style="position: relative;">
                         <input type="password" id="adminPassword" name="adminPassword" required placeholder="Enter your password">
                         <i class="fas fa-lock" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
-                     </div>
+                    </div>
                 </div>
+                
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
-             <p style="margin-top: 20px; font-size: 0.9em;"><a href="#" class="btn-secondary">Forgot Password?</a></p>
+            
+            <!-- Subtle help link -->
+            <div class="help-link-container">
+                <a href="#" class="help-link">Forgot Password?</a>
+            </div>
         </main>
+        
         <footer>
             <!-- Footer content -->
         </footer>
     </div>
 
     <style>
+        /* Ensure no stray text appears at the top */
+        body {
+            overflow-x: hidden;
+        }
+        
         /* Adjust input padding to make space for icons */
         #adminLoginForm input {
-            padding-left: 40px; /* Make space for the icon */
+            padding-left: 40px;
+        }
+        
+        /* Ensure proper z-index and positioning */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Fix any potential bouncing/pulsing animation on shield icon and its container */
+        header .fas.fa-shield-alt,
+        header div,
+        .shield-main,
+        .fas.fa-shield-alt {
+            animation: none !important;
+            transform: none !important;
+        }
+        
+        /* Ensure the icon container doesn't inherit unwanted styles */
+        header > div {
+            animation: none !important;
+            transform: none !important;
+        }
+        
+        /* Override any global pulse animations that might affect this page */
+        * {
+            animation-name: none !important;
+        }
+        
+        /* Allow only specific animations if needed, but exclude pulse */
+        .btn:hover,
+        button:hover {
+            animation: none !important;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+        }
+        
+        /* Subtle Help Link Styling - matching student login */
+        .help-link-container {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .help-link {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .help-link:hover {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        .help-link::before {
+            content: '\f084'; /* Font Awesome key icon for forgot password */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900; /* Changed from 400 to 900 for solid icons */
+            font-size: 0.8rem;
+            opacity: 0.7;
         }
     </style>
 
-     <script>
-        // Basic client-side navigation for demonstration
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const adminLoginForm = document.getElementById('adminLoginForm');
             if (adminLoginForm) {
                 adminLoginForm.addEventListener('submit', (event) => {
-                    event.preventDefault(); // Prevent default form submission
-                    // In a real app, you would collect data and send to backend here for authentication
+                    event.preventDefault();
                     console.log('Admin login form submitted. Navigating to admin dashboard.');
-                    // Simulate successful login and navigate to the admin dashboard page
-                    window.location.href = 'admin_dashboard.html'; // Navigate to the actual dashboard file
+                    window.location.href = 'admin_dashboard.html';
                 });
             } else {
                 console.error("Admin login form with ID 'adminLoginForm' not found!");

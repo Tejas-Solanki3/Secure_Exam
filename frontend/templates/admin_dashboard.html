@@ -39,15 +39,372 @@
              0% { transform: rotate(0deg); }
              100% { transform: rotate(360deg); }
          }
+
+        /* Add subtle animation to notification icon */
+        .dashboard-title-icon i {
+            animation: none !important; /* Prevent any unwanted pulse animations */
+        }
+        
+        /* Professional hover effects */
+        .dashboard-title-icon:hover i {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.2);
+        }
+        
+        /* Modern Professional Dashboard Header */
+        .simple-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 24px 32px;
+            background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .simple-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .simple-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.02em;
+        }
+        
+        .header-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        /* Logout Button Styling */
+        .logout-button {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 3;
+        }
+        
+        .logout-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Enhanced Professional Summary Cards */
+        .dashboard-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 28px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-medium) 100%);
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+            border-color: var(--primary-blue-light);
+        }
+        
+        .summary-card h3 {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .summary-card p {
+            color: var(--primary-blue-dark);
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1;
+        }
+        
+        /* Professional Controls Section */
+        .dashboard-controls {
+            background: var(--bg-primary);
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-controls select {
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--border-subtle);
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-width: 200px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .dashboard-controls select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Modern Dashboard Layout */
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+        
+        /* Professional Section Cards */
+        .recent-sessions-section,
+        .session-details-section {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .section-title {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        /* Professional Session List */
+        .session-list {
+            padding: 20px;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        
+        .list-item {
+            background: var(--bg-secondary);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .list-item:hover {
+            background: var(--primary-blue-lightest);
+            border-color: var(--primary-blue-light);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+        
+        .list-item.selected {
+            background: var(--primary-blue-lightest);
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+        
+        .list-item h4 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 6px 0;
+        }
+        
+        .list-item p {
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        /* Professional Session Details */
+        #sessionDetailsSection {
+            padding: 20px;
+        }
+        
+        .detail-item {
+            background: var(--bg-secondary);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .detail-item h4 {
+            color: var(--primary-blue-dark);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+        
+        /* Professional Test Management Section */
+        .test-management-section {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 32px;
+            overflow: hidden;
+        }
+        
+        .test-management-section h2 {
+            background: var(--primary-blue-dark);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+            padding: 20px 24px;
+        }
+        
+        .test-management-content {
+            padding: 24px;
+        }
+        
+        .test-management-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-subtle);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-blue-lightest);
+            border-color: var(--primary-blue-light);
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-main {
+                grid-template-columns: 1fr;
+            }
+            
+            .simple-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-management-buttons {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="admin-dashboard-container"> <!-- Reusing container style -->
-        <header class="dashboard-header">
-            <h1>Proctoring Dashboard</h1>
-            <!-- Optional: Add a notification icon -->
-            <!-- <div class="notification-icon"><i class="fas fa-bell"></i> <span class="badge">3</span></div> -->
-        </header>
+    <div class="admin-dashboard-container">
+        <!-- Modern Professional Header -->
+        <div class="simple-header">
+            <div class="header-content">
+                <h1>Proctoring Dashboard</h1>
+                <p class="header-subtitle">Monitor and manage exam sessions</p>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="logout-button" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
 
         <main class="dashboard-main-content">
              <div class="dashboard-summary">
@@ -82,8 +439,23 @@
                          No active sessions found.
                     </div>
                     <div class="session-list" id="sessionList">
-                        <!-- Session List Items will be loaded here by JS -->
-                        <!-- Placeholder items removed to be loaded dynamically -->
+                        <!-- Sample Sessions for Demo -->
+                        <div class="list-item">
+                            <h4>John Smith - Advanced Mathematics</h4>
+                            <p>Started: 10:30 AM • Duration: 1h 45m • Status: Active</p>
+                        </div>
+                        <div class="list-item">
+                            <h4>Sarah Johnson - Computer Science</h4>
+                            <p>Started: 09:15 AM • Duration: 2h 10m • Status: Active</p>
+                        </div>
+                        <div class="list-item">
+                            <h4>Michael Brown - Physics</h4>
+                            <p>Started: 11:00 AM • Duration: 1h 30m • Status: Active</p>
+                        </div>
+                        <div class="list-item">
+                            <h4>Emily Davis - Chemistry</h4>
+                            <p>Started: 08:45 AM • Duration: 2h 00m • Status: Completed</p>
+                        </div>
                     </div>
                 </section>
 
@@ -93,6 +465,7 @@
                      <div id="selectSessionMessage" style="text-align: center; color: var(--text-medium); padding: 20px;">
                          Select a session from the list to view details.
                     </div>
+                     
                      <div id="detailsLoadingIndicator" class="loading-indicator">
                          <i class="fas fa-spinner fa-spin"></i> Loading details...
                     </div>
@@ -127,14 +500,21 @@
                 </section>
             </div>
 
-             <!-- Placeholder for "Make New Test" section - could be a separate page or modal -->
-             <section style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light);">
-                 <h2 class="section-title">Test Management</h2>
-                 <p>Placeholder for Make New Test section and viewing past student answers.</p>
-                 <!-- Add buttons or links for Create New Test, View Student Answers -->
-                 <div style="display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
-                     <button class="btn btn-primary" id="createTestBtn">Create New Test</button> <!-- Added ID -->
-                     <button class="btn btn-secondary" id="viewPastAnswersBtn">View Past Answers</button> <!-- Added ID -->
+             <!-- Professional Test Management Section -->
+             <section class="test-management-section">
+                 <h2>Test Management</h2>
+                 <div class="test-management-content">
+                     <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px; line-height: 1.6;">
+                         Create new tests, manage existing assessments, and review student submissions.
+                     </p>
+                     <div class="test-management-buttons">
+                         <button class="btn btn-primary" id="createTestBtn">
+                             <i class="fas fa-plus-circle"></i> Create New Test
+                         </button>
+                         <button class="btn btn-secondary" id="viewPastAnswersBtn">
+                             <i class="fas fa-history"></i> View Past Answers
+                         </button>
+                     </div>
                  </div>
              </section>
 
@@ -151,6 +531,21 @@
      <script src="../static/js/admin.js"></script>
 
     <script>
+        // Add logout functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    // Confirm logout
+                    if (confirm('Are you sure you want to logout?')) {
+                        console.log('Admin logging out...');
+                        // Redirect to homepage
+                        window.location.href = 'homepage.html';
+                    }
+                });
+            }
+        });
+        
         // The basic placeholder JS block can be kept or removed as logic moves to admin.js
         // document.addEventListener('DOMContentLoaded', () => {
         //     console.log('Admin Dashboard page loaded (inline script).');

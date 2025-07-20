@@ -39,7 +39,11 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Verify Identity</button>
                 </form>
-                 <p style="margin-top: 20px; font-size: 0.9em;"><a href="#" class="btn-secondary">Need Help?</a></p>
+                
+                <!-- Subtle help link -->
+                <div class="help-link-container">
+                    <a href="#" class="help-link">Need Help?</a>
+                </div>
             </section>
 
 
@@ -67,7 +71,11 @@
 
 
                  <button id="continueToChecklistBtn" class="btn btn-primary" style="margin-top: 30px;">Continue</button>
-                 <p style="margin-top: 20px; font-size: 0.9em;"><a href="login.html" class="btn-secondary">Back to Login</a></p> <!-- Link back to login -->
+                 
+                 <!-- Subtle Back to Login Link -->
+                 <div class="back-link-container">
+                     <a href="login.html" class="back-link">Back to Login</a>
+                 </div>
             </section>
 
 
@@ -160,6 +168,70 @@
              border-radius: 4px;
              transition: width 0.5s ease-in-out; /* Smooth transition */
          }
+
+        /* Subtle Help Link Styling */
+        .help-link-container {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .help-link {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .help-link:hover {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        .help-link::before {
+            content: '\f059'; /* Font Awesome question circle icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 400;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Subtle Back Link Styling */
+        .back-link-container {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .back-link {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        .back-link::before {
+            content: '\f060'; /* Font Awesome arrow left icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
 
     </style>
 

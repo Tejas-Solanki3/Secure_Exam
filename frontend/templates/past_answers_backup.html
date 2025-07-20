@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureExamLite - Past Answers</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/admin.css"> <!-- Use admin styles -->
+    <link rel="stylesheet" href="../static/css/past_answers.css"> <!-- Link NEW CSS -->
+    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- REMOVE THE <style>...</style> BLOCK -->
+</head>
+<body>
+    <div class="admin-dashboard-container"> <!-- Reusing container style -->
+        <header class="dashboard-header">
+            <h1>Past Answers</h1>
+            <!-- Optional: Link back to dashboard -->
+            <a href="admin_dashboard.html" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+        </header>
+
+        <main class="answers-section">
+            <div class="filter-controls">
+                <label for="filterExam">Filter by Exam:</label>
+                <select id="filterExam">
+                    <option value="">All Exams</option>
+                    <!-- Exam options loaded by JS -->
+                </select>
+                 <label for="filterStudent">Filter by Student ID/Name:</label>
+                 <input type="text" id="filterStudent" placeholder="Enter ID or Name">
+                 <button class="btn btn-secondary btn-sm" id="applyFilterBtn">Apply Filter</button>
+            </div>
+
+            <div id="submissionsLoadingIndicator" class="loading-indicator">
+                <i class="fas fa-spinner fa-spin"></i> Loading submissions...
+            </div>
+            <div id="noSubmissionsMessage" class="empty-state-message" style="display: none;">
+                No submissions found matching criteria.
+            </div>
+
+            <!-- Table Header -->
+            <div class="students-header">
+                <div>Student & Exam Details</div>
+                <div>Actions</div>
+                <div>Expand</div>
+            </div>
+
+            <div class="student-accordion" id="submissionList">
+                <!-- Student accordion items will be loaded here by JS -->
+                
+                <!-- Example Student 1 -->
+                <div class="student-item" data-submission-id="sub123">
+                    <div class="student-header">
+                        <div class="student-info">
+                            <div class="student-name">Sarah Johnson</div>
+                            <div class="exam-details">Advanced Mathematics - Submitted 14:30</div>
+                            <div class="student-score">Score: 85%</div>
+                        </div>
+                        <button class="view-answers-btn" onclick="event.stopPropagation(); toggleStudentAnswers('sub123')">
+                            View Answers
+                        </button>
+                        <div class="accordion-toggle" onclick="toggleStudentAnswers('sub123')">
+                            <i class="fas fa-chevron-down" id="toggle-sub123"></i>
+                        </div>
+                    </div>
+                    <div class="student-answers" id="answers-sub123" style="display: none;">
+                        <div class="answers-content">
+                            <div class="answers-summary">
+                                <div class="answers-summary-text">Answer Details</div>
+                                <div class="answers-stats">
+                                    <div class="stat-item stat-correct">
+                                        <span>✓ 2 Correct</span>
+                                    </div>
+                                    <div class="stat-item stat-incorrect">
+                                        <span>✗ 1 Incorrect</span>
+                                    </div>
+                                    <div class="stat-item stat-pending">
+                                        <span>⏳ 1 Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q1</span>
+                                    What is the derivative of x²?
+                                </div>
+                                <div class="student-answer correct">
+                                    <span class="answer-text">2x</span>
+                                    <span class="answer-status correct">Correct</span>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q2</span>
+                                    Describe the process of photosynthesis.
+                                </div>
+                                <div class="student-answer">
+                                    <span class="answer-text">Photosynthesis is the process where plants use sunlight to convert carbon dioxide and water into glucose and oxygen.</span>
+                                    <span class="answer-status">Pending</span>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q3</span>
+                                    What is 5 × 8?
+                                </div>
+                                <div class="student-answer incorrect">
+                                    <span class="answer-text">35</span>
+                                    <span class="answer-status incorrect">Incorrect</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Student 2 -->
+                <div class="student-item" data-submission-id="sub456">
+                    <div class="student-header">
+                        <div class="student-info">
+                            <div class="student-name">Michael Chen</div>
+                            <div class="exam-details">Physics 101 - Submitted 15:00</div>
+                            <div class="student-score">Score: 95%</div>
+                        </div>
+                        <button class="view-answers-btn" onclick="event.stopPropagation(); toggleStudentAnswers('sub456')">
+                            View Answers
+                        </button>
+                        <div class="accordion-toggle" onclick="toggleStudentAnswers('sub456')">
+                            <i class="fas fa-chevron-down" id="toggle-sub456"></i>
+                        </div>
+                    </div>
+                    <div class="student-answers" id="answers-sub456" style="display: none;">
+                        <div class="answers-content">
+                            <div class="answers-summary">
+                                <div class="answers-summary-text">Answer Details</div>
+                                <div class="answers-stats">
+                                    <div class="stat-item stat-correct">
+                                        <span>✓ 2 Correct</span>
+                                    </div>
+                                    <div class="stat-item stat-incorrect">
+                                        <span>✗ 0 Incorrect</span>
+                                    </div>
+                                    <div class="stat-item stat-pending">
+                                        <span>⏳ 0 Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q1</span>
+                                    What is Newton's first law?
+                                </div>
+                                <div class="student-answer correct">
+                                    <span class="answer-text">An object at rest stays at rest unless acted upon by an external force.</span>
+                                    <span class="answer-status correct">Correct</span>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q2</span>
+                                    What is the speed of light?
+                                </div>
+                                <div class="student-answer correct">
+                                    <span class="answer-text">Approximately 300,000 km/s</span>
+                                    <span class="answer-status correct">Correct</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Student 3 -->
+                <div class="student-item" data-submission-id="sub789">
+                    <div class="student-header">
+                        <div class="student-info">
+                            <div class="student-name">Emily Davis</div>
+                            <div class="exam-details">Computer Science - Submitted 16:00</div>
+                            <div class="student-score">Score: 78%</div>
+                        </div>
+                        <button class="view-answers-btn" onclick="event.stopPropagation(); toggleStudentAnswers('sub789')">
+                            View Answers
+                        </button>
+                        <div class="accordion-toggle" onclick="toggleStudentAnswers('sub789')">
+                            <i class="fas fa-chevron-down" id="toggle-sub789"></i>
+                        </div>
+                    </div>
+                    <div class="student-answers" id="answers-sub789" style="display: none;">
+                        <div class="answers-content">
+                            <div class="answers-summary">
+                                <div class="answers-summary-text">Answer Details</div>
+                                <div class="answers-stats">
+                                    <div class="stat-item stat-correct">
+                                        <span>✓ 1 Correct</span>
+                                    </div>
+                                    <div class="stat-item stat-incorrect">
+                                        <span>✗ 0 Incorrect</span>
+                                    </div>
+                                    <div class="stat-item stat-pending">
+                                        <span>⏳ 1 Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q1</span>
+                                    What is JavaScript?
+                                </div>
+                                <div class="student-answer correct">
+                                    <span class="answer-text">A programming language primarily used for web development.</span>
+                                    <span class="answer-status correct">Correct</span>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q2</span>
+                                    Explain the concept of closures in JavaScript.
+                                </div>
+                                <div class="student-answer">
+                                    <span class="answer-text">A closure is when a function retains access to variables from its outer scope even after the outer function has returned.</span>
+                                    <span class="answer-status">Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Student 4 -->
+                <div class="student-item" data-submission-id="sub124">
+                    <div class="student-header">
+                        <div class="student-info">
+                            <div class="student-name">John Smith</div>
+                            <div class="exam-details">Advanced Mathematics - Submitted 14:45</div>
+                            <div class="student-score">Score: 72%</div>
+                        </div>
+                        <button class="view-answers-btn" onclick="event.stopPropagation(); toggleStudentAnswers('sub124')">
+                            View Answers
+                        </button>
+                        <div class="accordion-toggle" onclick="toggleStudentAnswers('sub124')">
+                            <i class="fas fa-chevron-down" id="toggle-sub124"></i>
+                        </div>
+                    </div>
+                    <div class="student-answers" id="answers-sub124" style="display: none;">
+                        <div class="answers-content">
+                            <div class="answers-summary">
+                                <div class="answers-summary-text">Answer Details</div>
+                                <div class="answers-stats">
+                                    <div class="stat-item stat-correct">
+                                        <span>✓ 0 Correct</span>
+                                    </div>
+                                    <div class="stat-item stat-incorrect">
+                                        <span>✗ 1 Incorrect</span>
+                                    </div>
+                                    <div class="stat-item stat-pending">
+                                        <span>⏳ 0 Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q1</span>
+                                    What is the derivative of x²?
+                                </div>
+                                <div class="student-answer incorrect">
+                                    <span class="answer-text">x/2</span>
+                                    <span class="answer-status incorrect">Incorrect</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Student 5 -->
+                <div class="student-item" data-submission-id="sub125">
+                    <div class="student-header">
+                        <div class="student-info">
+                            <div class="student-name">Emma Wilson</div>
+                            <div class="exam-details">Computer Science - Submitted 16:30</div>
+                            <div class="student-score">Score: 88%</div>
+                        </div>
+                        <button class="view-answers-btn" onclick="event.stopPropagation(); toggleStudentAnswers('sub125')">
+                            View Answers
+                        </button>
+                        <div class="accordion-toggle" onclick="toggleStudentAnswers('sub125')">
+                            <i class="fas fa-chevron-down" id="toggle-sub125"></i>
+                        </div>
+                    </div>
+                    <div class="student-answers" id="answers-sub125" style="display: none;">
+                        <div class="answers-content">
+                            <div class="answers-summary">
+                                <div class="answers-summary-text">Answer Details</div>
+                                <div class="answers-stats">
+                                    <div class="stat-item stat-correct">
+                                        <span>✓ 1 Correct</span>
+                                    </div>
+                                    <div class="stat-item stat-incorrect">
+                                        <span>✗ 0 Incorrect</span>
+                                    </div>
+                                    <div class="stat-item stat-pending">
+                                        <span>⏳ 0 Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="question-answer-pair">
+                                <div class="question-text">
+                                    <span class="question-number">Q1</span>
+                                    What is JavaScript?
+                                </div>
+                                <div class="student-answer correct">
+                                    <span class="answer-text">A scripting language for web development.</span>
+                                    <span class="answer-status correct">Correct</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+         <footer style="margin-top: 40px; text-align: center; font-size: 0.9em; color: #777;">
+            <p>© 2023 SecureExamLite</p>
+        </footer>
+
+    </div>
+
+     <!-- Link NEW JavaScript file -->
+     <script src="../static/js/past_answers.js"></script>
+     
+     <script>
+         // Simple function to toggle student answer accordion
+         function toggleStudentAnswers(submissionId) {
+             const dropdown = document.getElementById(`answers-${submissionId}`);
+             const toggleIcon = document.getElementById(`toggle-${submissionId}`);
+             
+             if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                 dropdown.style.display = 'block';
+                 toggleIcon.classList.remove('fa-chevron-down');
+                 toggleIcon.classList.add('fa-chevron-up');
+             } else {
+                 dropdown.style.display = 'none';
+                 toggleIcon.classList.remove('fa-chevron-up');
+                 toggleIcon.classList.add('fa-chevron-down');
+             }
+         }
+
+         // Simple initialization
+         document.addEventListener('DOMContentLoaded', function() {
+             // Hide loading indicator after a brief moment
+             const loadingIndicator = document.getElementById('submissionsLoadingIndicator');
+             if (loadingIndicator) {
+                 setTimeout(() => {
+                     loadingIndicator.style.display = 'none';
+                 }, 500);
+             }
+
+             // Basic filter functionality
+             const filterButton = document.getElementById('applyFilterBtn');
+             if (filterButton) {
+                 filterButton.addEventListener('click', function() {
+                     const examFilter = document.getElementById('filterExam').value;
+                     const studentFilter = document.getElementById('filterStudent').value.toLowerCase();
+                     
+                     const studentItems = document.querySelectorAll('.student-item');
+                     studentItems.forEach(item => {
+                         const studentName = item.querySelector('.student-name').textContent.toLowerCase();
+                         const examDetails = item.querySelector('.exam-details').textContent.toLowerCase();
+                         
+                         const matchesStudent = !studentFilter || studentName.includes(studentFilter);
+                         const matchesExam = !examFilter || examDetails.includes(examFilter.toLowerCase());
+                         
+                         if (matchesStudent && matchesExam) {
+                             item.style.display = 'block';
+                         } else {
+                             item.style.display = 'none';
+                         }
+                     });
+                 });
+             }
+         });
+     </script>
+</body>
+</html>

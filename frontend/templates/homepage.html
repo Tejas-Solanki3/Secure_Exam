@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="top">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,20 +10,22 @@
     <!-- Placeholder for Kepler Font if you add it later -->
     <!-- <link href="..." rel="stylesheet"> -->
 </head>
-<body>
+<body class="homepage">
     <!-- Main Navigation Bar -->
     <nav class="main-nav">
         <div class="nav-container">
-            <div class="nav-logo">
+            <a href="#top" class="nav-logo">
                 <i class="fas fa-shield-alt"></i> SecureExamLite
-            </div>
+            </a>
 
             <!-- This wrapper contains everything that will be part of the slide-out mobile menu -->
             <div class="mobile-nav-menu" id="mobileNavMenu">
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 </ul>
                 <div class="nav-actions">
                     <!-- Use btn-outline for Student Login and btn-primary for Admin Login -->
@@ -185,7 +187,7 @@
         </section>
 
         <!-- How It Works Section -->
-        <section class="how-it-works-section">
+        <section id="how-it-works" class="how-it-works-section">
             <div class="section-title">
                 <h2>How SecureExamLite Works</h2>
                 <p>A seamless journey from student login to secure exam completion</p>
@@ -448,6 +450,236 @@
             </div>
         </section>
 
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing-section">
+            <div class="section-title">
+                <h2>Choose Your Plan</h2>
+                <p>Flexible pricing options to match your institution's needs</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Starter Plan -->
+                <div class="pricing-card starter-plan">
+                    <div class="plan-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Starter</h3>
+                        <p class="plan-subtitle">Perfect for small institutions</p>
+                    </div>
+                    <div class="plan-pricing">
+                        <span class="price">$29</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Up to 50 concurrent students</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Basic AI proctoring</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Standard exam types</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Email support</span>
+                        </div>
+                    </div>
+                    <div class="plan-cta">
+                        <a href="admin_login.html" class="btn btn-outline">Get Started</a>
+                    </div>
+                </div>
+
+                <!-- Professional Plan (Most Popular) -->
+                <div class="pricing-card professional-plan popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="plan-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>Professional</h3>
+                        <p class="plan-subtitle">Ideal for medium institutions</p>
+                    </div>
+                    <div class="plan-pricing">
+                        <span class="price">$79</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Up to 200 concurrent students</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced AI proctoring</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>All exam types + custom</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Priority support + API access</span>
+                        </div>
+                    </div>
+                    <div class="plan-cta">
+                        <a href="admin_login.html" class="btn btn-primary">Get Started</a>
+                    </div>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card enterprise-plan">
+                    <div class="plan-header">
+                        <div class="plan-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Enterprise</h3>
+                        <p class="plan-subtitle">For large institutions</p>
+                    </div>
+                    <div class="plan-pricing">
+                        <span class="price">$199</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Unlimited concurrent students</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Premium AI proctoring</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>White-label + custom integrations</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>24/7 dedicated support</span>
+                        </div>
+                    </div>
+                    <div class="plan-cta">
+                        <a href="admin_login.html" class="btn btn-outline">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+            <div class="section-title">
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to common questions about SecureExamLite</p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How does AI proctoring work?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Our AI monitors video feeds for suspicious behavior like multiple faces, looking away, or unusual movement patterns, flagging potential violations for administrator review.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What browsers are supported?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>SecureExamLite works with Chrome, Firefox, Safari, and Edge. We recommend using the latest version for optimal performance.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Is student data secure and private?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, we use enterprise-grade encryption and comply with GDPR, FERPA, and other privacy regulations to protect student data.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I upgrade or downgrade my plan?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, you can change your plan at any time. Changes take effect immediately, and billing is prorated based on your usage.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Is there a free trial available?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We offer a 14-day free trial for all plans. No credit card required to start, and you can cancel anytime.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What are the system requirements?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>You need a computer with a webcam, microphone, and stable internet connection. Mobile devices are supported for certain exam types.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How quickly can I set up my first exam?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>You can create and deploy your first exam in under 10 minutes using our intuitive exam builder and question templates.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can students appeal proctoring flags?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, administrators can review all flagged incidents with video evidence and make final decisions about potential violations.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Do you provide training for administrators?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, we offer comprehensive onboarding, training sessions, and 24/7 support to help you get the most out of our platform.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What payment methods do you accept?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We accept all major credit cards, bank transfers, and purchase orders for enterprise customers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
          <!-- Call to Action Section -->
          <section class="cta-section">
              <h2>Ready to Get Started?</h2>
@@ -458,7 +690,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="main-footer">
+    <footer id="contact" class="main-footer">
         <div class="footer-container">
             <div class="footer-column about-us">
                  <h3>SecureExamLite</h3>
