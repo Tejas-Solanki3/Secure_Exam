@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Review - SecureExamLite</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/admin.css">
+    <link rel="stylesheet" href="../static/css/admin_review.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container review-container">
+        <h1 id="reviewExamName">Exam Review</h1>
+        <div class="review-header">
+            <div><strong>Student:</strong> <span id="reviewStudentName"></span></div>
+            <div><strong>Student ID:</strong> <span id="reviewStudentId"></span></div>
+            <div><strong>Exam Code:</strong> <span id="reviewExamCode"></span></div>
+            <div><strong>Score:</strong> <span id="reviewScore"></span></div>
+        </div>
+        <div class="review-flex">
+            <div class="review-selfie-block">
+                <div class="review-selfie-label">Student Selfie:</div>
+                <img id="reviewSelfieImg" class="review-selfie-img" src="" alt="Student Selfie"/>
+            </div>
+            <div class="review-answers-block">
+                <h2>Graded Answers</h2>
+                <div id="reviewQuestionsList"></div>
+            </div>
+        </div>
+        <div class="review-log-block">
+            <h2>Proctoring Log</h2>
+            <ul id="reviewLogList" class="review-log-list"></ul>
+        </div>
+        <div class="review-actions">
+            <a href="admin_dashboard.html" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        if (!sessionId) {
+            document.getElementById('reviewQuestionsList').innerHTML = '<div class="error">No session ID provided.</div>';
+            return;
+        }
+        try {
+            const response = await fetch(`/api/admin/review/${sessionId}`);
+            const data = await response.json();
+            if (!response.ok || data.status !== 'success') throw new Error(data.message || 'Failed to load review data');
+            const { exam_name, exam_code, student_name, student_id, score, selfie_path, answers, logs } = data;
+            document.getElementById('reviewExamName').textContent = exam_name;
+            document.getElementById('reviewExamCode').textContent = exam_code;
+            document.getElementById('reviewStudentName').textContent = student_name;
+            document.getElementById('reviewStudentId').textContent = student_id;
+            document.getElementById('reviewScore').textContent = score;
+            if (selfie_path) {
+                document.getElementById('reviewSelfieImg').src = selfie_path.replace('backend/', '');
+            } else {
+                document.getElementById('reviewSelfieImg').alt = 'No selfie available';
+            }
+            // Render answers
+            const questionsList = document.getElementById('reviewQuestionsList');
+            questionsList.innerHTML = '';
+            answers.forEach((ans, idx) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'result-question-card';
+                let statusIcon = '';
+                if (ans.type === 'mcq') {
+                    if (ans.status === 'correct') {
+                        statusIcon = '<i class="fas fa-check-circle correct"></i>';
+                    } else if (ans.status === 'incorrect') {
+                        statusIcon = '<i class="fas fa-times-circle incorrect"></i>';
+                    } else {
+                        statusIcon = '<i class="fas fa-question-circle pending"></i>';
+                    }
+                }
+                qDiv.innerHTML = `
+                    <div class="result-question-text"><strong>Q${idx+1}:</strong> ${ans.question_text} ${statusIcon}</div>
+                    <div class="result-answer"><strong>Answer:</strong> ${ans.answer !== null ? ans.answer : '<em>No answer</em>'}</div>
+                    ${ans.type === 'mcq' && ans.status === 'incorrect' ? `<div class="result-correct"><strong>Correct Answer:</strong> ${ans.correct_answer}</div>` : ''}
+                `;
+                questionsList.appendChild(qDiv);
+            });
+            // Render logs
+            const logList = document.getElementById('reviewLogList');
+            logList.innerHTML = '';
+            if (logs && logs.length > 0) {
+                logs.forEach(log => {
+                    const li = document.createElement('li');
+                    li.className = `log-${log.type || 'info'}`;
+                    li.innerHTML = `<span class="log-time">${log.timestamp ? new Date(log.timestamp).toLocaleString() : ''}</span> <span class="log-message">${log.message}</span>`;
+                    logList.appendChild(li);
+                });
+            } else {
+                logList.innerHTML = '<li>No proctoring events recorded.</li>';
+            }
+        } catch (err) {
+            document.getElementById('reviewQuestionsList').innerHTML = `<div class="error">${err.message}</div>`;
+        }
+    });
+    </script>
+</body>
+</html> 

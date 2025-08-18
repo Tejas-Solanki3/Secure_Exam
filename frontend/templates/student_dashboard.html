@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - SecureExamLite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cloud-white: #FFFFFF; --light-gray-50: #FDFDFD; --light-gray-100: #F8F8F8; --light-gray-200: #F0F0F0; --light-gray-300: #E0E0E0; --primary-accent-blue-500: #2196F3; --primary-accent-blue-700: #1976D2; --text-heading: #1a202c; --text-body: #4a5568; --text-subtle: #718096; --success-green: #059669; --warning-amber: #d97706; --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08); --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1); --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        body { background-color: var(--light-gray-100); font-family: 'Inter', sans-serif; color: var(--text-body); margin: 0; }
+        .dashboard-container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .welcome-message h1 { font-family: 'Poppins', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--text-heading); margin: 0; }
+        .welcome-message span { font-weight: 600; color: var(--primary-accent-blue-700); }
+        .logout-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 10px 20px; background: var(--cloud-white); color: var(--text-heading); border: 1px solid var(--light-gray-300); border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .exam-filters { display: flex; gap: 0.75rem; margin-bottom: 2rem; background-color: var(--cloud-white); padding: 0.5rem; border-radius: 50px; box-shadow: var(--shadow-sm); border: 1px solid var(--light-gray-200); }
+        .filter-btn { flex-grow: 1; padding: 0.75rem 1rem; border: none; background-color: transparent; color: var(--text-subtle); font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.95rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .filter-btn.active { background-color: var(--primary-accent-blue-700); color: var(--cloud-white); box-shadow: var(--shadow-md); }
+        .exam-list-container { display: flex; flex-direction: column; gap: 1.5rem; }
+        .exam-card { background-color: var(--cloud-white); border-radius: 16px; padding: 1.5rem 2rem; box-shadow: var(--shadow-md); border: 1px solid var(--light-gray-200); display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
+        .exam-icon { flex-shrink: 0; width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .exam-icon.available { background-color: #e3f2fd; color: var(--primary-accent-blue-700); }
+        .exam-icon.upcoming { background-color: #fff8e1; color: var(--warning-amber); }
+        .exam-icon.completed { background-color: #e8f5e9; color: var(--success-green); }
+.exam-icon.pending { background-color: #fff3e0; color: #f59e0b; }
+        .exam-info h3 { font-family: 'Poppins', sans-serif; font-size: 1.3rem; font-weight: 600; color: var(--text-heading); margin: 0 0 0.5rem 0; }
+        .exam-details { display: flex; gap: 1.5rem; list-style: none; padding: 0; margin: 0; color: var(--text-subtle); font-size: 0.9rem; }
+        .exam-details li { display: flex; align-items: center; gap: 0.5rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 12px 28px; text-decoration: none; border-radius: 50px; font-size: 0.95rem; font-weight: 600; border: none; cursor: pointer; }
+        .btn-primary { background: var(--primary-accent-blue-700); color: var(--cloud-white); }
+        .btn-secondary { background: var(--light-gray-200); color: var(--text-heading); }
+        .btn[disabled] { background-color: var(--light-gray-200); color: var(--text-subtle); cursor: not-allowed; }
+        .no-exams-message { background-color: var(--cloud-white); border-radius: 12px; padding: 3rem; text-align: center; color: var(--text-subtle); font-size: 1.1rem; border: 2px dashed var(--light-gray-200); }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="welcome-message"><h1>Welcome, <span id="studentName">Student</span>!</h1></div>
+            <a href="#" id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </header>
+        <main>
+            <div class="exam-filters">
+                <button class="filter-btn active" data-filter="all"><i class="fas fa-list-ul"></i> All</button>
+                <button class="filter-btn" data-filter="available"><i class="fas fa-pencil-alt"></i> Current</button>
+                <button class="filter-btn" data-filter="upcoming"><i class="fas fa-hourglass-half"></i> Upcoming</button>
+                <button class="filter-btn" data-filter="completed"><i class="fas fa-check-double"></i> Previous</button>
+            </div>
+            <div id="examListContainer" class="exam-list-container"></div>
+        </main>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const studentNameEl = document.getElementById('studentName');
+        const examListContainer = document.getElementById('examListContainer');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        let allExams = [];
+
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch('/api/student/dashboard');
+                if (!response.ok) {
+                    if (response.status === 401) window.location.href = 'login.html';
+                    return;
+                }
+                const data = await response.json();
+                if (data.status === 'success') {
+                    studentNameEl.textContent = data.student_name || 'Student';
+                    allExams = [
+                        ...data.exams.available.map(exam => ({ ...exam, status: 'available' })),
+                        ...data.exams.upcoming.map(exam => ({ ...exam, status: 'upcoming' })),
+                        ...data.exams.completed.map(exam => ({ ...exam, status: 'completed' }))
+                    ];
+                    renderExams(allExams);
+                } else {
+                    examListContainer.innerHTML = `<div class="no-exams-message">Could not load dashboard.</div>`;
+                }
+            } catch (error) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function renderExams(examsToRender) {
+            examListContainer.innerHTML = '';
+            if (examsToRender.length > 0) {
+                examsToRender.forEach(exam => examListContainer.appendChild(createExamCard(exam)));
+            } else {
+                examListContainer.innerHTML = `<div class="no-exams-message">No exams found for this category.</div>`;
+            }
+        }
+        
+        function createExamCard(exam) {
+            const card = document.createElement('div');
+            card.className = 'exam-card';
+            let scheduledTime = 'Not specified';
+            if (exam.scheduled_datetime) {
+                const date = new Date(exam.scheduled_datetime);
+                scheduledTime = date.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            }
+            let actionButton = '', iconClass = '', icon = '';
+            switch(exam.status) {
+                case 'available':
+                    actionButton = `<a href="exam.html?test_id=${exam.test_id}" class="btn btn-primary">Start Exam</a>`;
+                    iconClass = 'available';
+                    icon = 'fa-pencil-alt';
+                    break;
+                case 'completed':
+                    // Check if results are available (24 hours passed)
+                    const submissionTime = new Date(exam.submission_time);
+                    const currentTime = new Date();
+                    const hoursPassed = (currentTime - submissionTime) / (1000 * 60 * 60);
+                    
+                    if (hoursPassed >= 24) {
+                        actionButton = `<a href="student_results.html?session_id=${exam.submission_id}" class="btn btn-secondary">View Results</a>`;
+                        iconClass = 'completed';
+                        icon = 'fa-check-double';
+                    } else {
+                        const remainingHours = Math.floor(24 - hoursPassed);
+                        const remainingMinutes = Math.floor(((24 - hoursPassed) % 1) * 60);
+                        actionButton = `<button class="btn btn-secondary" disabled title="Results available in ${remainingHours}h ${remainingMinutes}m">Results Pending</button>`;
+                        iconClass = 'pending';
+                        icon = 'fa-clock';
+                    }
+                    break;
+                case 'upcoming':
+                    actionButton = `<button class="btn btn-secondary" disabled>Not Yet Available</button>`;
+                    iconClass = 'upcoming';
+                    icon = 'fa-hourglass-half';
+                    break;
+            }
+            card.innerHTML = `
+                <div class="exam-icon ${iconClass}"><i class="fas ${icon}"></i></div>
+                <div class="exam-info">
+                    <h3>${exam.name}</h3>
+                    <ul class="exam-details">
+                        <li><i class="fas fa-calendar-alt"></i> <strong>Date:</strong> ${scheduledTime}</li>
+                        <li><i class="fas fa-clock"></i> <strong>Duration:</strong> ${exam.duration_seconds / 60} mins</li>
+                        <li><i class="fas fa-file-alt"></i> <strong>Questions:</strong> ${exam.questions.length}</li>
+                    </ul>
+                </div>
+                <div class="exam-actions">${actionButton}</div>`;
+            return card;
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                if (filter === 'all') {
+                    renderExams(allExams);
+                } else {
+                    renderExams(allExams.filter(exam => exam.status === filter));
+                }
+            });
+        });
+        
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/api/student/logout', { method: 'POST' });
+            localStorage.removeItem('currentStudentId');
+            window.location.href = 'login.html';
+        });
+
+        fetchDashboardData();
+    });
+    </script>
+</body>
+</html>

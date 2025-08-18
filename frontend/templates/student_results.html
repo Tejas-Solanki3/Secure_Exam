@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Results - SecureExamLite</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/exam.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container results-container">
+        <h1 id="resultsExamName">Exam Results</h1>
+        <div class="results-header">
+            <div><strong>Student:</strong> <span id="resultsStudentName"></span></div>
+            <div><strong>Exam Code:</strong> <span id="resultsExamCode"></span></div>
+            <div><strong>Score:</strong> <span id="resultsScore"></span></div>
+        </div>
+        <hr>
+        <div id="resultsQuestionsList"></div>
+        <div class="results-actions">
+            <a href="student_dashboard.html" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+    </div>
+    <script>
+    // Fetch and render results
+    document.addEventListener('DOMContentLoaded', async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        if (!sessionId) {
+            document.getElementById('resultsQuestionsList').innerHTML = '<div class="error">No session ID provided.</div>';
+            return;
+        }
+        try {
+            const response = await fetch(`/api/student/results/${sessionId}`);
+            const data = await response.json();
+            
+            if (data.status === 'pending') {
+                // Show pending results with countdown
+                showPendingResults(data);
+                return;
+            }
+            
+            if (!response.ok || data.status !== 'success') throw new Error(data.message || 'Failed to load results');
+            
+            // Show actual results
+            showResults(data);
+            
+        } catch (err) {
+            document.getElementById('resultsQuestionsList').innerHTML = `<div class="error">${err.message}</div>`;
+        }
+    });
+
+    function showPendingResults(data) {
+        const { exam_name, exam_code, student_name, remaining_time, available_time } = data;
+        
+        document.getElementById('resultsExamName').textContent = exam_name;
+        document.getElementById('resultsExamCode').textContent = exam_code;
+        document.getElementById('resultsStudentName').textContent = student_name;
+        document.getElementById('resultsScore').textContent = 'Pending';
+        
+        const questionsList = document.getElementById('resultsQuestionsList');
+        questionsList.innerHTML = `
+            <div class="pending-results-card">
+                <div class="pending-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Results Pending</h3>
+                <p>Your exam results will be available in:</p>
+                <div class="countdown-timer" id="countdownTimer">
+                    <div class="time-unit">
+                        <span class="time-value" id="hoursRemaining">${remaining_time.hours}</span>
+                        <span class="time-label">Hours</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value" id="minutesRemaining">${remaining_time.minutes}</span>
+                        <span class="time-label">Minutes</span>
+                    </div>
+                </div>
+                <p class="available-time">Results will be available on: <strong>${new Date(available_time).toLocaleString()}</strong></p>
+                <div class="pending-message">
+                    <p><i class="fas fa-info-circle"></i> Your exam has been submitted successfully and is being reviewed by your instructor.</p>
+                </div>
+            </div>
+        `;
+        
+        // Start countdown timer
+        startCountdown(remaining_time.hours, remaining_time.minutes);
+    }
+
+    function showResults(data) {
+        const { exam_name, exam_code, student_name, score, answers } = data;
+        
+        document.getElementById('resultsExamName').textContent = exam_name;
+        document.getElementById('resultsExamCode').textContent = exam_code;
+        document.getElementById('resultsStudentName').textContent = student_name;
+        document.getElementById('resultsScore').textContent = score;
+        
+        const questionsList = document.getElementById('resultsQuestionsList');
+        questionsList.innerHTML = '';
+        
+        answers.forEach((ans, idx) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'result-question-card';
+            let statusIcon = '';
+            if (ans.type === 'mcq') {
+                if (ans.status === 'correct') {
+                    statusIcon = '<i class="fas fa-check-circle correct"></i>';
+                } else if (ans.status === 'incorrect') {
+                    statusIcon = '<i class="fas fa-times-circle incorrect"></i>';
+                } else {
+                    statusIcon = '<i class="fas fa-question-circle pending"></i>';
+                }
+            }
+            qDiv.innerHTML = `
+                <div class="result-question-text"><strong>Q${idx+1}:</strong> ${ans.question_text} ${statusIcon}</div>
+                <div class="result-answer"><strong>Your Answer:</strong> ${ans.answer !== null ? ans.answer : '<em>No answer</em>'}</div>
+                ${ans.type === 'mcq' && ans.status === 'incorrect' ? `<div class="result-correct"><strong>Correct Answer:</strong> ${ans.correct_answer}</div>` : ''}
+            `;
+            questionsList.appendChild(qDiv);
+        });
+    }
+
+    function startCountdown(hours, minutes) {
+        let totalSeconds = hours * 3600 + minutes * 60;
+        
+        const countdownInterval = setInterval(() => {
+            totalSeconds--;
+            
+            if (totalSeconds <= 0) {
+                clearInterval(countdownInterval);
+                // Reload page to show results
+                window.location.reload();
+                return;
+            }
+            
+            const hoursRemaining = Math.floor(totalSeconds / 3600);
+            const minutesRemaining = Math.floor((totalSeconds % 3600) / 60);
+            
+            document.getElementById('hoursRemaining').textContent = hoursRemaining;
+            document.getElementById('minutesRemaining').textContent = minutesRemaining;
+        }, 1000);
+    }
+    </script>
+    <style>
+    .results-container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 32px; }
+    .results-header { display: flex; gap: 2em; margin-bottom: 1em; font-size: 1.1em; }
+    .result-question-card { background: #f8f8f8; border-radius: 8px; margin-bottom: 18px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
+    .result-question-text { font-weight: 600; margin-bottom: 6px; }
+    .result-answer, .result-correct { margin-left: 1.5em; margin-bottom: 4px; }
+    .correct { color: #059669; margin-left: 8px; }
+    .incorrect { color: #dc2626; margin-left: 8px; }
+    .pending { color: #d97706; margin-left: 8px; }
+    .results-actions { margin-top: 2em; text-align: right; }
+    .btn.btn-primary { background: #2196F3; color: #fff; padding: 10px 22px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: background 0.2s; }
+    .btn.btn-primary:hover { background: #1976D2; }
+    .error { color: #dc2626; font-weight: 600; }
+    
+    /* Pending Results Styles */
+    .pending-results-card {
+        text-align: center;
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 40px 30px;
+        margin: 20px 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .pending-icon {
+        font-size: 4rem;
+        color: #f59e0b;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .pending-results-card h3 {
+        color: #1e293b;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+    
+    .pending-results-card p {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+    }
+    
+    .countdown-timer {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 30px 0;
+    }
+    
+    .time-unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: white;
+        padding: 20px 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        min-width: 80px;
+    }
+    
+    .time-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1;
+    }
+    
+    .time-label {
+        font-size: 0.9rem;
+        color: #64748b;
+        font-weight: 600;
+        margin-top: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .available-time {
+        background: #f1f5f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-size: 0.95rem;
+    }
+    
+    .available-time strong {
+        color: #1e293b;
+    }
+    
+    .pending-message {
+        background: #dbeafe;
+        border-left: 4px solid #3b82f6;
+        padding: 15px;
+        border-radius: 0 8px 8px 0;
+        margin-top: 20px;
+    }
+    
+    .pending-message p {
+        margin: 0;
+        color: #1e40af;
+        font-size: 0.95rem;
+    }
+    
+    .pending-message i {
+        margin-right: 8px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .countdown-timer {
+            gap: 15px;
+        }
+        
+        .time-unit {
+            padding: 15px 10px;
+            min-width: 60px;
+        }
+        
+        .time-value {
+            font-size: 2rem;
+        }
+        
+        .time-label {
+            font-size: 0.8rem;
+        }
+        
+        .pending-results-card {
+            padding: 30px 20px;
+        }
+        
+        .pending-icon {
+            font-size: 3rem;
+        }
+    }
+    </style>
+</body>
+</html> 

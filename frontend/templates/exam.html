@@ -6,136 +6,103 @@
     <title>SecureExamLite - Exam</title>
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/exam.css">
-    <!-- Using Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+    <style>
+        /* --- Proctoring Toggle Switch CSS --- */
+        .proctoring-toggle-container { display: flex; align-items: center; gap: 10px; }
+        .proctoring-toggle-container label { font-weight: 600; color: var(--text-subtle); }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success-green); }
+        input:focus + .slider { box-shadow: 0 0 1px var(--success-green); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        
+        /* --- Selfie UI Styles --- */
+        .selfie-camera-placeholder { width: 300px; height: 300px; background-color: #1a1a2e; border-radius: 8px; margin: 1rem auto; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .selfie-camera-placeholder video { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .selfie-circle-overlay { position: absolute; top: 5%; left: 5%; width: 90%; height: 90%; border: 3px dashed rgba(255, 255, 255, 0.6); border-radius: 50%; box-sizing: border-box; pointer-events: none; }
+        .progress-indicator { margin-top: 20px; font-size: 0.9em; color: var(--text-subtle); }
+        .progress-bar-container { width: 100%; height: 8px; background-color: var(--border-light); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .progress-bar { height: 100%; width: 0%; background-color: var(--primary-blue); border-radius: 4px; transition: width 0.5s ease-in-out; }
+
+        /* --- THIS IS THE FIX: Reverse the camera view --- */
+        #webcamVideo, #selfieVideo {
+            transform: scaleX(-1);
+        }
+    </style>
 </head>
 <body>
+    <div class="content-blocker" id="contentBlocker" style="display: flex;"></div>
     <div class="exam-container">
         <header class="exam-header">
-            <div class="exam-title">
-                <h2>Advanced Mathematics 101</h2> <!-- Placeholder Title -->
-                <p>MATH-401</p> <!-- Placeholder Code -->
-            </div>
-            <div class="exam-timer">
-                <i class="far fa-clock"></i> <span id="timeRemaining">02:45:30 Remaining</span> <!-- Timer will be updated by JS -->
-            </div>
-             <div class="recording-status">
-                 <span class="recording-dot"></span> Recording
+            <div class="exam-title"><h2 id="examTitle">Loading...</h2><p id="examCode"></p></div>
+            <div class="exam-timer"><i class="far fa-clock"></i> <span id="timeRemaining">--:--:--</span></div>
+            <div class="proctoring-toggle-container">
+                <label for="proctoringToggle">Proctoring</label>
+                <label class="switch"><input type="checkbox" id="proctoringToggle" checked><span class="slider"></span></label>
             </div>
         </header>
-
         <main class="exam-main">
             <div class="exam-content">
                 <div class="question-area">
-                    <!-- Question content will be loaded here by JS -->
-                    <h3>Question 1 of 50</h3>
-                    <p>What is the derivative of x²?</p>
-                    <!-- Example options for MCQ -->
-                    <div class="options">
-                        <label><input type="radio" name="q1" value="a"> a) 2x</label><br>
-                        <label><input type="radio" name="q1" value="b"> b) x/2</label><br>
-                        <label><input type="radio" name="q1" value="c"> c) 2</label><br>
-                        <label><input type="radio" name="q1" value="d"> d) x²ln(x)</label>
+                    <div id="questionContainer">
+                        <div class="question-header"><h3 id="questionProgress"></h3></div>
+                        <p id="questionText"></p>
+                        <div id="answerArea" class="options"></div>
                     </div>
-                     <!-- Placeholder for navigation -->
-                     <div class="question-navigation">
-                         <button class="btn btn-secondary" id="prevQuestionBtn"><i class="fas fa-chevron-left"></i> Previous</button>
-                         <button class="btn btn-primary" id="nextQuestionBtn">Next <i class="fas fa-chevron-right"></i></button>
-                     </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" id="prevQuestionBtn"><i class="fas fa-chevron-left"></i> Previous</button>
+                        <button class="btn btn-primary" id="nextQuestionBtn">Next <i class="fas fa-chevron-right"></i></button>
+                    </div>
                 </div>
-
                 <div class="webcam-area">
-                    <div class="camera-feed" id="cameraFeed">
-                        <!-- Live camera feed will be streamed here -->
-                        <video id="webcamVideo" autoplay muted playsinline></video>
-                         <div class="camera-status">
-                             <i class="fas fa-check-circle"></i> Camera Active
-                         </div>
-                    </div>
-                    <!-- Activity Log / Proctoring Messages -->
-                    <div class="activity-log">
-                        <h4>Activity Log</h4>
-                        <ul id="logList" style="max-height: 200px; overflow-y: auto;"> <!-- Added max-height and overflow for scrolling -->
-                             <!-- Log entries will be added here by JS -->
-                            <li><span class="log-time">13:45</span> <span class="log-message">Face properly detected</span> <i class="fas fa-check-circle log-icon-success"></i></li>
-                            <li><span class="log-time">13:44</span> <span class="log-message">Exam started</span> <i class="fas fa-check-circle log-icon-success"></i></li>
-                             <li><span class="log-time">13:43</span> <span class="log-message">System check complete</span> <i class="fas fa-check-circle log-icon-success"></i></li>
-                             <li><span class="log-time">13:42</span> <span class="log-message">Camera permission granted</span> <i class="fas fa-check-circle log-icon-success"></i></li>
-                        </ul>
-                    </div>
-
-                     <!-- Example Warning/Alert (Initially hidden) -->
-                     <div class="proctoring-alert" id="multiFaceAlert" style="display: none;">
-                         <i class="fas fa-exclamation-triangle alert-icon"></i>
-                         <span class="alert-message">Warning: Multiple faces detected</span>
-                         <button class="close-alert"><i class="fas fa-times"></i></button>
-                     </div>
+                    <div class="camera-feed" id="cameraFeed"><video id="webcamVideo" autoplay muted playsinline></video><canvas id="overlayCanvas"></canvas></div>
+                    <div class="activity-log"><h4>Activity Log</h4><ul id="logList"></ul></div>
                 </div>
             </div>
-
-            <!-- Action Buttons -->
             <div class="exam-actions">
-                <button class="btn btn-secondary" id="requestHelpBtn"><i class="fas fa-question-circle"></i> Request Help</button> <!-- Added ID -->
-                <button class="btn btn-danger" id="endExamBtn"><i class="fas fa-flag"></i> End Exam</button> <!-- Added ID -->
+                <button class="btn btn-secondary" id="requestHelpBtn"><i class="fas fa-question-circle"></i> Request Help</button>
+                <button class="btn btn-danger" id="endExamBtn"><i class="fas fa-flag"></i> End Exam</button>
             </div>
         </main>
+    </div>
 
-        <!-- Modal for Multiple Faces Detected (Initially hidden) -->
-        <div class="modal" id="multipleFaceModal" style="display: none;">
-            <div class="modal-content">
-                <span class="close-button">×</span>
-                 <div class="modal-icon" style="color: var(--error-red);"><i class="fas fa-exclamation-triangle fa-3x"></i></div>
-                <h2>Multiple Faces Detected</h2>
-                <p>We've detected more than one face in the camera view. This may be considered as a violation of exam rules.</p>
-                <div class="modal-actions">
-                    <button class="btn btn-danger">Resolve Issue</button> <!-- Use danger for primary action here? Or a different color? -->
-                     <button class="btn btn-secondary">Request Help</button>
-                    <button class="btn btn-secondary">Dismiss</button>
-                </div>
+    <div class="modal" id="selfieVerificationModal" style="display: none;">
+        <div class="modal-content">
+            <h2>Identity Verification</h2>
+            <p style="color: var(--text-subtle); font-size: 1em;">Please take a clear selfie</p>
+            <div class="selfie-camera-placeholder">
+                <video id="selfieVideo" autoplay muted playsinline></video>
+                <div class="selfie-circle-overlay"></div>
+            </div>
+            <div class="progress-indicator" id="progressIndicator">Step 1 of 2</div>
+            <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
+            <div class="modal-actions" style="margin-top: 1rem;"><button id="captureSelfieBtn" class="btn btn-primary">Capture Selfie</button></div>
+        </div>
+    </div>
+
+    <div class="modal" id="submitConfirmModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fas fa-question-circle fa-3x" style="color: var(--primary-accent-blue-700);"></i></div>
+            <h2>Submit Exam</h2>
+            <p>Are you sure you want to end the exam and submit your answers?</p>
+            <p style="font-size: 0.9em; color: var(--error-red);">This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="cancelSubmitBtn" class="btn btn-secondary">Return to Exam</button>
+                <button id="confirmSubmitBtn" class="btn btn-danger">Confirm & Submit</button>
             </div>
         </div>
-
-         <!-- Modal for Test Locked (Initially hidden) -->
-        <div class="modal" id="testLockedModal" style="display: none;">
-            <div class="modal-content">
-                <span class="close-button">×</span>
-                 <div class="modal-icon" style="color: var(--error-red);"><i class="fas fa-lock fa-3x"></i></div>
-                <h2>Test Locked</h2>
-                <p>Your test has been locked due to multiple proctoring violations.</p>
-                 <div class="form-group">
-                     <label for="reasonInput">Please provide a reason:</label>
-                     <textarea id="reasonInput" rows="4" style="width: 100%; padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; box-sizing: border-box; font-family: inherit;"></textarea>
-                 </div>
-                <div class="modal-actions">
-                     <button class="btn btn-primary" id="sendReasonBtn">Send to Administrator</button> <!-- Added ID for JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal for Submit Exam Confirmation (Initially hidden) -->
-        <div class="modal" id="submitConfirmModal" style="display: none;">
-             <div class="modal-content">
-                 <span class="close-button">×</span>
-                 <div class="modal-icon" style="color: var(--primary-blue);"><i class="fas fa-question-circle fa-3x"></i></div> <!-- Changed icon to question mark/info -->
-                 <h2>Submit Your Exam</h2>
-                 <p>Are you sure you want to submit your exam?</p>
-                 <p style="font-size: 0.9em; color: var(--error-red); margin-top: 15px;">Once submitted, you cannot return to the exam.</p>
-                 <div class="modal-actions">
-                      <button class="btn btn-primary" id="confirmSubmitBtn">Submit Exam</button> <!-- Button to confirm submission -->
-                     <button class="btn btn-secondary" id="cancelSubmitBtn">Return to Exam</button> <!-- Button to cancel -->
-                 </div>
-             </div>
-        </div>
-
-
-    </div> <!-- End exam-container -->
-
-    <!-- Link JavaScript files -->
-    <script src="../static/js/timer.js"></script>
+    </div>
+    
     <script src="../static/js/logger.js"></script>
+    <script src="../static/js/timer.js"></script>
     <script src="../static/js/camera.js"></script>
+    <script src="../static/js/face_detector.js"></script>
     <script src="../static/js/exam.js"></script>
-
-    <!-- Moved End Exam button logic into exam.js -->
 </body>
 </html>

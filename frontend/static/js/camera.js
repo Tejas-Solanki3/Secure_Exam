@@ -1,60 +1,54 @@
 // static/js/camera.js
 
-const webcamVideoElement = document.getElementById('webcamVideo');
-let currentStream = null;
+let currentStream; // To hold the MediaStream object
 
-async function startCamera() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        console.error('getUserMedia is not supported in this browser');
-         logActivity('Camera not supported in browser', 'error');
+/**
+ * Starts the camera and streams it to a given video element.
+ * @param {HTMLVideoElement} videoElement The video element to stream to.
+ * @returns {Promise<boolean>} Resolves true if camera started, false otherwise.
+ */
+async function startCamera(videoElement) {
+    if (!videoElement) {
+        console.error('Video element not provided to startCamera.');
         return false;
     }
 
-    console.log('Attempting to start camera...');
-     logActivity('Requesting camera access...');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('getUserMedia is not supported in this browser.');
+        return false;
+    }
 
     try {
-        // Request both video and potentially audio access
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-        currentStream = stream;
-
-        if (webcamVideoElement) {
-            webcamVideoElement.srcObject = stream;
-             logActivity('Camera stream started', 'success');
-            console.log('Camera stream started successfully.');
-            return true;
-        } else {
-             console.error('Webcam video element not found!');
-             logActivity('Webcam video element not found', 'error');
-             stopCamera(); // Stop the stream if we can't attach it
-             return false;
-        }
-
+        videoElement.srcObject = stream;
+        currentStream = stream; // Store the stream to stop it later
+        console.log('Camera stream started successfully.');
+        return true;
     } catch (err) {
         console.error('Error accessing camera: ', err);
-        logActivity(`Error accessing camera: ${err.message}`, 'error');
-        // TODO: Handle specific errors like permission denied
-         return false;
+        // More specific error handling
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            alert('Camera access denied. Please allow camera permissions in your browser settings to proceed.');
+        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+            alert('No camera found. Please ensure a camera is connected and enabled.');
+        } else {
+            alert('An unexpected error occurred while accessing the camera: ' + err.message);
+        }
+        return false;
     }
 }
 
+/**
+ * Stops the currently active camera stream.
+ */
 function stopCamera() {
     if (currentStream) {
-        const tracks = currentStream.getTracks();
-        tracks.forEach(track => track.stop());
+        currentStream.getTracks().forEach(track => track.stop());
         currentStream = null;
         console.log('Camera stream stopped.');
-         logActivity('Camera stream stopped');
-    }
-     if (webcamVideoElement) {
-        webcamVideoElement.srcObject = null;
     }
 }
 
-// Example usage (would be called from exam.js)
-// document.addEventListener('DOMContentLoaded', async () => {
-//      await startCamera();
-// });
-
-// Make stopCamera available globally or export if using modules
-// window.stopCamera = stopCamera; // Or export { startCamera, stopCamera };
+// Make functions globally available
+window.startCamera = startCamera;
+window.stopCamera = stopCamera;

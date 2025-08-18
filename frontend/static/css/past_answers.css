@@ -1,138 +1,305 @@
-/* --- Past Answers Page Specific Styles --- */
+/* past_answers.css - Styles for the admin past answers page */
 
-/* Note: Some general styles (like .container, .btn) come from style.css */
-/* Note: Some admin-specific layout styles come from admin.css (e.g., admin-dashboard-container, dashboard-header) */
-
-.answers-section {
-    margin-top: 20px;
+.admin-dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
 }
 
-.answers-section h2 {
-    margin-bottom: 20px;
-    color: var(--primary-blue-dark);
-}
-
-.filter-controls {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.filter-controls select,
-.filter-controls input[type="text"] {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--border-light);
-    font-family: inherit; /* Inherit font from body */
-    font-size: 1em;
-}
-
-.submission-list {
-    /* Styles for the list of submissions */
-}
-
-.submission-item {
-    background-color: var(--primary-blue-lightest);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
+.dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--border-light);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, var(--primary-blue-dark, #0D47A1) 0%, var(--primary-accent-blue-700, #1976D2) 100%);
+    border-radius: 16px;
+    color: white;
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, 0.15));
 }
 
-.submission-item:hover {
-    background-color: #f9f9f9;
+.dashboard-header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
 }
 
-/* Style for selected submission item */
-.submission-item.selected {
-    background-color: var(--primary-blue-light); /* Highlight selected item */
-    border-color: var(--primary-blue);
-}
-
-
-.submission-info .student-name {
-    font-weight: bold;
-    color: var(--text-dark);
-}
-
-.submission-info .exam-details {
-    font-size: 0.9em;
-    color: var(--text-medium);
-}
-
-.view-answers-btn {
-    background-color: var(--primary-blue);
-    color: var(--primary-white);
-    padding: 8px 15px;
-    border-radius: 5px;
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
     text-decoration: none;
-    font-size: 0.9em;
-    border: none; /* Ensure button has no default border */
+    border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
 }
 
-/* Styles for individual answer display (could be a modal or separate section) */
-.answer-details {
-    margin-top: 20px;
-    border-top: 1px solid var(--border-light);
-    padding-top: 20px;
+.btn-primary {
+    background: var(--primary-accent-blue-500, #2196F3);
+    color: white;
 }
 
-.answer-details h3 {
-    margin-bottom: 15px;
-    color: var(--primary-blue-dark);
+.btn-primary:hover {
+    background: var(--primary-accent-blue-700, #1976D2);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
 }
 
-.question-answer-pair {
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px dashed var(--border-light);
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.question-answer-pair:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
-.question-text {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--text-dark);
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
 }
 
-.student-answer {
-    color: var(--text-medium);
-    font-size: 0.9em; /* Slightly smaller font for answer text */
+.answers-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
+    border: 1px solid var(--border-default, #E0E0E0);
 }
 
-.student-answer.correct {
-    color: green;
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--light-gray-50, #FDFDFD);
+    border-radius: 12px;
+    border: 1px solid var(--light-gray-200, #F0F0F0);
+    flex-wrap: wrap;
+    align-items: end;
 }
 
-.student-answer.incorrect {
-    color: var(--error-red);
+.filter-controls label {
+    font-weight: 600;
+    color: var(--text-heading, #1a202c);
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
-/* Responsive adjustments if needed for past_answers.html */
-@media (max-width: 600px) {
+.filter-controls select,
+.filter-controls input {
+    padding: 0.75rem;
+    border: 1px solid var(--light-gray-300, #E0E0E0);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    min-width: 200px;
+    background: white;
+}
+
+.filter-controls select:focus,
+.filter-controls input:focus {
+    outline: none;
+    border-color: var(--primary-accent-blue-500, #2196F3);
+    box-shadow: 0 0 0 3px var(--primary-blue-lightest, #E3F2FD);
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-subtle, #718096);
+    font-size: 1.1rem;
+}
+
+.loading-indicator i {
+    margin-right: 0.5rem;
+    color: var(--primary-accent-blue-500, #2196F3);
+}
+
+.empty-state-message {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-subtle, #718096);
+    font-size: 1.1rem;
+    background: var(--light-gray-50, #FDFDFD);
+    border-radius: 12px;
+    border: 2px dashed var(--light-gray-200, #F0F0F0);
+}
+
+.student-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.submission-card {
+    background: white;
+    border: 1px solid var(--light-gray-200, #F0F0F0);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.08));
+    transition: all 0.3s ease;
+}
+
+.submission-card:hover {
+    box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
+    border-color: var(--primary-blue-light, #BBDEFB);
+    transform: translateY(-2px);
+}
+
+.submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.submission-info h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-heading, #1a202c);
+    margin: 0 0 0.5rem 0;
+}
+
+.submission-meta {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--text-subtle, #718096);
+    font-size: 0.9rem;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+.submission-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.submission-meta i {
+    color: var(--primary-accent-blue-500, #2196F3);
+}
+
+.submission-score {
+    display: flex;
+    align-items: center;
+}
+
+.score-badge {
+    background: var(--success-green, #059669);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.submission-details {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--light-gray-50, #FDFDFD);
+    border-radius: 8px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-body, #4a5568);
+    font-size: 0.9rem;
+}
+
+.detail-item i {
+    color: var(--warning-amber, #d97706);
+}
+
+.submission-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.btn-review {
+    background: var(--primary-accent-blue-500, #2196F3);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-review:hover {
+    background: var(--primary-accent-blue-700, #1976D2);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-dashboard-container {
+        padding: 1rem;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
     .filter-controls {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        align-items: stretch;
     }
-     .filter-controls label,
-     .filter-controls select,
-     .filter-controls input[type="text"],
-     .filter-controls button {
-         width: 100%; /* Full width on mobile */
-         box-sizing: border-box;
-     }
+    
+    .filter-controls select,
+    .filter-controls input {
+        min-width: auto;
+    }
+    
+    .submission-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .submission-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .submission-details {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .submission-actions {
+        justify-content: center;
+    }
 }
+
+@media (max-width: 480px) {
+    .answers-section {
+        padding: 1rem;
+    }
+    
+    .submission-card {
+        padding: 1rem;
+    }
+    
+    .filter-controls {
+        padding: 1rem;
+    }
+} 

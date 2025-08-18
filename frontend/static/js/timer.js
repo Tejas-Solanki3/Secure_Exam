@@ -20,16 +20,17 @@ function startTimer(durationInSeconds) {
         const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         timerDisplay.textContent = `${formattedTime} Remaining`;
 
-        if (timeRemainingInSeconds <= 0) {
+        if (timeRemainingInSeconds < 0) {
             clearInterval(timerInterval);
             console.log('Timer finished!');
-            // TODO: Handle exam end when timer reaches zero
+            alert("Time's up! The exam will now be submitted.");
+            // In a real app, this would trigger the submit function
+            // window.submitExam(); 
         } else {
             timeRemainingInSeconds--;
         }
     }
 
-    // Update immediately and then every second
     updateTimerDisplay();
     timerInterval = setInterval(updateTimerDisplay, 1000);
 }
@@ -39,12 +40,5 @@ function stopTimer() {
     console.log('Timer stopped.');
 }
 
-function getRemainingTime() {
-    return timeRemainingInSeconds;
-}
-
-// Example usage (would be called from exam.js)
-// document.addEventListener('DOMContentLoaded', () => {
-//     // Start a timer for 2 hours (7200 seconds)
-//     // startTimer(7200);
-// });
+window.startTimer = startTimer;
+window.stopTimer = stopTimer;

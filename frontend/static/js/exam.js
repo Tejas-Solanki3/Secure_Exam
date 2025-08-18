@@ -1,392 +1,246 @@
 // static/js/exam.js
-
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Exam page loaded.');
-    logActivity('Exam page loaded'); // Use the logging function
-
-    // --- Start Camera ---
-    // Call the startCamera function from camera.js
-    // Make sure camera.js is loaded before exam.js
-    if (typeof startCamera === 'function') {
-        const cameraStarted = await startCamera();
-        if (cameraStarted) {
-            console.log('Camera successfully started for exam.');
-        } else {
-            console.error('Failed to start camera for exam.');
-            logActivity('Failed to start camera', 'error');
-            // TODO: Handle camera failure - maybe redirect to error page
-            // window.location.href = 'error.html';
-        }
-    } else {
-        console.error('Camera functions not available!');
-        logActivity('Camera functions not available', 'error');
-    }
-
-
-    // --- Start Timer ---
-    if (typeof startTimer === 'function') {
-        startTimer(7200); // Start timer for 2 hours
-        logActivity('Exam timer started');
-    } else {
-        console.error('Timer functions not available!');
-         logActivity('Timer functions not available', 'error');
-    }
-
-
-    // --- Proctoring Features ---
-    let violationCount = 0; // Counter for violations
-    const maxViolations = 2; // Max allowed violations before locking
-    const multiFaceAlert = document.getElementById('multiFaceAlert'); // Get the alert div
-    const lockedModal = document.getElementById('testLockedModal'); // Get the locked modal div
-    const reasonInput = lockedModal ? lockedModal.querySelector('#reasonInput') : null; // Get the reason input
-    const sendReasonButton = lockedModal ? lockedModal.querySelector('.modal-actions .btn-primary') : null; // Get the send reason button
-    const submitConfirmModal = document.getElementById('submitConfirmModal'); // Get the submit confirmation modal
-    const confirmSubmitBtn = submitConfirmModal ? submitConfirmModal.querySelector('#confirmSubmitBtn') : null; // Get confirm submit button
-    const cancelSubmitBtn = submitConfirmModal ? submitConfirmModal.querySelector('#cancelSubmitBtn') : null; // Get cancel submit button
-
-
-    let alertTimeout; // To hide the proctoring alert automatically
-
-
-    // Tab/Window Focus Detection
-    const handleVisibilityChange = () => {
-        if (document.hidden) {
-            console.warn('Tab is hidden (user switched tabs or minimized)');
-            logActivity('Tab switched or window minimized', 'warning');
-            handleViolation('Tab Switch');
-        } else {
-            console.log('Tab is visible');
-            logActivity('Tab is visible again');
-        }
-    };
-
-    const handleBlur = () => {
-        console.warn('Window lost focus (user switched windows or applications)');
-        logActivity('Window lost focus', 'warning');
-         // Add a slight delay to avoid double counting with visibilitychange if just switching tabs
-        setTimeout(() => {
-             if (document.visibilityState === 'visible') {
-                 console.log('Window blurred, but document is still visible - likely switched application');
-                 // Decide if this counts as a violation based on your policy
-                 // handleViolation('Window Blur - Switched Application');
-             } else {
-                 console.log('Window blurred because document became hidden (tab switch)');
-             }
-        }, 50); // Small delay
-         handleViolation('Window Blur'); // Count all blurs as potential violations initially
-    };
-
-     const handleFocus = () => {
-        console.log('Window gained focus');
-        logActivity('Window gained focus');
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', handleBlur);
-    window.addEventListener('focus', handleFocus);
-
-
-    // Disable Right-Click on the entire document
-    document.addEventListener('contextmenu', (event) => {
-        console.warn('Right-click attempted. Preventing default behavior.');
-         event.preventDefault(); // Prevent the default context menu
-         logActivity('Right-click prevented', 'warning');
-    });
-
-    // Text selection is handled by CSS (user-select: none) applied via the 'test-locked' class
-
-
-    function handleViolation(type) {
-        // Only count violations if the test is NOT already locked
-        if (!document.body.classList.contains('test-locked')) {
-             violationCount++;
-            console.log(`Violation detected: ${type}. Total violations: ${violationCount}`);
-            logActivity(`Violation detected: ${type}. Count: ${violationCount}`, 'warning');
-
-            if (violationCount <= maxViolations) {
-                const warningsLeft = maxViolations - violationCount;
-                showProctoringAlert(`Violation detected: ${type}. You have ${warningsLeft} warnings left.`);
-            } else {
-                // Lock the test
-                console.error('Max violations reached. Locking test.');
-                logActivity('Maximum violations reached. Test locked.', 'error');
-                lockTest('Maximum proctoring violations reached.');
-            }
-        } else {
-             console.log('Violation detected, but test is already locked. Ignoring.');
-        }
-    }
-
-    function showProctoringAlert(message) {
-         if (multiFaceAlert) {
-             const alertMessageSpan = multiFaceAlert.querySelector('.alert-message');
-             if (alertMessageSpan) {
-                 alertMessageSpan.textContent = message;
-             }
-             multiFaceAlert.style.display = 'flex'; // Show the alert
-
-             // Clear any existing timeout to prevent premature hiding
-             if (alertTimeout) {
-                 clearTimeout(alertTimeout);
-             }
-
-             // Hide the alert automatically after 5 seconds
-             alertTimeout = setTimeout(() => {
-                 multiFaceAlert.style.display = 'none';
-             }, 5000); // Hide after 5 seconds
-         } else {
-             alert(message); // Fallback to native alert
-         }
-    }
-
-    // Function to hide the proctoring alert manually
-    const closeAlertButton = document.querySelector('#multiFaceAlert .close-alert');
-    if (closeAlertButton) {
-         closeAlertButton.addEventListener('click', () => {
-            if (multiFaceAlert) {
-                multiFaceAlert.style.display = 'none';
-                 if (alertTimeout) {
-                     clearTimeout(alertTimeout); // Clear timeout if closed manually
-                 }
-            }
-         });
-    }
-
-
-    function lockTest(reason) {
-        console.log(`Test Locked. Reason: ${reason}`);
-        document.body.classList.add('test-locked');
-        logActivity(`Test Locked: ${reason}`, 'error');
-
-        if (typeof stopTimer === 'function') stopTimer();
-        if (typeof stopCamera === 'function') stopCamera();
-
-        if (multiFaceAlert && multiFaceAlert.style.display !== 'none') {
-             multiFaceAlert.style.display = 'none';
-             if (alertTimeout) {
-                clearTimeout(alertTimeout);
-             }
-        }
-
-        if (lockedModal) {
-            lockedModal.style.display = 'flex';
-             if(reasonInput) {
-                 reasonInput.value = '';
-                 reasonInput.disabled = false;
-             }
-             if(sendReasonButton) {
-                sendReasonButton.disabled = false;
-             }
-        } else {
-            alert(`Test Locked: ${reason}`);
-        }
-
-         // Disable interaction with the main exam content
-         const examContainer = document.querySelector('.exam-container');
-         if(examContainer) {
-            // The CSS rule body.test-locked > *:not(.modal) handles this.
-            // Explicitly disabling form elements here is a secondary measure.
-             const form = examContainer.querySelector('.question-area form');
-             if(form) {
-                 const elements = form.elements;
-                 for (let i = 0; i < elements.length; i++) {
-                     elements[i].disabled = true;
-                 }
-             }
-             const actionButtons = examContainer.querySelectorAll('.exam-actions button');
-             actionButtons.forEach(btn => btn.disabled = true);
-
-             const navButtons = examContainer.querySelectorAll('.question-navigation button');
-             navButtons.forEach(btn => btn.disabled = true);
-
-             // Hide any other modals that might be open (like submit confirm modal)
-             if (submitConfirmModal && submitConfirmModal.style.display !== 'none') {
-                  submitConfirmModal.style.display = 'none';
-             }
-         }
-
-
-    }
-
-
-    // --- Modal Event Listeners ---
-    const multipleFaceModal = document.getElementById('multipleFaceModal');
-    // testLockedModal is already declared at the top
-    // submitConfirmModal is already declared at the top
-
-
-    // Close modal when clicking on the close button (x)
-    document.querySelectorAll('.modal .close-button').forEach(button => {
-        button.addEventListener('click', () => {
-             const modal = button.closest('.modal');
-             // Prevent closing the locked modal using the close button
-             if (modal && modal.id === 'testLockedModal') {
-                 console.log('Close button on locked modal ignored.');
-             } else if (modal) {
-                 modal.style.display = 'none';
-             }
-        });
-    });
-
-    // Close modal when clicking outside of the modal content (Does NOT close locked modal)
-    window.addEventListener('click', (event) => {
-        if (event.target === multipleFaceModal) {
-            multipleFaceModal.style.display = 'none';
-        }
-        // Do NOT close testLockedModal or submitConfirmModal by clicking outside
-        // if (event.target === testLockedModal || event.target === submitConfirmModal) {
-        //     event.target.style.display = 'none';
-        // }
-    });
-
-
-    // Event listener for the "Send to Administrator" button in the locked modal
-    if (sendReasonButton) {
-         sendReasonButton.addEventListener('click', () => {
-            if (reasonInput) {
-                const reason = reasonInput.value.trim();
-                console.log('Sending reason to administrator:', reason);
-                logActivity('Reason sent to administrator', 'info');
-                // TODO: Implement Fetch API call to backend to send reason
-
-                 alert('Reason sent. Waiting for administrator review.');
-                 reasonInput.disabled = true;
-                 sendReasonButton.disabled = true;
-            }
-         });
-    }
-
-
-    // --- Exam Action Button Listeners ---
-    const requestHelpBtn = document.getElementById('requestHelpBtn'); // Get Request Help button by ID
-    const endExamBtn = document.getElementById('endExamBtn'); // Get End Exam button by ID
-
-    if (requestHelpBtn) {
-        requestHelpBtn.addEventListener('click', () => {
-            console.log('Request Help button clicked (placeholder).');
-            logActivity('Student requested help', 'info');
-            // TODO: Implement sending a help request to the backend
-            // TODO: Maybe show a confirmation message or modal
-             alert('Help request sent.'); // Placeholder
-        });
-    }
-
-    if (endExamBtn) {
-        endExamBtn.addEventListener('click', () => {
-            console.log('End Exam button clicked. Showing submit confirmation modal.');
-            logActivity('Student clicked End Exam, showing confirmation', 'info');
-            // Show the submit confirmation modal instead of navigating directly
-            if (submitConfirmModal) {
-                submitConfirmModal.style.display = 'flex';
-            } else {
-                // Fallback to old behavior if modal not found
-                 console.warn('Submit confirmation modal not found, navigating directly.');
-                 // Simulate submission process...
-                  if (typeof stopTimer === 'function') stopTimer();
-                  if (typeof stopCamera === 'function') stopCamera();
-                 window.location.href = 'submission_success.html';
-            }
-        });
-    }
-
-    // --- Submit Confirmation Modal Button Listeners ---
-    if (confirmSubmitBtn) {
-        confirmSubmitBtn.addEventListener('click', () => {
-            console.log('Submit Exam button clicked in modal. Simulating submission.');
-             logActivity('Exam submission confirmed', 'info');
-            // TODO: Implement actual submission process (save answers, stop proctoring, send data to backend)
-
-            // Simulate submission process...
-             console.log('Submitting exam data (placeholder)...');
-             logActivity('Submitting exam data', 'info');
-
-            // Stop timer and camera
-            if (typeof stopTimer === 'function') stopTimer();
-            if (typeof stopCamera === 'function') stopCamera();
-
-            // Clean up event listeners to prevent violations after ending
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            window.removeEventListener('blur', handleBlur);
-            window.removeEventListener('focus', handleFocus);
-            // Removing contextmenu listener specifically can be tricky and might need a flag
-            // document.removeEventListener('contextmenu', (event) => event.preventDefault());
-
-             // Navigate to submission success page after simulated submission
-            console.log('Navigating to submission success page.');
-             // Hide the modal before navigating
-             if (submitConfirmModal) {
-                 submitConfirmModal.style.display = 'none';
-             }
-            window.location.href = 'submission_success.html';
-        });
-    }
-
-    if (cancelSubmitBtn) {
-        cancelSubmitBtn.addEventListener('click', () => {
-            console.log('Return to Exam button clicked in modal.');
-             logActivity('Exam submission cancelled', 'info');
-            // Hide the submit confirmation modal and return to the exam
-             if (submitConfirmModal) {
-                 submitConfirmModal.style.display = 'none';
-             }
-             // Do NOT resume timer or camera here, they weren't stopped by showing the modal
-        });
-    }
-
-
-    // --- Placeholder Functions for Exam Logic ---
-
-    // Placeholder function to load questions
-    function loadQuestions() {
-        console.log('Loading exam questions (placeholder)...');
-        // TODO: Implement Fetch API call to backend to get question data
-        // TODO: Update the #questionArea HTML with the first question
-    }
-
-    // Placeholder function to handle saving an answer (e.g., when option is selected or text entered)
-    function saveAnswer(questionId, answerData) {
-        console.log(`Saving answer for question ${questionId}: ${JSON.stringify(answerData)} (placeholder)...`);
-        // TODO: Implement Fetch API call to backend to save the answer
-    }
-
-    // Placeholder function to navigate to the next question
-    function nextQuestion() {
-        console.log('Navigating to next question (placeholder)...');
-        // TODO: Implement logic to load the next question from the fetched data
-        // TODO: Update the #questionArea HTML
-    }
-
-    // Placeholder function to navigate to the previous question
-    function prevQuestion() {
-        console.log('Navigating to previous question (placeholder)...');
-        // TODO: Implement logic to load the previous question from the fetched data
-        // TODO: Update the #questionArea HTML
-    }
-
-     // Attach listeners for question navigation buttons
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Elements ---
+    const endExamBtn = document.getElementById('endExamBtn');
+    const submitConfirmModal = document.getElementById('submitConfirmModal');
+    const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+    const cancelSubmitBtn = document.getElementById('cancelSubmitBtn');
+    const webcamVideo = document.getElementById('webcamVideo');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    const proctoringToggle = document.getElementById('proctoringToggle');
+    const selfieModal = document.getElementById('selfieVerificationModal');
+    const selfieVideo = document.getElementById('selfieVideo');
+    const captureSelfieBtn = document.getElementById('captureSelfieBtn');
+    const contentBlocker = document.getElementById('contentBlocker');
+    const examTitleEl = document.getElementById('examTitle');
+    const examCodeEl = document.getElementById('examCode');
+    const questionProgressEl = document.getElementById('questionProgress');
+    const questionTextEl = document.getElementById('questionText');
+    const answerAreaEl = document.getElementById('answerArea');
     const prevQuestionBtn = document.getElementById('prevQuestionBtn');
     const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+    const progressIndicator = document.getElementById('progressIndicator');
+    const progressBar = document.getElementById('progressBar');
 
-    if (prevQuestionBtn) {
-        prevQuestionBtn.addEventListener('click', prevQuestion);
+    // --- State Variables ---
+    let currentSessionId = null;
+    let currentStudentId = localStorage.getItem('currentStudentId') || 'unknown_student';
+    const testId = new URLSearchParams(window.location.search).get('test_id');
+    let questions = [];
+    let studentAnswers = {};
+    let currentQuestionIndex = 0;
+
+    // --- Core Exam Logic ---
+    function renderQuestion(index) {
+        const question = questions[index];
+        questionProgressEl.textContent = `Question ${index + 1} of ${questions.length}`;
+        questionTextEl.textContent = question.text;
+        answerAreaEl.innerHTML = '';
+        if (question.type === 'mcq') {
+            const optionsHtml = question.options.map((option) => `<label><input type="radio" name="question_${index}" value="${option}" ${studentAnswers[index] === option ? 'checked' : ''}> ${option}</label>`).join('');
+            answerAreaEl.innerHTML = optionsHtml;
+        } else if (question.type === 'subjective') {
+            const answer = studentAnswers[index] || '';
+            answerAreaEl.innerHTML = `<textarea class="subjective-answer" placeholder="Type your answer here...">${answer}</textarea>`;
+        }
+        prevQuestionBtn.disabled = index === 0;
+        nextQuestionBtn.textContent = (index === questions.length - 1) ? 'Finish' : 'Next';
     }
 
-    if (nextQuestionBtn) {
-        nextQuestionBtn.addEventListener('click', nextQuestion);
+    function saveCurrentAnswer() {
+        if (!questions[currentQuestionIndex]) return;
+        const question = questions[currentQuestionIndex];
+        if (question.type === 'mcq') {
+            const selectedOption = answerAreaEl.querySelector(`input[name="question_${currentQuestionIndex}"]:checked`);
+            if (selectedOption) studentAnswers[currentQuestionIndex] = selectedOption.value;
+        } else if (question.type === 'subjective') {
+            const textArea = answerAreaEl.querySelector('textarea');
+            if (textArea) studentAnswers[currentQuestionIndex] = textArea.value;
+        }
     }
 
-    // Initial load of questions when the page loads
-    // loadQuestions(); // Uncomment when ready to implement question loading
+    prevQuestionBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            renderQuestion(currentQuestionIndex);
+        }
+    });
 
+    nextQuestionBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            renderQuestion(currentQuestionIndex);
+        } else {
+            endExamBtn.click();
+        }
+    });
 
-    // --- Example: Simulate violations to test locking (for development) ---
-    // Uncomment these lines to test the locking feature
-    // setTimeout(() => { handleViolation('Simulated Violation 1'); }, 3000);
-    // setTimeout(() => { handleViolation('Simulated Violation 2'); }, 6000);
-    // setTimeout(() => { handleViolation('Simulated Violation 3'); }, 9000); // This should trigger lock
+    // --- Submission Logic ---
+    endExamBtn.addEventListener('click', () => {
+        saveCurrentAnswer();
+        submitConfirmModal.style.display = 'flex';
+    });
+    cancelSubmitBtn.addEventListener('click', () => {
+        submitConfirmModal.style.display = 'none';
+    });
+    confirmSubmitBtn.addEventListener('click', async () => {
+        logActivity('Student confirmed exam submission.');
+        const formattedAnswers = questions.map((q, index) => ({
+            question_text: q.text,
+            answer: studentAnswers[index] || null
+        }));
+        try {
+            const response = await fetch('/api/exam/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_id: currentSessionId, answers: formattedAnswers })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            stopTimer();
+            stopProctoringCamera();
+            window.location.href = `submission_success.html?session_id=${currentSessionId}`;
+        } catch (error) {
+            alert(`Submission failed: ${error.message}`);
+            submitConfirmModal.style.display = 'none';
+        }
+    });
 
+    // --- Selfie & Setup Workflow ---
+    function updateProgress(step, total) {
+        const percentage = (step / total) * 100;
+        if (progressIndicator) progressIndicator.textContent = `Step ${step} of ${total}`;
+        if (progressBar) progressBar.style.width = `${percentage}%`;
+    }
+
+    async function handleSelfieVerification() {
+        if (!testId) {
+            alert("No test selected."); window.location.href = 'student_dashboard.html'; return;
+        }
+        selfieModal.style.display = 'flex';
+        updateProgress(1, 2);
+        await startCamera(selfieVideo);
+    }
+
+    captureSelfieBtn.addEventListener('click', async () => {
+        captureSelfieBtn.disabled = true;
+        captureSelfieBtn.textContent = 'Processing...';
+        updateProgress(2, 2);
+        const canvas = document.createElement('canvas');
+        canvas.width = selfieVideo.videoWidth;
+        canvas.height = selfieVideo.videoHeight;
+        canvas.getContext('2d').drawImage(selfieVideo, 0, 0, canvas.width, canvas.height);
+        const selfieData = canvas.toDataURL('image/jpeg');
+        stopCamera();
+        try {
+            const sessionResponse = await fetch('/api/exam/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ student_id: currentStudentId, test_id: testId })
+            });
+            const sessionData = await sessionResponse.json();
+            if (!sessionResponse.ok) throw new Error(sessionData.message);
+            currentSessionId = sessionData.session_id;
+            window.currentSessionId = currentSessionId; // Make it globally available for logger.js
+            const selfieResponse = await fetch('/upload-selfie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ selfie: selfieData, session_id: currentSessionId })
+            });
+            if (!selfieResponse.ok) throw new Error('Failed to upload selfie.');
+            setTimeout(() => { selfieModal.style.display = 'none'; startExam(); }, 500);
+        } catch (error) { 
+            alert(`Error: ${error.message}`); 
+            captureSelfieBtn.disabled = false;
+            captureSelfieBtn.textContent = 'Capture Selfie';
+            updateProgress(1, 2);
+        }
+    });
+
+    // --- Proctoring Logic ---
+    proctoringToggle.addEventListener('change', () => {
+        const proctoringEnabled = proctoringToggle.checked;
+        if (proctoringEnabled) {
+            logActivity('Proctoring manually enabled.', 'info');
+            startProctoringCamera();
+        } else {
+            logActivity('Proctoring manually disabled.', 'warning');
+            stopProctoringCamera();
+        }
+    });
+    async function startProctoringCamera() {
+       const started = await startCamera(webcamVideo);
+       if (started) initFaceDetector(webcamVideo, overlayCanvas, handleViolation, currentSessionId);
+    }
+    function stopProctoringCamera() {
+        stopCamera();
+        stopFaceDetector();
+    }
+    function handleViolation(message) {
+        logActivity(`Violation: ${message}`, 'warning');
+    }
+
+    async function startExam() {
+        contentBlocker.style.display = 'none';
+        logActivity('Identity verified. Exam started.');
+        
+        // Initialize security features
+        initializeSecurity();
+        
+        try {
+            const response = await fetch(`/api/exam/details/${testId}`);
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message);
+            examTitleEl.textContent = data.details.name;
+            examCodeEl.textContent = data.details.code;
+            questions = data.details.questions;
+            questions.forEach((q, i) => studentAnswers[i] = null);
+            startTimer(data.details.duration_seconds);
+            renderQuestion(currentQuestionIndex);
+            await startProctoringCamera();
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+            window.location.href = 'student_dashboard.html';
+        }
+    }
+
+    // --- Enhanced Security: Lockdown and Proctoring Violation Logic ---
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            // Use the new two-strike system for tab switching
+            if (window.handleTabSwitch) {
+                window.handleTabSwitch();
+            } else {
+                logActivity('Tab switched or window minimized', 'warning');
+            }
+        }
+    });
+
+    document.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+        logActivity('Right-click disabled', 'warning');
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I') || (event.metaKey && event.altKey && event.key === 'i')) {
+            event.preventDefault();
+            logActivity('Developer tools access attempt blocked', 'warning');
+        }
+    });
+
+    // --- Security Initialization ---
+    function initializeSecurity() {
+        // Reset security counters for new exam
+        if (window.resetSecurityCounters) {
+            window.resetSecurityCounters();
+        }
+        if (window.resetFaceDetector) {
+            window.resetFaceDetector();
+        }
+    }
+
+    // --- Initial Load ---
+    handleSelfieVerification();
 });
-
-// Make stopCamera/stopTimer available globally or export if using modules (defined in their respective files)
-// window.stopCamera = stopCamera;
-// window.stopTimer = stopTimer;

@@ -4,11 +4,2029 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureExamLite - Secure Online Proctoring</title>
-    <link rel="stylesheet" href="../static/css/style.css">
     <!-- Using Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Placeholder for Kepler Font if you add it later -->
-    <!-- <link href="..." rel="stylesheet"> -->
+    <!-- Google Fonts - Poppins for headings, Inter for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Global Styles --- */
+
+        :root {
+            /* Cloud White / Very Light Neutral Palette */
+            --cloud-white: #FFFFFF;
+            --light-gray-50: #FDFDFD; /* Slightly off-white for subtle variation */
+            --light-gray-100: #F8F8F8;
+            --light-gray-200: #F0F0F0;
+            --light-gray-300: #E0E0E0;
+            --light-gray-400: #D0D0D0; /* For borders/subtle elements */
+
+            /* Primary Accent Blue (kept for interactive elements and highlights) */
+            --primary-accent-blue-50: #E3F2FD;
+            --primary-accent-blue-100: #BBDEFB;
+            --primary-accent-blue-200: #90CAF9;
+            --primary-accent-blue-300: #64B5F6;
+            --primary-accent-blue-400: #42A5F5;
+            --primary-accent-blue-500: #2196F3; /* Main primary blue */
+            --primary-accent-blue-600: #1E88E5;
+            --primary-accent-blue-700: #1976D2;
+            --primary-accent-blue-800: #1565C0;
+            --primary-accent-blue-900: #0D47A1; /* Darkest blue */
+
+            /* Mapping to original variable names */
+            --primary-blue-dark: var(--primary-accent-blue-900);
+            --primary-blue: var(--primary-accent-blue-500);
+            --primary-blue-medium: var(--primary-accent-blue-700);
+            --primary-blue-light: var(--primary-accent-blue-200);
+            --primary-blue-lightest: var(--primary-accent-blue-50);
+            
+            /* Text colors (kept dark for contrast) */
+            --text-heading: #1a202c; /* Very dark gray for strong headings */
+            --text-body: #4a5568;    /* Dark gray for body text */
+            --text-subtle: #718096;  /* Medium gray for secondary text */
+            --text-white: #ffffff;
+            
+            /* Backgrounds */
+            --bg-main: var(--cloud-white);
+            --bg-section-light: var(--cloud-white);
+            --bg-section-dark: var(--text-heading); /* Using a very dark gray for dark sections like footer */
+            
+            /* Borders */
+            --border-default: var(--light-gray-200);
+            --border-light: var(--light-gray-100);
+
+            /* Status colors (kept as is) */
+            --success-green: #059669;
+            --warning-amber: #d97706;
+            --error-red: #dc2626;
+            --info-blue: #0284c7;
+            
+            /* Shadows (kept as is) */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Body text in Inter */
+            margin: 0;
+            line-height: 1.6;
+            color: var(--text-body);
+            background-color: var(--bg-main);
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+        }
+
+        /* Headings using Poppins font */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif; /* Changed to Poppins */
+            color: var(--text-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        h1 { font-size: 3.5rem; font-weight: 800; }
+        h2 { font-size: 2.8rem; font-weight: 800; }
+        h3 { font-size: 2rem; font-weight: 700; }
+        h4 { font-size: 1.5rem; font-weight: 600; }
+
+        p {
+            font-size: 1rem;
+            color: var(--text-body);
+            margin-bottom: 1rem;
+        }
+
+        /* Text Gradients for prominent headings */
+        .text-gradient-blue {
+            background: linear-gradient(90deg, var(--primary-accent-blue-800), var(--primary-accent-blue-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-gradient-darkblue {
+            background: linear-gradient(90deg, var(--primary-accent-blue-900), var(--primary-accent-blue-700));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-gradient-cta {
+            background: linear-gradient(90deg, var(--primary-accent-blue-500), var(--primary-accent-blue-300));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* --- Navigation Bar --- */
+        .main-nav {
+            background: var(--bg-section-light);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Poppins', sans-serif; /* Changed to Poppins */
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-blue-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .nav-logo i {
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+        }
+
+        .nav-logo:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-subtle);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-blue);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Hamburger menu styles */
+        .nav-toggle {
+            display: none; /* Hidden by default on desktop */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 101; /* Above mobile menu */
+        }
+
+        .hamburger {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-blue-dark);
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger::before,
+        .hamburger::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-blue-dark);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger::before {
+            top: -8px;
+        }
+
+        .hamburger::after {
+            top: 8px;
+        }
+
+        /* Animation for hamburger to close icon */
+        .nav-toggle.active .hamburger {
+            transform: rotate(45deg);
+        }
+
+        .nav-toggle.active .hamburger::before {
+            top: 0;
+            opacity: 0;
+        }
+
+        .nav-toggle.active .hamburger::after {
+            top: 0;
+            transform: rotate(-90deg);
+        }
+
+        .mobile-nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 50px; /* Pill shape */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        .btn:hover::before {
+            left: 0;
+        }
+
+        .btn-large {
+            padding: 16px 36px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-accent-blue-600), var(--primary-accent-blue-500));
+            color: var(--text-white);
+            border: 2px solid var(--primary-accent-blue-500);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, var(--primary-accent-blue-700), var(--primary-accent-blue-600));
+            border-color: var(--primary-accent-blue-600);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray-100); /* Changed to light gray */
+            color: var(--text-heading);
+            border: 2px solid var(--light-gray-200); /* Changed to light gray */
+        }
+        .btn-secondary:hover {
+            background: var(--light-gray-200); /* Changed to light gray */
+            color: var(--text-heading);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 4rem 2rem;
+            gap: 4rem;
+            background: linear-gradient(135deg, var(--light-gray-50), var(--light-gray-100)); /* Changed to light gray */
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            flex-basis: 55%;
+            text-align: left;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInScale 1s ease-out forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            color: var(--text-body);
+            margin-bottom: 2.5rem;
+            max-width: 90%;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.4s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-image {
+            flex-basis: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            /* Optional: Adjust padding or margin if the Lottie animation needs more space */
+            padding: 20px; /* Example: add some padding around the Lottie animation */
+        }
+
+        /* Removed previous animated-data-flow-illustration styles */
+
+        /* --- Main Content Area & Section Styling --- */
+        .landing-main {
+            background-color: var(--bg-main);
+        }
+
+        .section-padding {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--text-subtle);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- Features Grid --- */
+        .features-section {
+            background: linear-gradient(180deg, var(--bg-main), var(--light-gray-50)); /* Changed to light gray */
+            border-bottom: 1px solid var(--border-light);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-section-light);
+            padding: 2.5rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-accent-blue-100), var(--primary-accent-blue-200)); /* Kept blue */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        .feature-card:hover::before {
+            opacity: 0.1;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            color: var(--primary-blue); /* Kept blue */
+            margin-bottom: 1.8rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: var(--text-body);
+            margin-bottom: 1rem;
+        }
+
+        /* --- Alternating Layout Sections --- */
+        .alternating-section {
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center;
+            gap: 5rem;
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .alternating-section:nth-of-type(odd) {
+            background: linear-gradient(180deg, var(--light-gray-50), var(--light-gray-100)); /* Changed to light gray */
+        }
+        .alternating-section:nth-of-type(even) {
+            background: var(--bg-section-light);
+        }
+
+        .alternating-section.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .alternating-section .section-image,
+        .alternating-section .section-content {
+            flex-basis: 50%;
+            max-width: 50%; /* Ensure content doesn't stretch too wide */
+        }
+
+        .alternating-section .section-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .alternating-section .section-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Dashboard Illustration */
+        .animated-dashboard-illustration {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-section-light); /* Already white, kept */
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 20px; /* Added padding for better visual separation */
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard-screen {
+            width: 90%;
+            height: 90%;
+            background: var(--bg-section-light);
+            border-radius: 8px;
+            border: 2px solid var(--primary-accent-blue-300); /* Kept blue */
+            padding: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .dashboard-header {
+            width: 100%;
+            height: 15px;
+            background: var(--primary-accent-blue-200); /* Kept blue */
+            border-radius: 3px;
+            margin-bottom: 10px;
+            animation: pulseHeader 2s ease-in-out infinite;
+        }
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+        .chart-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+            padding: 5px;
+            background: var(--light-gray-50); /* Changed to light gray */
+            border-radius: 5px;
+        }
+        .animated-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            width: 100%;
+            height: 100%;
+        }
+        .chart-bar {
+            background: var(--primary-accent-blue-500); /* Kept blue */
+            border-radius: 2px;
+            flex: 1;
+            min-height: 20%;
+            animation: chartGrow 3s ease-in-out infinite;
+        }
+        .bar-1 { animation-delay: 0s; }
+        .bar-2 { animation-delay: 0.5s; }
+        .bar-3 { animation-delay: 1s; }
+        .bar-4 { animation-delay: 1.5s; }
+        .status-indicators {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+        .status-dot.active { background: var(--success-green); }
+        .status-dot.warning { background: var(--warning-amber); animation-delay: 1s; }
+
+        /* Privacy/Vault Illustration */
+        .animated-privacy-illustration {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--light-gray-100), var(--light-gray-200)); /* Changed to light gray */
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 20px; /* Added padding for better visual separation */
+            position: relative;
+            overflow: hidden;
+        }
+        .data-vault {
+            position: relative;
+            width: 60%;
+            height: 60%;
+            animation: float 5s ease-in-out infinite;
+        }
+        .vault-door {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, var(--text-heading), var(--bg-section-dark)); /* Kept dark neutral for contrast */
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .vault-lock {
+            font-size: 3.5rem;
+            color: var(--light-gray-200); /* Lighter lock on dark vault */
+            animation: lockShine 3s ease-in-out infinite;
+        }
+        .encryption-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--light-gray-400); /* Changed to light gray */
+            border-radius: 50%;
+            animation: particleFloat 4s ease-in-out infinite;
+            filter: blur(1px);
+        }
+        .particle-1 { top: 20%; left: 10%; animation-delay: 0s; }
+        .particle-2 { top: 30%; right: 15%; animation-delay: 0.8s; }
+        .particle-3 { bottom: 20%; left: 20%; animation-delay: 1.6s; }
+        .particle-4 { bottom: 30%; right: 10%; animation-delay: 2.4s; }
+        .particle-5 { top: 50%; left: 5%; animation-delay: 3.2s; }
+
+
+        .alternating-section .section-content h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .alternating-section .section-content ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1.5rem;
+        }
+
+        .alternating-section .section-content ul li {
+            margin-bottom: 0.8rem;
+            color: var(--text-body);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 1.05rem;
+        }
+
+        .alternating-section .section-content ul li .fas {
+            color: var(--primary-blue); /* Kept blue */
+            font-size: 1.3rem;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        /* --- How It Works Section --- */
+        .how-it-works-section {
+            background: linear-gradient(180deg, var(--light-gray-100), var(--light-gray-200)); /* Changed to light gray */
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center; /* Center vertically */
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 2;
+            width: 100%; /* Ensure items take full width to center content */
+            justify-content: center; /* Center the step-circle and content wrapper */
+        }
+        .step-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .step-item:nth-child(even) .step-content {
+            text-align: right;
+            margin-right: 3rem;
+            margin-left: 0;
+        }
+        .step-item:nth-child(odd) .step-content {
+            text-align: left;
+            margin-left: 3rem;
+            margin-right: 0;
+        }
+        .step-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-accent-blue-500), var(--primary-accent-blue-700)); /* Kept blue */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            border: 4px solid var(--bg-section-light);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            z-index: 3; /* Above timeline path */
+        }
+        .step-circle:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--text-heading); /* Changed to dark neutral */
+            color: var(--text-white);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--bg-section-light);
+        }
+        .step-icon {
+            font-size: 2.5rem;
+            color: var(--text-white);
+        }
+        .step-content {
+            flex: 1;
+            max-width: 45%; /* Constrain width for readability */
+        }
+        .step-content p {
+            font-size: 1rem;
+            color: var(--text-body);
+            margin-bottom: 1.2rem;
+        }
+        .step-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: flex-start; /* Align tags left */
+        }
+        .step-item:nth-child(even) .step-features {
+            justify-content: flex-end; /* Align tags right for even items */
+        }
+        .feature-tag {
+            background: var(--light-gray-100); /* Changed to light gray */
+            color: var(--text-heading); /* Changed to dark neutral */
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--light-gray-200); /* Changed to light gray */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .feature-tag:hover {
+            background: var(--light-gray-200); /* Changed to light gray */
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .how-it-works-cta {
+            margin-top: 5rem;
+            text-align: center;
+            /* Changed background to primary accent blue gradient */
+            background: linear-gradient(135deg, var(--primary-accent-blue-700), var(--primary-accent-blue-900));
+            color: var(--text-white);
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+        }
+        .how-it-works-cta h3 {
+            color: var(--text-white);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .how-it-works-cta p {
+            color: var(--primary-accent-blue-300); /* Kept blue */
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cta-buttons .btn {
+            min-width: 220px;
+        }
+
+        /* --- Features Carousel Section --- */
+        .features-carousel-section {
+            background: var(--cloud-white); /* Kept blue */
+            border-bottom: 1px solid var(--border-default);
+        }
+        .carousel-container {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .carousel-wrapper {
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+        }
+        .carousel-track {
+            display: flex;
+            position: relative;
+            width: 100%;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            transform: translateX(100%); /* Start off-screen right */
+        }
+        .carousel-slide.active {
+            opacity: 1;
+            visibility: visible;
+            position: relative;
+            transform: translateX(0);
+        }
+        .carousel-slide.prev { /* For previous slide animation */
+            transform: translateX(-100%);
+        }
+
+        .carousel-card {
+            background: var(--bg-section-light);
+            padding: 3.5rem 3rem;
+            text-align: center;
+            border: 1px solid var(--border-default);
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .carousel-icon {
+            font-size: 4rem;
+            color: var(--primary-accent-blue-500); /* Kept blue */
+            margin-bottom: 2rem;
+        }
+        .carousel-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .carousel-card p {
+            font-size: 1.1rem;
+            color: var(--text-body);
+            margin-bottom: 2.5rem;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-body);
+            text-align: left;
+        }
+        .feature-list li i {
+            color: var(--success-green);
+            font-size: 1rem;
+        }
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        .carousel-btn {
+            background: var(--primary-accent-blue-500); /* Kept blue */
+            color: var(--text-white);
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-btn:hover {
+            background: var(--primary-accent-blue-700); /* Kept blue */
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .carousel-btn:disabled {
+            background: var(--light-gray-200); /* Changed to light gray */
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .carousel-indicators {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--light-gray-300); /* Changed to light gray */
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .indicator.active {
+            background: var(--text-heading); /* Changed to dark neutral */
+            transform: scale(1.3);
+        }
+
+        /* --- Users Section --- */
+        .users-section {
+            background: var(--cloud-white); /* Changed to light gray */
+            padding-bottom: 8rem; /* More space at bottom */
+        }
+        .users-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            margin-top: 3rem;
+        }
+        .user-card {
+            background: var(--bg-section-light);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-default);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .user-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+        .student-card { border-top: 6px solid var(--primary-accent-blue-500); } /* Kept blue */
+        .admin-card { border-top: 6px solid var(--success-green); }
+
+        .user-header { margin-bottom: 2rem; }
+        .user-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            font-size: 2.5rem;
+            color: var(--text-white);
+        }
+        .student-icon { background: linear-gradient(135deg, var(--primary-accent-blue-500), var(--primary-accent-blue-700)); } /* Kept blue */
+        .admin-icon { background: linear-gradient(135deg, var(--success-green), #047857); }
+
+        .user-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .user-subtitle {
+            color: var(--text-subtle);
+            font-size: 1.1rem;
+        }
+        .user-features {
+            margin-bottom: 2.5rem;
+            width: 100%;
+        }
+        .user-features .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+            text-align: left;
+        }
+        .user-features .feature-item:last-child { border-bottom: none; }
+        .user-features .feature-item i {
+            color: var(--primary-blue); /* Kept blue */
+            font-size: 1.4rem;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        .admin-card .feature-item i { color: var(--success-green); }
+        .feature-text h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.2rem 0;
+        }
+        .feature-text p {
+            font-size: 0.95rem;
+            color: var(--text-subtle);
+            margin: 0;
+        }
+        .user-cta .btn {
+            padding: 14px 36px;
+            font-size: 1.05rem;
+            min-width: 200px;
+        }
+
+        /* --- Pricing Section --- */
+        .pricing-section {
+            background: linear-gradient(180deg, var(--light-gray-400), var(--light-gray-500)); /* Changed to light gray */
+            padding-top: 8rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+            align-items: stretch;
+            justify-content: center;
+        }
+        .pricing-card {
+            background: var(--bg-section-light);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            border: 2px solid var(--border-default);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px; /* Ensure consistent height */
+            justify-content: space-between;
+            z-index: 1;
+        }
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-accent-blue-200), var(--primary-accent-blue-500)); /* Kept blue */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .pricing-card:hover::before { opacity: 1; }
+        .pricing-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--light-gray-300); /* Changed to light gray */
+        }
+        .pricing-card.popular {
+            border-color: var(--primary-accent-blue-500); /* Kept blue */
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px);
+        }
+        .pricing-card.popular::before {
+            opacity: 1;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary-accent-blue-500), var(--primary-accent-blue-700)); /* Kept blue */
+        }
+        .pricing-card.popular:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-xl);
+        }
+        .popular-badge {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-accent-blue-500), var(--primary-accent-blue-700)); /* Kept blue */
+            color: var(--text-white);
+            padding: 6px 18px;
+            border-radius: 0 0 10px 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+        .plan-header { text-align: center; margin-bottom: 2rem; }
+        .plan-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--light-gray-100), var(--light-gray-200)); /* Changed to light gray */
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--light-gray-200); /* Changed to light gray */
+            transition: all 0.3s ease;
+        }
+        .pricing-card:hover .plan-icon {
+            transform: scale(1.15);
+            background: linear-gradient(135deg, var(--primary-accent-blue-500), var(--primary-accent-blue-700)); /* Kept blue */
+            border-color: var(--primary-accent-blue-500); /* Kept blue */
+        }
+        .plan-icon i {
+            font-size: 2rem;
+            color: var(--text-subtle); /* Changed to text-subtle */
+            transition: color 0.3s ease;
+        }
+        .pricing-card:hover .plan-icon i { color: var(--text-white); }
+        .plan-header h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 0.6rem 0;
+        }
+        .plan-subtitle {
+            color: var(--text-subtle);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .plan-pricing {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem 0;
+            background: var(--light-gray-50); /* Changed to light gray */
+            border-radius: 12px;
+            border: 2px solid var(--light-gray-100); /* Changed to light gray */
+        }
+        .price {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-heading); /* Changed to text-heading */
+        }
+        .period {
+            font-size: 1.2rem;
+            color: var(--text-subtle);
+            font-weight: 600;
+        }
+        .plan-features {
+            margin-bottom: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .plan-features .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            background: var(--light-gray-50); /* Changed to light gray */
+            border: 1px solid var(--light-gray-100); /* Changed to light gray */
+        }
+        .plan-features .feature-item:hover {
+            background: var(--light-gray-100); /* Changed to light gray */
+            border-color: var(--light-gray-200); /* Changed to light gray */
+            transform: translateX(6px);
+        }
+        .plan-features .feature-item i {
+            color: var(--success-green);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            background: rgba(5, 150, 105, 0.1);
+            padding: 6px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .plan-features .feature-item span {
+            color: var(--text-body);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .plan-cta {
+            text-align: center;
+            margin-top: auto;
+            padding-top: 1.5rem;
+        }
+        .plan-cta .btn {
+            width: 100%;
+            max-width: 200px;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+        }
+        .professional-plan .plan-icon { background: linear-gradient(135deg, var(--primary-accent-blue-500), var(--primary-accent-blue-700)); border-color: var(--primary-accent-blue-500); } /* Kept blue */
+        .professional-plan .plan-icon i { color: var(--text-white); }
+        .professional-plan .price {
+            background: linear-gradient(135deg, var(--primary-accent-blue-900), var(--primary-accent-blue-500)); /* Kept blue */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .enterprise-plan .plan-icon { background: linear-gradient(135deg, var(--text-heading), var(--bg-section-dark)); border-color: var(--text-heading); } /* Changed to dark neutral */
+        .enterprise-plan .plan-icon i { color: var(--text-white); }
+        .enterprise-plan .price { color: var(--text-heading); } /* No gradient for enterprise price, changed to dark neutral */
+        .enterprise-plan .btn {
+            background: var(--text-heading) !important; /* Changed to dark neutral */
+            border-color: var(--text-heading) !important; /* Changed to dark neutral */
+            color: var(--text-white) !important;
+        }
+        .enterprise-plan .btn:hover {
+            background: var(--bg-section-dark) !important; /* Changed to dark neutral */
+            border-color: var(--bg-section-dark) !important; /* Changed to dark neutral */
+            color: var(--text-white) !important;
+        }
+
+        /* --- FAQ Section (Accordion) --- */
+        .faq-section {
+            background: var(--bg-section-light);
+        }
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .faq-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .faq-item {
+            background: var(--bg-section-light);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-default);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+            border-color: var(--light-gray-200); /* Changed to light gray */
+        }
+        .faq-question {
+            width: 100%;
+            padding: 1.8rem 2rem;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif; /* Changed to Poppins */
+            line-height: 1.4;
+        }
+        .faq-question:hover {
+            background: var(--light-gray-50); /* Changed to light gray */
+            color: var(--primary-blue); /* Kept blue */
+        }
+        .faq-question.active {
+            background: var(--light-gray-100); /* Changed to light gray */
+            color: var(--text-heading); /* Changed to dark neutral */
+            padding-bottom: 1.2rem;
+        }
+        .faq-question i {
+            font-size: 1.2rem;
+            color: var(--primary-blue); /* Kept blue */
+            transition: transform 0.3s ease;
+            margin-left: 1rem;
+            flex-shrink: 0;
+        }
+        .faq-question.active i {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background: var(--light-gray-50); /* Changed to light gray */
+        }
+        .faq-answer.active {
+            max-height: 400px; /* Adjust max-height as needed */
+            padding: 0 2rem 1.8rem 2rem;
+        }
+        .faq-answer p {
+            margin: 0;
+            color: var(--text-body);
+            line-height: 1.7;
+            font-size: 1rem;
+            padding-top: 0.5rem;
+        }
+
+        /* --- Call to Action Section --- */
+        .cta-section {
+            background: linear-gradient(135deg, var(--text-heading), var(--bg-section-dark)); /* Changed to dark neutral */
+            color: var(--text-white);
+            text-align: center;
+            padding: 5rem 2rem;
+            border-radius: 20px;
+            margin: 4rem auto;
+            max-width: 1200px;
+            box-shadow: var(--shadow-lg);
+        }
+        .cta-section h2 {
+            color: var(--text-white);
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+        .cta-section p {
+            color: var(--light-gray-200); /* Changed to light gray */
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+        .cta-section .btn {
+            background: var(--text-white);
+            color: var(--primary-blue); /* Kept blue */
+            font-weight: 700;
+            padding: 18px 40px;
+            font-size: 1.15rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-md);
+        }
+        .cta-section .btn:hover {
+            background: var(--light-gray-100); /* Changed to light gray */
+            color: var(--primary-blue-dark); /* Kept blue */
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* --- Footer --- */
+        .main-footer {
+            background-color: var(--text-heading); /* Changed to dark neutral */
+            color: var(--text-white);
+            padding: 4rem 2rem 2rem 2rem;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2.5rem;
+        }
+        .footer-column h3 {
+            margin-bottom: 1.2rem;
+            color: var(--text-white);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .footer-column p {
+            color: var(--light-gray-200); /* Changed to light gray */
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer-column ul li {
+            margin-bottom: 0.6rem;
+        }
+        .footer-column a {
+            color: var(--light-gray-200); /* Changed to light gray */
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+        .footer-column a:hover {
+            color: var(--text-white);
+        }
+        .social-icons a {
+            color: var(--light-gray-300); /* Changed to light gray */
+            margin-right: 1.2rem;
+            font-size: 1.8rem;
+            transition: color 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: var(--text-white);
+        }
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--bg-section-dark); /* Changed to dark neutral */
+            font-size: 0.9rem;
+            color: var(--light-gray-300); /* Changed to light gray */
+        }
+
+        /* ===================================== */
+        /* --- ANIMATIONS & SCROLL EFFECTS --- */
+        /* ===================================== */
+
+        /* Base state for scroll-animated elements */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .scroll-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Specific staggered animations (applied by JS) */
+        .stagger-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .stagger-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .stagger-in-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .stagger-scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .is-visible .stagger-in-up,
+        .is-visible .stagger-in-left,
+        .is-visible .stagger-in-right,
+        .is-visible .stagger-scale-in {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes iconFloat { /* More dynamic float for icons */
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-10px) translateX(5px); }
+            50% { transform: translateY(0px) translateX(-5px); }
+            75% { transform: translateY(-8px) translateX(8px); }
+        }
+        @keyframes rotate3D { /* Subtle 3D rotation for shield container */
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(10deg); }
+            100% { transform: rotateY(0deg); }
+        }
+        @keyframes pulseHeader {
+            0%, 100% { transform: scaleX(1); opacity: 1; }
+            50% { transform: scaleX(0.98); opacity: 0.8; }
+        }
+        @keyframes chartGrow {
+            0%, 100% { height: 30%; }
+            50% { height: 80%; }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        @keyframes lockShine {
+            0%, 100% { color: var(--primary-accent-blue-500); } /* Kept blue */
+            50% { color: var(--primary-accent-blue-200); text-shadow: 0 0 15px var(--primary-accent-blue-200); } /* Kept blue */
+        }
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px); 
+                opacity: 0.7; 
+            }
+            25% { 
+                transform: translateY(-15px) translateX(5px); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translateY(-10px) translateX(-8px); 
+                opacity: 0.8; 
+            }
+            75% { 
+                transform: translateY(-20px) translateX(3px); 
+                opacity: 0.9; 
+            }
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.2rem; }
+            h3 { font-size: 1.7rem; }
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 3rem 1.5rem;
+            }
+            .hero-content { flex-basis: 100%; }
+            .hero-actions { justify-content: center; }
+            .hero-image { flex-basis: 80%; max-width: 350px; margin-top: 3rem; }
+
+            /* Mobile Navigation */
+            .nav-links, .nav-actions {
+                display: none; /* Hide by default on mobile */
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                background: var(--bg-section-light);
+                position: absolute;
+                top: 100%;
+                left: 0;
+                padding: 1rem 0;
+                box-shadow: var(--shadow-md);
+                border-top: 1px solid var(--border-light);
+            }
+
+            .mobile-nav-menu.active .nav-links,
+            .mobile-nav-menu.active .nav-actions {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+            .nav-links a {
+                padding: 0.8rem 0;
+                display: block;
+            }
+            .nav-actions {
+                padding: 1rem 0;
+                gap: 0.8rem;
+            }
+            .nav-actions .btn {
+                width: 80%;
+                max-width: 250px;
+            }
+            .nav-toggle {
+                display: block; /* Show hamburger on mobile */
+            }
+
+
+            .section-padding { padding: 4rem 1.5rem; }
+            .section-title { margin-bottom: 3rem; }
+            .section-title h2 { font-size: 2.2rem; }
+            .section-title p { font-size: 1rem; }
+
+            .alternating-section {
+                flex-direction: column;
+                gap: 3rem;
+                padding: 4rem 1.5rem;
+            }
+            .alternating-section.reverse { flex-direction: column; } /* Reset for mobile */
+            .alternating-section .section-content,
+            .alternating-section .section-image {
+                flex-basis: 100%; /* Take full width on smaller screens */
+                max-width: 100%;
+            }
+            /* Center content within section-content on mobile */
+            .alternating-section .section-content {
+                text-align: center; /* Center text for stacked layout */
+            }
+            .alternating-section .section-content ul {
+                justify-content: center; /* Center list items for stacked layout */
+            }
+            .alternating-section .section-content ul li {
+                text-align: left; /* Keep individual list items left-aligned */
+                margin-left: auto; /* Center list items */
+                margin-right: auto; /* Center list items */
+                max-width: 300px; /* Constrain width for readability on small screens */
+            }
+
+
+            .how-it-works-section .steps-timeline .timeline-path { display: none; }
+            .step-item { flex-direction: column !important; align-items: center; margin-bottom: 3rem; }
+            .step-item:nth-child(even) .step-content,
+            .step-item:nth-child(odd) .step-content {
+                text-align: center;
+                margin: 1.5rem 0 0 0;
+                max-width: 100%;
+            }
+            .step-item:nth-child(even) .step-features,
+            .step-item:nth-child(odd) .step-features {
+                justify-content: center;
+            }
+            .step-circle { width: 90px; height: 90px; }
+            .step-icon { font-size: 2rem; }
+            .step-content h3 { font-size: 1.5rem; }
+            .step-content p { font-size: 1rem; }
+            .how-it-works-cta { padding: 3rem 1.5rem; }
+            .how-it-works-cta h3 { font-size: 1.8rem; }
+            .how-it-works-cta p { font-size: 1rem; }
+
+            .carousel-card { padding: 2.5rem 2rem; min-height: 400px; }
+            .carousel-icon { font-size: 3rem; }
+            .carousel-card h3 { font-size: 1.6rem; }
+            .carousel-card p { font-size: 1rem; }
+            .feature-list { grid-template-columns: 1fr; }
+
+            .users-comparison { grid-template-columns: 1fr; gap: 2.5rem; }
+            .user-card { padding: 2rem; }
+            .user-icon { width: 70px; height: 70px; font-size: 2rem; }
+            .user-header h3 { font-size: 1.6rem; }
+            .user-subtitle { font-size: 1rem; }
+            .user-features .feature-item { font-size: 0.9rem; }
+
+            .pricing-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .pricing-card { min-height: auto; padding: 2.5rem 2rem; }
+            .price { font-size: 2.5rem; }
+            .period { font-size: 1rem; }
+            .plan-features .feature-item span { font-size: 0.9rem; }
+
+            .faq-question { padding: 1.5rem 1.8rem; font-size: 1.05rem; }
+            .faq-answer.active { padding: 0 1.8rem 1.5rem 1.8rem; }
+            .faq-answer p { font-size: 0.95rem; }
+
+            .cta-section { padding: 4rem 1.5rem; margin: 3rem auto; }
+            .cta-section h2 { font-size: 2.2rem; }
+            .cta-section p { font-size: 1.1rem; }
+            .cta-section .btn { padding: 16px 32px; font-size: 1.05rem; }
+
+            .footer-container { grid-template-columns: 1fr; text-align: center; }
+            .social-icons { justify-content: center; }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+            .hero-section { padding: 2.5rem 1rem; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1.1rem; }
+            .hero-actions { flex-direction: column; gap: 1rem; }
+            .btn-large { width: 100%; }
+
+            .section-padding { padding: 3rem 1rem; }
+            .section-title h2 { font-size: 2rem; }
+            .section-title p { font-size: 1rem; }
+
+            .feature-card { padding: 1.8rem; }
+            .feature-icon { font-size: 3rem; }
+            .feature-card h3 { font-size: 1.4rem; }
+
+            .alternating-section { padding: 3rem 1rem; gap: 2rem; }
+            .alternating-section .section-content h2 { font-size: 1.8rem; }
+            .alternating-section .section-content ul li { font-size: 0.9rem; }
+
+            .how-it-works-cta h3 { font-size: 1.6rem; }
+            .how-it-works-cta p { font-size: 1rem; }
+            .cta-buttons .btn { min-width: unset; width: 100%; }
+
+            .carousel-card { padding: 2rem 1.5rem; min-height: 350px; }
+            .carousel-icon { font-size: 2.5rem; }
+            .carousel-card h3 { font-size: 1.4rem; }
+            .carousel-card p { font-size: 0.95rem; }
+
+            .user-card { padding: 1.5rem; }
+            .user-icon { width: 60px; height: 60px; font-size: 1.8rem; }
+            .user-header h3 { font-size: 1.4rem; }
+            .user-subtitle { font-size: 0.9rem; }
+            .user-features .feature-item { padding: 0.8rem 0; }
+            .feature-text h4 { font-size: 0.95rem; }
+            .feature-text p { font-size: 0.85rem; }
+            .user-cta .btn { padding: 12px 24px; font-size: 0.95rem; }
+
+            .pricing-card { padding: 2rem 1.5rem; }
+            .price { font-size: 2.2rem; }
+            .period { font-size: 0.95rem; }
+            .plan-features .feature-item span { font-size: 0.8rem; }
+            .plan-cta .btn { padding: 0.8rem 1.2rem; font-size: 0.9rem; }
+
+            .faq-question { padding: 1.2rem 1.5rem; font-size: 1rem; }
+            .faq-answer.active { padding: 0 1.5rem 1.2rem 1.5rem; }
+            .faq-answer p { font-size: 0.9rem; }
+
+            .cta-section { padding: 3rem 1rem; margin: 2rem auto; }
+            .cta-section h2 { font-size: 2rem; }
+            .cta-section p { font-size: 1rem; }
+            .cta-section .btn { padding: 14px 28px; font-size: 1rem; }
+        }
+
+        /* HERO SECTION PIXEL-PERFECT OVERRIDES */
+        .exact-hero {
+          background: #f6f9ff;
+          border-radius: 32px;
+          box-shadow: 0 8px 48px rgba(33, 150, 243, 0.08);
+          padding: 64px 48px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 48px;
+          margin: 48px auto 0 auto;
+          max-width: 1400px;
+          position: relative;
+        }
+        .exact-badge {
+          background: #e6f9ec;
+          color: #22c55e;
+          font-weight: 600;
+          padding: 7px 22px;
+          border-radius: 20px;
+          font-size: 1.05rem;
+          display: inline-block;
+          margin-bottom: 28px;
+          letter-spacing: 0.01em;
+        }
+        .exact-hero-title {
+          font-family: 'Poppins', sans-serif;
+          font-size: 3.6rem;
+          font-weight: 900;
+          line-height: 1.08;
+          margin-bottom: 18px;
+          color: #181c2a;
+        }
+        .exact-hero-highlight {
+          color: #3b82f6;
+          font-weight: 800;
+        }
+        .exact-hero-desc {
+          font-size: 1.25rem;
+          color: #4a5568;
+          max-width: 600px;
+          margin-bottom: 38px;
+          line-height: 1.6;
+        }
+        .exact-hero-actions {
+          display: flex;
+          gap: 22px;
+          margin-bottom: 0;
+        }
+        .exact-btn-primary {
+          border-radius: 16px !important;
+          font-size: 1.08rem;
+          font-weight: 700;
+          padding: 18px 20px !important;
+          box-shadow: 0 2px 12px rgba(59, 130, 246, 0.08);
+          background: linear-gradient(90deg, #3b82f6, #2563eb);
+          border: none;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .exact-btn-primary .exact-arrow {
+          font-size: 1.25em;
+          margin-left: 6px;
+          font-weight: 700;
+          transition: transform 0.2s;
+        }
+        .exact-btn-primary:hover .exact-arrow {
+          transform: translateX(4px);
+        }
+        .exact-btn-secondary {
+          border-radius: 16px !important;
+          font-size: 1.08rem;
+          font-weight: 700;
+          padding: 18px 38px !important;
+          background: #fff;
+          color: #181c2a;
+          border: 1.5px solid #e5e7eb;
+          box-shadow: 0 2px 12px rgba(59, 130, 246, 0.04);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .exact-btn-secondary .exact-dot {
+          font-size: 1.5em;
+          color: #d1d5db;
+          margin-left: 2px;
+          font-weight: 900;
+        }
+        .exact-hero-checklist {
+          background: #fff;
+          border-radius: 24px;
+          box-shadow: 0 8px 48px rgba(33, 150, 243, 0.10);
+          padding: 38px 44px 28px 44px;
+          min-width: 370px;
+          max-width: 420px;
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          align-items: flex-start;
+        }
+        .exact-check-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          font-size: 1.13rem;
+          color: #23272f;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+        }
+        .exact-check-icon {
+          font-size: 1.45em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+        }
+        .exact-check-secured {
+          background: #e6f9ec;
+          color: #22c55e;
+          border-radius: 14px;
+          padding: 16px 18px;
+          font-weight: 700;
+          font-size: 1.13rem;
+          margin-top: 8px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .exact-check-secured-icon-inline i {
+  color: #22c55e;
+  font-size: 16px;
+  margin-right: 8px;   /* spacing after the tick */
+  margin-left: 12px;    /* move tick to the right */
+  vertical-align: middle;
+}
+
+
+        .exact-check-secured-text {
+          color: #059669;
+          font-weight: 700;
+          font-size: 1.13rem;
+        }
+        @media (max-width: 1100px) {
+          .exact-hero {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 48px 16px;
+            gap: 32px;
+          }
+          .exact-hero-checklist {
+            margin-left: 0;
+            min-width: 100%;
+            max-width: 100%;
+          }
+        }
+        @media (max-width: 700px) {
+          .exact-hero {
+            padding: 24px 2vw;
+            border-radius: 18px;
+          }
+          .exact-hero-title {
+            font-size: 2.1rem;
+          }
+          .exact-hero-checklist {
+            padding: 22px 10px 16px 10px;
+            border-radius: 12px;
+          }
+          .exact-btn-primary, .exact-btn-secondary {
+            padding: 13px 18px !important;
+            font-size: 1rem;
+          }
+        }
+        /* HERO SECTION PIXEL-PERFECT OVERRIDES (Rectangular Card) */
+        .exact-hero-checklist-rect {
+          background: #fff;
+          border-radius: 18px;
+          box-shadow: 0 4px 32px rgba(33,150,243,0.07);
+          padding: 32px 36px 24px 36px;
+          min-width: 410px;
+          max-width: 480px;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          align-items: flex-start;
+          border: 1px solid #eee;
+        }
+        .exact-check-item-rect {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          font-size: 1.08rem;
+          color: #222;
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          width: 100%;
+        }
+        .exact-check-icon-rect {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-size: 1.15em;
+          box-shadow: 0 2px 8px rgba(33,150,243,0.07);
+          flex-shrink: 0;
+        }
+        .exact-check-secured-icon {
+  background: #22c55e;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;   /* smaller circle */
+  height: 30px;  /* smaller circle */
+  border-radius: 50%;
+}
+
+.exact-check-secured-icon i {
+  color: #fff;
+  font-size: 20px; /* smaller tick */
+}
+
+        .exact-check-text {
+          color: #222;
+          font-size: 1.08rem;
+          font-weight: 400;
+          text-align: left;
+        }
+        .exact-check-secured-rect {
+          background: #d1fae5;
+          border: 1px solid #bbf7d0;
+          border-radius: 18px;
+          padding: 15px 3px;
+          font-weight: 500;
+          font-size: 1rem;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-top: 15px;
+        }
+        .exact-check-secured-text-rect {
+          color: #059669;
+          font-weight: 500;
+          font-size: 1rem;
+          text-align: left;
+        }
+        @media (max-width: 1100px) {
+          .exact-hero-checklist-rect {
+            margin-left: 0;
+            min-width: 100%;
+            max-width: 100%;
+          }
+        }
+        @media (max-width: 700px) {
+          .exact-hero-checklist-rect {
+            padding: 12px 4px 8px 4px;
+            border-radius: 10px;
+          }
+          .exact-check-item-rect {
+            font-size: 0.98rem;
+          }
+          .exact-check-secured-rect {
+            font-size: 0.98rem;
+            border-radius: 8px;
+          }
+        }
+    </style>
 </head>
 <body class="homepage">
     <!-- Main Navigation Bar -->
@@ -42,78 +2060,89 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="hero-section">
-        <div class="hero-content">
-            <h1>Secure Exams, Anywhere, Anytime.</h1>
-            <p>Our platform provides robust proctoring and a seamless testing experience, ensuring academic integrity for modern digital learning.</p>
-            <div class="hero-actions">
-                <a href="login.html" class="btn btn-primary btn-large">Start Exam</a>
-                <a href="#features" class="btn btn-secondary btn-large">Learn More</a>
-            </div>
+    <header class="hero-section scroll-animate exact-hero">
+      <div class="hero-content">
+        <span class="badge badge-success exact-badge">No Software Installation Required</span>
+        <h1 class="exact-hero-title">
+          Secure Online Exams with
+          <span class="exact-hero-highlight"> Real-time Proctoring</span>
+        </h1>
+        <p class="exact-hero-desc">
+          SecureExam Lite ensures academic integrity with browser-based proctoring, AI-powered monitoring, and comprehensive reporting – all without requiring any software installation.
+        </p>
+        <div class="hero-actions exact-hero-actions">
+          <a href="login.html" class="btn btn-primary btn-large exact-btn-primary exact-btn-small-rect">
+            Start Free Trial <span class="exact-arrow">→</span>
+          </a>
+          <a href="#features" class="btn btn-secondary btn-large exact-btn-secondary exact-btn-small-rect">
+                             Learn More <span class="exact-dot">·</span>
+          </a>
         </div>
-         <!-- Animated Security Shield Hero Illustration -->
-        <div class="hero-image">
-            <div class="animated-security-illustration">
-                <div class="shield-container">
-                    <div class="shield-main">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="security-rings">
-                        <div class="ring ring-1"></div>
-                        <div class="ring ring-2"></div>
-                        <div class="ring ring-3"></div>
-                    </div>
-                    <div class="floating-icons">
-                        <div class="floating-icon icon-1"><i class="fas fa-camera"></i></div>
-                        <div class="floating-icon icon-2"><i class="fas fa-lock"></i></div>
-                        <div class="floating-icon icon-3"><i class="fas fa-eye"></i></div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="hero-checklist exact-hero-checklist exact-hero-checklist-rect">
+        <div class="exact-check-item-rect">
+          <span class="exact-check-icon-rect" style="background: #22c55e;"><i class="fas fa-camera"></i></span>
+          <span class="exact-check-text">Real-time face detection active</span>
         </div>
+        <div class="exact-check-item-rect">
+          <span class="exact-check-icon-rect" style="background: #3b82f6;"><i class="fas fa-eye"></i></span>
+          <span class="exact-check-text">Monitoring tab switching</span>
+        </div>
+        <div class="exact-check-item-rect">
+          <span class="exact-check-icon-rect" style="background: #f59e0b;"><i class="fas fa-shield-alt"></i></span>
+          <span class="exact-check-text">Developer tools blocked</span>
+        </div>
+        <div class="exact-check-secured-rect">
+            <span class="exact-check-secured-icon-inline">
+              <i class="fas fa-check"></i>
+            </span>
+            <span class="exact-check-secured-text-rect">Exam environment secured</span>
+          </div>
+          
+      </div>
     </header>
 
     <!-- Main Content Area -->
     <main class="landing-main">
         <!-- Features Section -->
-        <section id="features" class="features-section">
+        <section id="features" class="features-section section-padding scroll-animate">
             <div class="section-title">
-                <h2>Why Choose SecureExamLite?</h2>
+                <h2 class="text-gradient-blue">Why Choose SecureExamLite?</h2>
                 <p>We provide the tools to ensure your assessments are fair and secure.</p>
             </div>
             <div class="features-grid">
                 <!-- Feature 1 -->
-                <div class="feature-card">
+                <div class="feature-card stagger-scale-in">
                     <div class="feature-icon"><i class="fas fa-lock"></i></div>
                     <h3>Lockdown Browser</h3>
                     <p>Prevents students from leaving the exam browser, ensuring full focus and preventing access to unauthorized resources.</p>
                 </div>
                 <!-- Feature 2 -->
-                <div class="feature-card">
+                <div class="feature-card stagger-scale-in">
                     <div class="feature-icon"><i class="fas fa-users"></i></div>
                     <h3>AI Face Detection</h3>
                     <p>Our system intelligently detects multiple faces, ensuring the integrity of the test-taker's environment.</p>
                 </div>
                 <!-- Feature 3 -->
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-camera"></i></div>
-                    <h3>Room & Webcam Scan</h3>
-                    <p>Verify the student's identity and testing environment before the exam begins with guided camera scans.</p>
+                <div class="feature-card stagger-scale-in">
+                    <div class="feature-icon"><i class="fas fa-user-check"></i></div>
+                    <h3>Identity Verification</h3>
+                    <p>Verify the student's identity through secure camera-based biometric verification before the exam begins.</p>
                 </div>
-                 <!-- Feature 4 -->
-                <div class="feature-card">
+                <!-- Feature 4 -->
+                <div class="feature-card stagger-scale-in">
                     <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
                     <h3>Flexible Question Types</h3>
                     <p>Create exams with a mix of multiple-choice and subjective questions to suit your assessment needs.</p>
                 </div>
-                 <!-- Feature 5 -->
-                <div class="feature-card">
+                <!-- Feature 5 -->
+                <div class="feature-card stagger-scale-in">
                     <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
                     <h3>Admin Dashboard</h3>
                     <p>Monitor active sessions, review alerts, and manage tests and student data from a single, intuitive dashboard.</p>
                 </div>
-                 <!-- Feature 6 -->
-                <div class="feature-card">
+                <!-- Feature 6 -->
+                <div class="feature-card stagger-scale-in">
                     <div class="feature-icon"><i class="fas fa-globe"></i></div>
                     <h3>Fully Responsive</h3>
                     <p>Accessible on any device, ensuring a consistent and reliable experience for all users.</p>
@@ -122,8 +2151,8 @@
         </section>
 
         <!-- Alternating Layout Section (Example) -->
-         <section class="alternating-section">
-            <div class="section-image">
+        <section class="alternating-section scroll-animate">
+            <div class="section-image stagger-in-left">
                 <div class="animated-dashboard-illustration">
                     <div class="dashboard-screen">
                         <div class="dashboard-header"></div>
@@ -145,19 +2174,19 @@
                     </div>
                 </div>
             </div>
-             <div class="section-content">
-                <h2>Real-Time Proctoring & Alerts</h2>
+            <div class="section-content stagger-in-right">
+                <h2 class="text-gradient-blue">Real-Time Proctoring & Alerts</h2>
                 <p>Our live proctoring dashboard allows administrators to monitor student camera feeds in real-time. The system automatically flags suspicious activities such as multiple faces, looking away, or tab switching, allowing for immediate review and action.</p>
-                 <ul>
-                    <li><i class="fas fa-check-circle"></i> Live student camera feeds.</li>
-                    <li><i class="fas fa-check-circle"></i> Automated alerts for proctoring violations.</li>
-                    <li><i class="fas fa-check-circle"></i> Detailed activity logs for each session.</li>
-                 </ul>
+                <ul>
+                    <li class="stagger-in-up"><span><i class="fas fa-check-circle"></i></span> Live student camera feeds.</li>
+                    <li class="stagger-in-up"><span><i class="fas fa-check-circle"></i></span> Automated alerts for proctoring violations.</li>
+                    <li class="stagger-in-up"><span><i class="fas fa-check-circle"></i></span> Detailed activity logs for each session.</li>
+                </ul>
             </div>
         </section>
 
-        <section class="alternating-section reverse">
-             <div class="section-image">
+        <section class="alternating-section reverse scroll-animate">
+            <div class="section-image stagger-in-right">
                 <div class="animated-privacy-illustration">
                     <div class="data-vault">
                         <div class="vault-door">
@@ -174,29 +2203,29 @@
                         </div>
                     </div>
                 </div>
-             </div>
-            <div class="section-content">
-                <h2>Privacy First Approach</h2>
+            </div>
+            <div class="section-content stagger-in-left">
+                <h2 class="text-gradient-blue">Privacy First Approach</h2>
                 <p>We are committed to protecting student privacy. All data is encrypted and handled with the utmost care, ensuring compliance with privacy regulations. Your institution retains full control over the data and who has access to it.</p>
                 <ul>
-                    <li><i class="fas fa-check-circle"></i> End-to-end data encryption.</li>
-                    <li><i class="fas fa-check-circle"></i> Institution-controlled data access.</li>
-                    <li><i class="fas fa-check-circle"></i> Full compliance with privacy standards.</li>
+                    <li class="stagger-in-up"><span><i class="fas fa-check-circle"></i></span> End-to-end data encryption.</li>
+                    <li class="stagger-in-up"><span><i class="fas fa-check-circle"></i></span> Institution-controlled data access.</li>
+                    <li class="stagger-in-up"><span><i class="fas fa-check-circle"></i></span> Full compliance with privacy standards.</li>
                 </ul>
             </div>
         </section>
 
         <!-- How It Works Section -->
-        <section id="how-it-works" class="how-it-works-section">
+        <section id="how-it-works" class="how-it-works-section section-padding scroll-animate">
             <div class="section-title">
-                <h2>How SecureExamLite Works</h2>
+                <h2 class="text-gradient-blue">How SecureExamLite Works</h2>
                 <p>A seamless journey from student login to secure exam completion</p>
             </div>
             
             <div class="steps-timeline">
                 <div class="timeline-path"></div>
                 
-                <div class="step-item" data-step="1">
+                <div class="step-item stagger-in-up" data-step="1">
                     <div class="step-circle">
                         <div class="step-number">1</div>
                         <div class="step-icon"><i class="fas fa-user-check"></i></div>
@@ -205,66 +2234,51 @@
                         <h3>Secure Login & Identity Verification</h3>
                         <p>Students authenticate with their credentials and complete biometric identity verification through our advanced camera system.</p>
                         <div class="step-features">
-                            <span class="feature-tag"><i class="fas fa-camera"></i> Live Selfie Verification</span>
-                            <span class="feature-tag"><i class="fas fa-shield-alt"></i> Secure Authentication</span>
+                            <span class="feature-tag">Live Selfie Verification</span>
+                            <span class="feature-tag">Secure Authentication</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="step-item" data-step="2">
+                <div class="step-item stagger-in-up" data-step="2">
                     <div class="step-circle">
                         <div class="step-number">2</div>
-                        <div class="step-icon"><i class="fas fa-search"></i></div>
-                    </div>
-                    <div class="step-content">
-                        <h3>Comprehensive Room Scan</h3>
-                        <p>AI-powered room scanning ensures a secure testing environment by detecting potential security threats and unauthorized materials.</p>
-                        <div class="step-features">
-                            <span class="feature-tag"><i class="fas fa-eye"></i> 360° Room Scan</span>
-                            <span class="feature-tag"><i class="fas fa-ban"></i> Threat Detection</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="step-item" data-step="3">
-                    <div class="step-circle">
-                        <div class="step-number">3</div>
                         <div class="step-icon"><i class="fas fa-laptop-code"></i></div>
                     </div>
                     <div class="step-content">
                         <h3>Proctored Exam Experience</h3>
                         <p>Students take their exam in a secure, monitored environment with real-time AI analysis and violation detection for complete integrity.</p>
                         <div class="step-features">
-                            <span class="feature-tag"><i class="fas fa-brain"></i> AI Monitoring</span>
-                            <span class="feature-tag"><i class="fas fa-lock"></i> Browser Lockdown</span>
-                            <span class="feature-tag"><i class="fas fa-exclamation-triangle"></i> Real-time Alerts</span>
+                            <span class="feature-tag">AI Monitoring</span>
+                            <span class="feature-tag">Browser Lockdown</span>
+                            <span class="feature-tag">Real-time Alerts</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="step-item" data-step="4">
+                <div class="step-item stagger-in-up" data-step="3">
                     <div class="step-circle">
-                        <div class="step-number">4</div>
+                        <div class="step-number">3</div>
                         <div class="step-icon"><i class="fas fa-chart-bar"></i></div>
                     </div>
                     <div class="step-content">
                         <h3>Detailed Analytics & Review</h3>
                         <p>Administrators access comprehensive session data, review flagged incidents, and analyze student performance through our intuitive dashboard.</p>
                         <div class="step-features">
-                            <span class="feature-tag"><i class="fas fa-analytics"></i> Session Analytics</span>
-                            <span class="feature-tag"><i class="fas fa-video"></i> Recorded Sessions</span>
-                            <span class="feature-tag"><i class="fas fa-download"></i> Export Reports</span>
+                            <span class="feature-tag">Session Analytics</span>
+                            <span class="feature-tag">Recorded Sessions</span>
+                            <span class="feature-tag">Export Reports</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="how-it-works-cta">
+            <div class="how-it-works-cta stagger-in-up">
                 <div class="cta-content">
                     <h3>Ready to Experience Secure Examinations?</h3>
                     <p>Join thousands of institutions already using SecureExamLite for their online assessments</p>
                     <div class="cta-buttons">
-                        <a href="login.html" class="btn btn-primary btn-large">Start Your Exam</a>
+                        <a href="login.html" class="btn btn-primary btn-large">Start Exam</a>
                         <a href="admin_login.html" class="btn btn-secondary btn-large">Administrator Portal</a>
                     </div>
                 </div>
@@ -272,12 +2286,12 @@
         </section>
 
         <!-- Features Carousel Section -->
-        <section class="features-carousel-section">
+        <section class="features-carousel-section section-padding scroll-animate">
             <div class="section-title">
-                <h2>Explore All Features</h2>
+                <h2 class="text-gradient-blue">Explore All Features</h2>
                 <p>Discover everything SecureExamLite has to offer</p>
             </div>
-            <div class="carousel-container">
+            <div class="carousel-container stagger-in-up">
                 <div class="carousel-wrapper">
                     <div class="carousel-track" id="featuresCarousel">
                         <div class="carousel-slide active">
@@ -356,13 +2370,13 @@
         </section>
 
         <!-- Students vs Administrators Section -->
-        <section class="users-section">
+        <section class="users-section section-padding scroll-animate">
             <div class="section-title">
-                <h2>Built for Everyone</h2>
+                <h2 class="text-gradient-blue">Built for Everyone</h2>
                 <p>Tailored experiences for students and administrators</p>
             </div>
             <div class="users-comparison">
-                <div class="user-card student-card">
+                <div class="user-card student-card stagger-in-up">
                     <div class="user-header">
                         <div class="user-icon student-icon">
                             <i class="fas fa-user-graduate"></i>
@@ -371,28 +2385,28 @@
                         <p class="user-subtitle">Simple, stress-free exam experience</p>
                     </div>
                     <div class="user-features">
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-left">
                             <i class="fas fa-laptop"></i>
                             <div class="feature-text">
                                 <h4>Easy Access</h4>
                                 <p>Simple login process with clear instructions</p>
                             </div>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-left">
                             <i class="fas fa-eye"></i>
                             <div class="feature-text">
                                 <h4>Transparent Monitoring</h4>
                                 <p>Clear indicators showing what's being monitored</p>
                             </div>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-left">
                             <i class="fas fa-clock"></i>
                             <div class="feature-text">
                                 <h4>Real-time Timer</h4>
                                 <p>Always know how much time remains</p>
                             </div>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-left">
                             <i class="fas fa-question-circle"></i>
                             <div class="feature-text">
                                 <h4>Help Support</h4>
@@ -405,7 +2419,7 @@
                     </div>
                 </div>
 
-                <div class="user-card admin-card">
+                <div class="user-card admin-card stagger-in-up">
                     <div class="user-header">
                         <div class="user-icon admin-icon">
                             <i class="fas fa-user-shield"></i>
@@ -414,28 +2428,28 @@
                         <p class="user-subtitle">Comprehensive control and insights</p>
                     </div>
                     <div class="user-features">
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-right">
                             <i class="fas fa-desktop"></i>
                             <div class="feature-text">
                                 <h4>Live Monitoring</h4>
                                 <p>Real-time view of all active exam sessions</p>
                             </div>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-right">
                             <i class="fas fa-exclamation-triangle"></i>
                             <div class="feature-text">
                                 <h4>Alert Management</h4>
                                 <p>Instant notifications for suspicious activities</p>
                             </div>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-right">
                             <i class="fas fa-plus-circle"></i>
                             <div class="feature-text">
                                 <h4>Test Creation</h4>
                                 <p>Easy-to-use tools for creating secure exams</p>
                             </div>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-right">
                             <i class="fas fa-analytics"></i>
                             <div class="feature-text">
                                 <h4>Detailed Reports</h4>
@@ -451,15 +2465,15 @@
         </section>
 
         <!-- Pricing Section -->
-        <section id="pricing" class="pricing-section">
+        <section id="pricing" class="pricing-section section-padding scroll-animate">
             <div class="section-title">
-                <h2>Choose Your Plan</h2>
+                <h2 class="text-gradient-cta">Choose Your Plan</h2>
                 <p>Flexible pricing options to match your institution's needs</p>
             </div>
             
             <div class="pricing-grid">
                 <!-- Starter Plan -->
-                <div class="pricing-card starter-plan">
+                <div class="pricing-card starter-plan stagger-in-up">
                     <div class="plan-header">
                         <div class="plan-icon">
                             <i class="fas fa-graduation-cap"></i>
@@ -472,19 +2486,19 @@
                         <span class="period">/month</span>
                     </div>
                     <div class="plan-features">
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Up to 50 concurrent students</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Basic AI proctoring</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Standard exam types</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Email support</span>
                         </div>
@@ -495,7 +2509,7 @@
                 </div>
 
                 <!-- Professional Plan (Most Popular) -->
-                <div class="pricing-card professional-plan popular">
+                <div class="pricing-card professional-plan popular stagger-in-up">
                     <div class="popular-badge">Most Popular</div>
                     <div class="plan-header">
                         <div class="plan-icon">
@@ -505,23 +2519,23 @@
                         <p class="plan-subtitle">Ideal for medium institutions</p>
                     </div>
                     <div class="plan-pricing">
-                        <span class="price">$79</span>
+                        <span class="price text-gradient-darkblue">$79</span>
                         <span class="period">/month</span>
                     </div>
                     <div class="plan-features">
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Up to 200 concurrent students</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Advanced AI proctoring</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>All exam types + custom</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Priority support + API access</span>
                         </div>
@@ -532,7 +2546,7 @@
                 </div>
 
                 <!-- Enterprise Plan -->
-                <div class="pricing-card enterprise-plan">
+                <div class="pricing-card enterprise-plan stagger-in-up">
                     <div class="plan-header">
                         <div class="plan-icon">
                             <i class="fas fa-building"></i>
@@ -545,19 +2559,19 @@
                         <span class="period">/month</span>
                     </div>
                     <div class="plan-features">
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Unlimited concurrent students</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>Premium AI proctoring</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>White-label + custom integrations</span>
                         </div>
-                        <div class="feature-item">
+                        <div class="feature-item stagger-in-up">
                             <i class="fas fa-check"></i>
                             <span>24/7 dedicated support</span>
                         </div>
@@ -570,15 +2584,15 @@
         </section>
 
         <!-- FAQ Section -->
-        <section id="faq" class="faq-section">
+        <section id="faq" class="faq-section section-padding scroll-animate">
             <div class="section-title">
-                <h2>Frequently Asked Questions</h2>
+                <h2 class="text-gradient-blue">Frequently Asked Questions</h2>
                 <p>Find answers to common questions about SecureExamLite</p>
             </div>
-            <div class="faq-container">
+            <div class="faq-container stagger-in-up">
                 <div class="faq-accordion">
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>How does AI proctoring work?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -588,7 +2602,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>What browsers are supported?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -598,7 +2612,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>Is student data secure and private?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -608,7 +2622,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>Can I upgrade or downgrade my plan?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -618,7 +2632,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>Is there a free trial available?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -628,7 +2642,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>What are the system requirements?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -638,7 +2652,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>How quickly can I set up my first exam?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -648,7 +2662,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>Can students appeal proctoring flags?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -658,7 +2672,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>Do you provide training for administrators?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -668,7 +2682,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
+                        <button class="faq-question">
                             <span>What payment methods do you accept?</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -680,12 +2694,12 @@
             </div>
         </section>
 
-         <!-- Call to Action Section -->
-         <section class="cta-section">
-             <h2>Ready to Get Started?</h2>
-             <p>Ensure the integrity of your exams with SecureExamLite.</p>
-             <a href="admin_login.html" class="btn btn-primary btn-large">Become an Administrator</a>
-         </section>
+        <!-- Call to Action Section -->
+        <section class="cta-section scroll-animate">
+            <h2 class="text-gradient-cta">Ready to Get Started?</h2>
+            <p>Ensure the integrity of your exams with SecureExamLite.</p>
+            <a href="admin_login.html" class="btn btn-primary btn-large">Become an Administrator</a>
+        </section>
 
     </main>
 
@@ -693,40 +2707,219 @@
     <footer id="contact" class="main-footer">
         <div class="footer-container">
             <div class="footer-column about-us">
-                 <h3>SecureExamLite</h3>
-                 <p>Your partner in maintaining academic integrity in the digital age.</p>
+                <h3>SecureExamLite</h3>
+                <p>Your partner in maintaining academic integrity in the digital age.</p>
             </div>
             <div class="footer-column">
                 <h3>Product</h3>
-                 <ul>
+                <ul>
                     <li><a href="#features">Features</a></li>
-                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
                     <li><a href="#">Integrations</a></li>
-                 </ul>
+                </ul>
             </div>
             <div class="footer-column">
                 <h3>Resources</h3>
-                 <ul>
+                <ul>
                     <li><a href="#">Blog</a></li>
                     <li><a href="#">Support Center</a></li>
                     <li><a href="#">Privacy Policy</a></li>
-                 </ul>
+                </ul>
             </div>
-             <div class="footer-column">
+            <div class="footer-column">
                 <h3>Contact Us</h3>
-                 <p>info@secureexamlite.com</p>
-                 <div class="social-icons">
+                <p>info@secureexamlite.com</p>
+                <div class="social-icons">
                     <a href="#"><i class="fab fa-linkedin"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
-                 </div>
+                </div>
             </div>
         </div>
-         <div class="footer-bottom">
+        <div class="footer-bottom">
             <p>© 2023 SecureExamLite. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- JavaScript -->
-    <script src="../static/js/homepage.js"></script>
+    <script type="module" src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Mobile Navigation Toggle ---
+            const navToggleBtn = document.getElementById('navToggleBtn');
+            const mobileNavMenu = document.getElementById('mobileNavMenu');
+
+            if (navToggleBtn && mobileNavMenu) {
+                navToggleBtn.addEventListener('click', () => {
+                    mobileNavMenu.classList.toggle('active');
+                    navToggleBtn.classList.toggle('active');
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileNavMenu.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileNavMenu.classList.remove('active');
+                        navToggleBtn.classList.remove('active');
+                    });
+                });
+            }
+
+            // --- Features Carousel Functionality ---
+            const carousel = document.getElementById('featuresCarousel');
+            const slides = carousel ? Array.from(carousel.querySelectorAll('.carousel-slide')) : [];
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicatorsContainer = document.getElementById('carouselIndicators');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            let autoAdvanceInterval;
+
+            function createIndicators() {
+                if (!indicatorsContainer) return;
+                indicatorsContainer.innerHTML = ''; // Clear existing indicators
+                for (let i = 0; i < totalSlides; i++) {
+                    const indicator = document.createElement('div');
+                    indicator.classList.add('indicator');
+                    if (i === 0) indicator.classList.add('active');
+                    indicator.addEventListener('click', () => goToSlide(i));
+                    indicatorsContainer.appendChild(indicator);
+                }
+            }
+
+            function updateCarousel(direction = 0) { // direction: 0 for no slide, 1 for next, -1 for prev
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active', 'prev');
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                    } else if (direction === 1 && index === (currentSlide - 1 + totalSlides) % totalSlides) {
+                        // If moving next, the previous active slide should slide left
+                    } else if (direction === -1 && index === (currentSlide + 1) % totalSlides) {
+                        // If moving prev, the next slide should slide right (default is fine)
+                    }
+                });
+
+                const indicators = indicatorsContainer ? indicatorsContainer.querySelectorAll('.indicator') : [];
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentSlide);
+                });
+
+                if (prevBtn) prevBtn.disabled = currentSlide === 0 && totalSlides > 1;
+                if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1 && totalSlides > 1;
+            }
+
+            function goToSlide(slideIndex, direction = 0) {
+                const oldSlide = currentSlide;
+                currentSlide = (slideIndex + totalSlides) % totalSlides; // Ensure index is within bounds
+
+                // Determine slide direction for animation
+                if (oldSlide < currentSlide) { // Moving forward
+                    updateCarousel(1);
+                } else if (oldSlide > currentSlide) { // Moving backward
+                    updateCarousel(-1);
+                } else { // No change or initial load
+                    updateCarousel(0);
+                }
+            }
+
+            function nextSlide() {
+                goToSlide(currentSlide + 1, 1);
+            }
+
+            function prevSlide() {
+                goToSlide(currentSlide - 1, -1);
+            }
+
+            function startAutoAdvance() {
+                stopAutoAdvance();
+                autoAdvanceInterval = setInterval(() => {
+                    nextSlide();
+                }, 5000);
+            }
+
+            function stopAutoAdvance() {
+                clearInterval(autoAdvanceInterval);
+            }
+
+            if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoAdvance(); nextSlide(); startAutoAdvance(); });
+            if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoAdvance(); prevSlide(); startAutoAdvance(); });
+
+            const carouselContainer = document.querySelector('.carousel-container');
+            if (carouselContainer) {
+                carouselContainer.addEventListener('mouseenter', stopAutoAdvance);
+                carouselContainer.addEventListener('mouseleave', startAutoAdvance);
+            }
+
+            if (carousel && slides.length > 0) {
+                createIndicators();
+                updateCarousel();
+                startAutoAdvance();
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') { prevSlide(); }
+                else if (e.key === 'ArrowRight') { nextSlide(); }
+            });
+
+            // --- Scroll Animation Logic (Intersection Observer) ---
+            const sectionsToAnimate = document.querySelectorAll('.scroll-animate');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // Trigger when 15% of the section is visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Trigger staggered animations for children
+                        const staggeredChildren = entry.target.querySelectorAll('.stagger-in-up, .stagger-in-left, .stagger-in-right, .stagger-scale-in');
+                        staggeredChildren.forEach((child, index) => {
+                            child.style.transitionDelay = `${index * 0.1}s`; // Stagger by 100ms
+                            child.classList.add('is-visible');
+                        });
+                        observer.unobserve(entry.target); // Stop observing once animated
+                    }
+                });
+            }, observerOptions);
+
+            sectionsToAnimate.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Initial animation for hero section (since it's visible on load)
+            const heroContentElements = document.querySelectorAll('.hero-content h1, .hero-content p, .hero-actions');
+            heroContentElements.forEach(el => el.style.opacity = 1); // CSS handles initial animation
+
+            // --- FAQ Accordion functionality ---
+            const faqQuestions = document.querySelectorAll('.faq-question');
+
+            faqQuestions.forEach(button => {
+                button.addEventListener('click', () => {
+                    const faqItem = button.closest('.faq-item');
+                    const answer = faqItem.querySelector('.faq-answer');
+                    const isActive = button.classList.contains('active');
+                    
+                    // Close all other FAQ items
+                    document.querySelectorAll('.faq-question').forEach(q => {
+                        if (q !== button) {
+                            q.classList.remove('active');
+                            q.closest('.faq-item').querySelector('.faq-answer').classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current FAQ item
+                    if (isActive) {
+                        button.classList.remove('active');
+                        answer.classList.remove('active');
+                    } else {
+                        button.classList.add('active');
+                        answer.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

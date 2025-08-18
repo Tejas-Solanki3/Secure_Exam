@@ -3,59 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecureExamLite - Create New Test</title>
+    <title>SecureExamLite - Exam</title>
     <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="stylesheet" href="../static/css/admin.css"> <!-- Use admin styles -->
-     <link rel="stylesheet" href="../static/css/create_test.css"> <!-- Link NEW CSS -->
-    <!-- Using Font Awesome for icons -->
+    <link rel="stylesheet" href="../static/css/exam.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- REMOVE THE <style>...</style> BLOCK -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+    <style>
+        /* --- Proctoring Toggle Switch CSS --- */
+        .proctoring-toggle-container { display: flex; align-items: center; gap: 10px; }
+        .proctoring-toggle-container label { font-weight: 600; color: var(--text-subtle); }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success-green); }
+        input:focus + .slider { box-shadow: 0 0 1px var(--success-green); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        /* --- Question Area Styles --- */
+        .question-header h3 { font-size: 1.2rem; color: var(--text-heading); }
+        .question-text { font-size: 1.1rem; line-height: 1.6; margin: 1.5rem 0; }
+        .options label { display: block; background: var(--light-gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; cursor: pointer; border: 1px solid var(--light-gray-200); transition: all 0.2s ease; }
+        .options label:hover { background: var(--primary-blue-lightest); border-color: var(--primary-blue-light); }
+        .options input { margin-right: 10px; }
+        textarea.subjective-answer { width: 100%; min-height: 150px; padding: 1rem; font-size: 1rem; border-radius: 8px; border: 1px solid var(--light-gray-300); }
+    </style>
 </head>
 <body>
-    <div class="admin-dashboard-container"> <!-- Reusing container style -->
-        <header class="dashboard-header">
-            <h1>Create New Test</h1>
-            <!-- Optional: Link back to dashboard -->
-             <a href="admin_dashboard.html" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+    <div class="content-blocker" id="contentBlocker" style="display: flex;"></div>
+
+    <div class="exam-container">
+        <header class="exam-header">
+            <div class="exam-title">
+                <h2 id="examTitle">Loading Exam...</h2>
+                <p id="examCode"></p>
+            </div>
+            <div class="exam-timer">
+                <i class="far fa-clock"></i> <span id="timeRemaining">--:--:--</span>
+            </div>
+            <div class="proctoring-toggle-container">
+                <label for="proctoringToggle">Proctoring</label>
+                <label class="switch">
+                    <input type="checkbox" id="proctoringToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
         </header>
 
-        <main class="test-form-section">
-            <form id="createTestForm">
-                <div class="form-group">
-                    <label for="testTitle">Test Title:</label>
-                    <input type="text" id="testTitle" name="testTitle" required>
+        <main class="exam-main">
+            <div class="exam-content">
+                <!-- UPDATED QUESTION AREA -->
+                <div class="question-area">
+                    <div id="questionContainer">
+                        <div class="question-header">
+                            <h3 id="questionProgress">Question...</h3>
+                        </div>
+                        <p id="questionText">Loading question text...</p>
+                        <div id="answerArea" class="options">
+                            <!-- Answer options or textarea will be rendered here by JS -->
+                        </div>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" id="prevQuestionBtn"><i class="fas fa-chevron-left"></i> Previous</button>
+                        <button class="btn btn-primary" id="nextQuestionBtn">Next <i class="fas fa-chevron-right"></i></button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="testDuration">Duration (minutes):</label>
-                    <input type="number" id="testDuration" name="testDuration" required min="1">
+                <!-- END UPDATED QUESTION AREA -->
+                <div class="webcam-area">
+                    <div class="camera-feed" id="cameraFeed">
+                        <video id="webcamVideo" autoplay muted playsinline></video>
+                        <canvas id="overlayCanvas"></canvas>
+                    </div>
+                    <div class="activity-log">
+                        <h4>Activity Log</h4>
+                        <ul id="logList"></ul>
+                    </div>
                 </div>
-
-                <h2>Add Questions</h2>
-                 <div class="question-type-select">
-                     <label for="questionType">Select Question Type:</label>
-                     <select id="questionType">
-                         <option value="mcq">Multiple Choice</option>
-                         <option value="subjective">Subjective</option>
-                     </select>
-                     <button type="button" class="btn btn-primary btn-sm" id="addQuestionTypeBtn" style="margin-left: 10px;">Add Question</button>
-                 </div>
-
-                 <div id="questionsArea">
-                     <!-- Question forms will be added here by JS -->
-                 </div>
-
-                <button type="submit" class="btn btn-primary save-test-btn">Save Test</button>
-            </form>
+            </div>
+            <div class="exam-actions">
+                <button class="btn btn-secondary" id="requestHelpBtn"><i class="fas fa-question-circle"></i> Request Help</button>
+                <button class="btn btn-danger" id="endExamBtn"><i class="fas fa-flag"></i> End Exam</button>
+            </div>
         </main>
-
-         <footer style="margin-top: 40px; text-align: center; font-size: 0.9em; color: #777;">
-            <p>© 2023 SecureExamLite</p>
-        </footer>
-
     </div>
 
-     <!-- Link NEW JavaScript file -->
-     <script src="../static/js/create_test.js"></script>
-     <!-- REMOVE THE <script>...</script> BLOCK -->
+    <div class="modal" id="selfieVerificationModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fas fa-camera fa-3x"></i></div>
+            <h2>Identity Verification</h2>
+            <p>Please take a clear selfie before starting your exam.</p>
+            <div class="selfie-camera-placeholder" style="height: 250px; width: 250px; margin: 1rem auto; border-radius: 50%;">
+                <video id="selfieVideo" autoplay muted playsinline></video>
+            </div>
+            <div class="modal-actions">
+                <button id="captureSelfieBtn" class="btn btn-primary">Capture Selfie</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../static/js/logger.js"></script>
+    <script src="../static/js/timer.js"></script>
+    <script src="../static/js/camera.js"></script>
+    <script src="../static/js/face_detector.js"></script>
+    <script src="../static/js/exam.js"></script>
 </body>
 </html>

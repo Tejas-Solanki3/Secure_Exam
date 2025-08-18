@@ -1,203 +1,179 @@
-// static/js/past_answers.js
+// past_answers.js - Admin submissions review page
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Past Answers page JS loaded.');
+    console.log('Past Answers page loaded.');
 
-    // Get elements
+    // DOM Elements
     const filterExamSelect = document.getElementById('filterExam');
     const filterStudentInput = document.getElementById('filterStudent');
     const applyFilterBtn = document.getElementById('applyFilterBtn');
-    const submissionListArea = document.getElementById('submissionList');
     const submissionsLoadingIndicator = document.getElementById('submissionsLoadingIndicator');
     const noSubmissionsMessage = document.getElementById('noSubmissionsMessage');
-    const answerDetailsArea = document.getElementById('answerDetailsArea');
-    const answerDetailsStudentName = document.getElementById('answerDetailsStudentName');
-    const answerDetailsExamName = document.getElementById('answerDetailsExamName');
-    const questionAnswerPairsArea = document.getElementById('questionAnswerPairs');
+    const submissionList = document.getElementById('submissionList');
 
+    let allSubmissions = [];
+    let filteredSubmissions = [];
 
-    // --- Placeholder Data (Simulating Backend Response) ---
-    const mockSubmissions = [
-        { id: 'sub123', studentName: 'Sarah Johnson', examName: 'Advanced Mathematics', submitTime: '14:30', examId: 'math101', studentId: 's001',
-          answers: [
-              { questionText: 'Q1: What is the derivative of x²?', studentAnswer: 'a) 2x', isCorrect: true },
-              { questionText: 'Q2: Describe the process of photosynthesis.', studentAnswer: 'Photosynthesis is the process where plants use sunlight...', isCorrect: null }, // Subjective answers might not have isCorrect initially
-              { questionText: 'Q3: Multiple Choice Question Example', studentAnswer: 'b) Option B', isCorrect: false }
-          ]},
-        { id: 'sub456', studentName: 'Michael Chen', examName: 'Physics 101', submitTime: '15:00', examId: 'phy101', studentId: 's002',
-          answers: [
-               { questionText: 'Q1: What is Newton\'s first law?', studentAnswer: 'An object at rest stays at rest unless acted upon by an external force.', isCorrect: true },
-               { questionText: 'Q2: What is the speed of light?', studentAnswer: 'Around 300,000 km/s', isCorrect: true}
-          ]},
-        { id: 'sub789', studentName: 'Emily Davis', examName: 'Computer Science', submitTime: '16:00', examId: 'cs101', studentId: 's003',
-          answers: [
-               { questionText: 'Q1: What is JavaScript?', studentAnswer: 'A programming language.', isCorrect: true}
-          ]},
-        // Add more mock submissions
-    ];
+    // Initialize the page
+    async function initializePage() {
+        await fetchExamOptions();
+        await fetchSubmissions();
+    }
 
-    // Mock exam data for filter options
-     const mockExams = [{id: '', name: 'All Exams'}, {id: 'math101', name: 'Advanced Mathematics'}, {id: 'phy101', name: 'Physics 101'}, {id: 'cs101', name: 'Computer Science'}];
-
-
-    // --- Placeholder Functions ---
-
-    // Simulate fetching and displaying the list of submissions
-    function loadSubmissions(examFilter = '', studentFilter = '') {
-        console.log(`Loading submissions (placeholder) with exam filter: ${examFilter}, student filter: ${studentFilter}...`);
-        if(submissionsLoadingIndicator) submissionsLoadingIndicator.style.display = 'block'; // Show loading indicator
-        if(submissionListArea) submissionListArea.innerHTML = ''; // Clear previous list
-        if(noSubmissionsMessage) noSubmissionsMessage.style.display = 'none'; // Hide no submissions message
-        if(answerDetailsArea) answerDetailsArea.style.display = 'none'; // Hide answer details when loading list
-
-
-        // Simulate network delay
-        setTimeout(() => {
-            if(submissionsLoadingIndicator) submissionsLoadingIndicator.style.display = 'none'; // Hide loading indicator
-            // TODO: Implement Fetch API call to backend with filters
-
-            // Filter mock data
-            const filteredSubmissions = mockSubmissions.filter(submission => {
-                const matchesExam = examFilter === '' || submission.examId === examFilter;
-                const matchesStudent = studentFilter === '' ||
-                                       submission.studentId.toLowerCase().includes(studentFilter.toLowerCase()) ||
-                                       submission.studentName.toLowerCase().includes(studentFilter.toLowerCase());
-                return matchesExam && matchesStudent;
-            });
-
-
-            if (filteredSubmissions.length === 0) {
-                if(noSubmissionsMessage) noSubmissionsMessage.style.display = 'block';
+    // Fetch exam options for filter dropdown
+    async function fetchExamOptions() {
+        try {
+            const response = await fetch('/api/admin/exams');
+            const data = await response.json();
+            if (response.ok) {
+                filterExamSelect.innerHTML = '<option value="">All Exams</option>';
+                data.exams.forEach(exam => {
+                    const option = document.createElement('option');
+                    option.value = exam.id;
+                    option.textContent = exam.name;
+                    filterExamSelect.appendChild(option);
+                });
             } else {
-                // Populate the submission list
-                if(submissionListArea) {
-                     filteredSubmissions.forEach(submission => {
-                        const submissionItem = document.createElement('div');
-                        submissionItem.classList.add('submission-item');
-                        submissionItem.dataset.submissionId = submission.id; // Store submission ID
-                        submissionItem.innerHTML = `
-                            <div class="submission-info">
-                                <div class="student-name">${submission.studentName}</div>
-                                <div class="exam-details">${submission.examName} - Submitted ${submission.submitTime}</div>
-                            </div>
-                             <button class="btn view-answers-btn btn-sm" data-submission-id="${submission.id}">View Answers</button> <!-- Added data-id -->
-                        `;
-                        submissionListArea.appendChild(submissionItem);
-                    });
-                }
+                console.error('Failed to fetch exam options:', data.message);
             }
-             console.log('Submissions loaded (placeholder).');
-        }, 500); // Simulate 0.5 second load time
-    }
-
-    // Simulate fetching and displaying details for a single submission
-    function viewSubmissionAnswers(submissionId) {
-        console.log(`Viewing answers for submission: ${submissionId} (placeholder)...`);
-        // TODO: Implement Fetch API call to backend for specific submission details
-
-        // Find the submission in mock data
-        const selectedSubmission = mockSubmissions.find(submission => submission.id === submissionId);
-
-        if (selectedSubmission && answerDetailsArea && answerDetailsStudentName && answerDetailsExamName && questionAnswerPairsArea) {
-            // Populate the answer details area
-            answerDetailsStudentName.textContent = selectedSubmission.studentName;
-            answerDetailsExamName.textContent = selectedSubmission.examName;
-            questionAnswerPairsArea.innerHTML = ''; // Clear previous answers
-
-            selectedSubmission.answers.forEach(pair => {
-                const pairDiv = document.createElement('div');
-                pairDiv.classList.add('question-answer-pair');
-
-                 let answerClass = '';
-                 if (pair.isCorrect === true) answerClass = 'correct';
-                 else if (pair.isCorrect === false) answerClass = 'incorrect';
-                 // Subjective answers might not have a class initially
-
-                pairDiv.innerHTML = `
-                    <div class="question-text">${pair.questionText}</div>
-                    <div class="student-answer ${answerClass}">Student Answer: ${pair.studentAnswer}</div>
-                `;
-                questionAnswerPairsArea.appendChild(pairDiv);
-            });
-
-            answerDetailsArea.style.display = 'block'; // Show the answer details area
-
-        } else {
-            console.error(`Submission with ID ${submissionId} not found or elements missing.`);
-             if(answerDetailsArea) answerDetailsArea.style.display = 'none';
-             alert(`Submission details for ID ${submissionId} not found.`);
+        } catch (error) {
+            console.error('Error fetching exam options:', error);
         }
     }
 
-
-    // Simulate loading filter options (e.g., list of exams)
-    function loadFilterOptions() {
-        console.log('Loading filter options (placeholder)...');
-        // TODO: Implement Fetch API call to backend to get list of exams etc.
-         // Populate the exam filter select
-        if(filterExamSelect) {
-             mockExams.forEach(exam => {
-                const option = document.createElement('option');
-                option.value = exam.id;
-                option.textContent = exam.name;
-                filterExamSelect.appendChild(option);
-            });
+    // Fetch all submissions
+    async function fetchSubmissions() {
+        showLoading(true);
+        try {
+            const response = await fetch('/api/admin/submissions');
+            const data = await response.json();
+            if (response.ok) {
+                allSubmissions = data.submissions || [];
+                filteredSubmissions = [...allSubmissions];
+                renderSubmissions();
+            } else {
+                console.error('Failed to fetch submissions:', data.message);
+                showNoSubmissions('Failed to load submissions.');
+            }
+        } catch (error) {
+            console.error('Error fetching submissions:', error);
+            showNoSubmissions('Network error loading submissions.');
+        } finally {
+            showLoading(false);
         }
-        console.log('Filter options loaded (placeholder).');
     }
 
+    // Render submissions list
+    function renderSubmissions() {
+        if (filteredSubmissions.length === 0) {
+            showNoSubmissions('No submissions found matching criteria.');
+            return;
+        }
 
-    // --- Event Listeners ---
-
-    // Initial load of filter options and submissions
-    loadFilterOptions();
-    loadSubmissions(); // Load initial list
-
-
-    // Handle filter button click
-    if (applyFilterBtn && filterExamSelect && filterStudentInput) {
-        applyFilterBtn.addEventListener('click', () => {
-            const selectedExam = filterExamSelect.value;
-            const studentSearch = filterStudentInput.value.trim();
-            loadSubmissions(selectedExam, studentSearch);
+        submissionList.innerHTML = '';
+        filteredSubmissions.forEach(submission => {
+            const submissionCard = createSubmissionCard(submission);
+            submissionList.appendChild(submissionCard);
         });
     }
 
-    // Handle clicking on a submission item OR the "View Answers" button to view answers
-     if (submissionListArea) {
-         submissionListArea.addEventListener('click', (event) => {
-             const submissionItem = event.target.closest('.submission-item');
-             const viewButton = event.target.closest('.view-answers-btn');
+    // Create a submission card
+    function createSubmissionCard(submission) {
+        const card = document.createElement('div');
+        card.className = 'submission-card';
+        
+        const startTime = new Date(submission.start_time).toLocaleString();
+        const warningCount = submission.logs.filter(log => log.type === 'warning').length;
+        
+        card.innerHTML = `
+            <div class="submission-header">
+                <div class="submission-info">
+                    <h3>${submission.student_name}</h3>
+                    <p class="submission-meta">
+                        <span><i class="fas fa-user"></i> ${submission.student_id}</span>
+                        <span><i class="fas fa-file-alt"></i> ${submission.exam_name}</span>
+                        <span><i class="fas fa-clock"></i> ${startTime}</span>
+                    </p>
+                </div>
+                <div class="submission-score">
+                    <span class="score-badge">${submission.score}</span>
+                </div>
+            </div>
+            <div class="submission-details">
+                <div class="detail-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>${warningCount} warnings</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>${submission.answers.length} questions</span>
+                </div>
+            </div>
+            <div class="submission-actions">
+                <a href="admin_review.html?session_id=${submission.session_id}" class="btn btn-primary btn-review">
+                    <i class="fas fa-search"></i> Review
+                </a>
+            </div>
+        `;
+        
+        return card;
+    }
 
-             let submissionId = null;
-             if (submissionItem) {
-                 submissionId = submissionItem.dataset.submissionId;
-             } else if (viewButton) {
-                 submissionId = viewButton.dataset.submissionId; // Get from button's data attribute
-                 event.stopPropagation(); // Prevent click from bubbling up to the parent .submission-item if both are clicked
-             }
+    // Apply filters
+    function applyFilters() {
+        const selectedExam = filterExamSelect.value;
+        const studentFilter = filterStudentInput.value.toLowerCase();
 
+        filteredSubmissions = allSubmissions.filter(submission => {
+            const examMatch = !selectedExam || submission.test_id === selectedExam;
+            const studentMatch = !studentFilter || 
+                submission.student_name.toLowerCase().includes(studentFilter) ||
+                submission.student_id.toLowerCase().includes(studentFilter);
+            
+            return examMatch && studentMatch;
+        });
 
-             if (submissionId) {
-                 // Remove 'selected' class from previous and add to the clicked item
-                 if (submissionItem) { // Ensure we have the list item if clicked directly
-                    submissionListArea.querySelectorAll('.submission-item').forEach(item => item.classList.remove('selected'));
-                    submissionItem.classList.add('selected');
-                 } else if (viewButton) { // If button clicked, find the parent item
-                     const parentItem = viewButton.closest('.submission-item');
-                     if (parentItem) {
-                        submissionListArea.querySelectorAll('.submission-item').forEach(item => item.classList.remove('selected'));
-                        parentItem.classList.add('selected');
-                     }
-                 }
+        renderSubmissions();
+    }
 
-                 viewSubmissionAnswers(submissionId);
-             }
-         });
-     }
+    // Show/hide loading indicator
+    function showLoading(show) {
+        if (submissionsLoadingIndicator) {
+            submissionsLoadingIndicator.style.display = show ? 'block' : 'none';
+        }
+        if (submissionList) {
+            submissionList.style.display = show ? 'none' : 'block';
+        }
+    }
 
+    // Show no submissions message
+    function showNoSubmissions(message) {
+        if (noSubmissionsMessage) {
+            noSubmissionsMessage.textContent = message;
+            noSubmissionsMessage.style.display = 'block';
+        }
+        if (submissionList) {
+            submissionList.style.display = 'none';
+        }
+    }
 
-     // Optional: Implement logic for marking subjective answers as correct/incorrect if needed
-     // This would require more UI elements and JS logic, likely involving backend updates.
+    // Event listeners
+    if (applyFilterBtn) {
+        applyFilterBtn.addEventListener('click', applyFilters);
+    }
 
-});
+    if (filterStudentInput) {
+        filterStudentInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+    }
+
+    if (filterExamSelect) {
+        filterExamSelect.addEventListener('change', applyFilters);
+    }
+
+    // Initialize the page
+    initializePage();
+}); 

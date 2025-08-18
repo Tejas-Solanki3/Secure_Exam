@@ -6,6 +6,8 @@
     <title>SecureExamLite - Administrator Login</title>
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts - Poppins for headings, Inter for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -14,7 +16,7 @@
                 <i class="fas fa-shield-alt fa-2x" style="color: var(--primary-blue-dark);"></i>
             </div>
             <h1>Administrator Login</h1>
-            <p style="color: var(--text-medium); font-size: 1em;">Please sign in to manage exams</p>
+            <p style="color: var(--text-subtle); font-size: 1em;">Please sign in to manage exams</p>
         </header>
         
         <main>
@@ -23,7 +25,7 @@
                     <label for="adminEmail">Email:</label>
                     <div style="position: relative;">
                         <input type="email" id="adminEmail" name="adminEmail" required placeholder="Enter your email">
-                        <i class="fas fa-envelope" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                        <i class="fas fa-envelope" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-subtle);"></i>
                     </div>
                 </div>
                 
@@ -31,7 +33,7 @@
                     <label for="adminPassword">Password:</label>
                     <div style="position: relative;">
                         <input type="password" id="adminPassword" name="adminPassword" required placeholder="Enter your password">
-                        <i class="fas fa-lock" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                        <i class="fas fa-lock" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-subtle);"></i>
                     </div>
                 </div>
                 
@@ -103,7 +105,7 @@
         
         .help-link {
             font-size: 0.9rem;
-            color: var(--text-tertiary);
+            color: var(--text-subtle); /* Changed to text-subtle */
             text-decoration: none;
             font-weight: 400;
             transition: color 0.2s ease;
@@ -130,10 +132,35 @@
         document.addEventListener('DOMContentLoaded', () => {
             const adminLoginForm = document.getElementById('adminLoginForm');
             if (adminLoginForm) {
-                adminLoginForm.addEventListener('submit', (event) => {
+                adminLoginForm.addEventListener('submit', async (event) => {
                     event.preventDefault();
-                    console.log('Admin login form submitted. Navigating to admin dashboard.');
-                    window.location.href = 'admin_dashboard.html';
+                    console.log('Admin login form submitted.');
+
+                    const email = document.getElementById('adminEmail').value;
+                    const password = document.getElementById('adminPassword').value;
+
+                    try {
+                        const response = await fetch('/api/admin/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, password })
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            console.log('Admin login successful:', result);
+                            // Store a flag in localStorage or sessionStorage for client-side check
+                            localStorage.setItem('adminLoggedIn', 'true'); 
+                            window.location.href = 'admin_dashboard.html';
+                        } else {
+                            console.error('Admin login failed:', result);
+                            alert('Login failed: ' + (result.message || 'Invalid credentials.'));
+                        }
+                    } catch (error) {
+                        console.error('Error during admin login fetch:', error);
+                        alert('An error occurred during login. Please try again.');
+                    }
                 });
             } else {
                 console.error("Admin login form with ID 'adminLoginForm' not found!");

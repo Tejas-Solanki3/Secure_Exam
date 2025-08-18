@@ -30,14 +30,87 @@ body {
     border-radius: 16px;
     margin: -32px -32px 40px -32px;
     box-shadow: var(--shadow-sm);
+    /* Ensure no unwanted animations */
+    animation: none !important;
 }
 
-.dashboard-header h1 {
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-icon {
+    background: var(--primary-blue);
+    color: var(--bg-primary);
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.header-text h1 {
     margin: 0;
     color: var(--text-primary);
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: -0.025em;
+}
+
+.header-subtitle {
+    margin: 4px 0 0 0;
+    color: var(--text-tertiary);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.notification-icon {
+    position: relative;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.notification-icon:hover {
+    background: var(--primary-blue-light);
+    color: var(--primary-blue-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--error-red);
+    color: var(--bg-primary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .dashboard-summary {
@@ -342,6 +415,22 @@ body {
      padding: 10px; /* Slightly smaller padding for detail buttons */
   }
 
+/* Clean Dashboard Title Section - DISABLED */
+.dashboard-title-section {
+    display: none; /* Hide the old problematic section */
+}
+
+.dashboard-title-icon {
+    display: none;
+}
+
+.dashboard-title-icon i {
+    display: none;
+}
+
+.dashboard-main-title {
+    display: none;
+}
 
 /* Responsive adjustments for Admin Dashboard */
 @media (max-width: 768px) {
@@ -379,7 +468,38 @@ body {
          width: 100%; /* Full width select on mobile */
      }
 }
- /* Adjust body padding for smaller screens */
+
+/* Responsive adjustments for dashboard header */
+@media (max-width: 768px) {
+    .dashboard-header {
+        padding: 20px;
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .header-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .header-text h1 {
+        font-size: 1.75rem;
+    }
+    
+    .header-subtitle {
+        font-size: 0.9rem;
+    }
+}
+
+/* Adjust body padding for smaller screens */
 @media (max-width: 600px) {
      body {
          padding: 10px;

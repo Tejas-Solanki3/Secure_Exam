@@ -4,552 +4,465 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SecureExamLite - Admin Dashboard</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-    <!-- Dedicated Admin CSS will be linked here -->
-    <link rel="stylesheet" href="../static/css/admin.css">
-    <!-- Using Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Temporary inline styles for specific elements or overrides */
-        /* These should be moved to admin.css later if appropriate */
-
-        /* Style for empty state messages */
-        .empty-state-message {
-            text-align: center;
-            color: var(--text-medium);
-            padding: 20px;
-            background-color: var(--primary-blue-lightest);
-            border-radius: 8px;
-            margin-top: 20px;
+        :root {
+            --cloud-white: #FFFFFF; --light-gray-50: #FDFDFD; --light-gray-100: #F8F8F8; --light-gray-200: #F0F0F0; --light-gray-300: #E0E0E0; --primary-accent-blue-500: #2196F3; --primary-accent-blue-700: #1976D2; --primary-blue-dark: #0D47A1; --primary-blue-lightest: #E3F2FD; --primary-blue-light: #BBDEFB; --text-heading: #1a202c; --text-body: #4a5568; --text-subtle: #718096; --success-green: #059669; --warning-amber: #d97706; --error-red: #dc2626; --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08); --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1); --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15); --border-default: #E0E0E0;
         }
-
-        /* Style for loading indicators (placeholders) */
-        .loading-indicator {
-            text-align: center;
-            color: var(--primary-blue-dark);
-            padding: 20px;
-             display: none; /* Initially hidden */
-        }
-
-         .loading-indicator .fas {
-             animation: spin 1s linear infinite; /* Simple spin animation */
-         }
-
-         @keyframes spin {
-             0% { transform: rotate(0deg); }
-             100% { transform: rotate(360deg); }
-         }
-
-        /* Add subtle animation to notification icon */
-        .dashboard-title-icon i {
-            animation: none !important; /* Prevent any unwanted pulse animations */
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-gray-100); margin: 0; }
+        .admin-dashboard-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .simple-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding: 24px 32px; background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-accent-blue-700) 100%); border-radius: 16px; box-shadow: var(--shadow-lg); color: white; }
+        .logout-button { background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 12px 24px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+        .dashboard-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .summary-card { background: white; padding: 28px 24px; border-radius: 16px; border: 1px solid var(--border-default); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); text-align: center; }
+        .summary-card h3 { color: var(--text-subtle); font-size: 0.9rem; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; }
+        .summary-card p { color: var(--primary-blue-dark); font-size: 2.8rem; font-weight: 800; margin: 0; }
+        .test-management-section { background: white; border-radius: 16px; border: 1px solid var(--border-default); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); margin-top: 32px; overflow: hidden; }
+        .test-management-section h2 { background: var(--primary-blue-dark); color: white; font-size: 1.2rem; font-weight: 700; margin: 0; padding: 20px 24px; }
+        .test-management-content { padding: 24px; }
+        .test-management-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+        .btn { padding: 12px 24px; font-size: 0.95rem; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .btn-primary { background: var(--primary-accent-blue-500); color: white; }
+        .btn-secondary { background: var(--light-gray-100); color: var(--text-heading); border: 2px solid var(--border-default); }
+        .btn-danger { background: var(--error-red); color: white; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-container { background: white; border-radius: 16px; box-shadow: var(--shadow-lg); width: 90%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+        .modal-overlay.active { display: flex; }
+        .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--light-gray-200); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-family: 'Poppins', sans-serif; margin: 0; font-size: 1.5rem; color: var(--text-heading); }
+        .modal-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-subtle); }
+        .modal-body { padding: 2rem; overflow-y: auto; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-heading); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--light-gray-300); border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        .questions-container { margin-top: 2rem; border-top: 1px solid var(--light-gray-200); padding-top: 1.5rem; }
+        .question-card { background: var(--light-gray-50); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--light-gray-200); }
+        .mcq-options { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+        .mcq-option-item { display: flex; align-items: center; gap: 10px; }
+        .mcq-option-item input[type="radio"] { flex-shrink: 0; transform: scale(1.2); }
+        .mcq-option-item input[type="text"] { flex-grow: 1; background-color: var(--light-gray-100); border: 1px solid var(--light-gray-200); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .mcq-option-item input[type="text"]:focus { outline: none; border-color: var(--primary-accent-blue-500); box-shadow: 0 0 0 3px var(--primary-blue-lightest); }
+        .modal-footer { padding: 1.5rem 2rem; border-top: 1px solid var(--light-gray-200); display: flex; justify-content: flex-end; gap: 1rem; background-color: var(--light-gray-50); }
+        .delete-test-list { list-style: none; padding: 0; margin: 0; }
+        .delete-test-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid var(--light-gray-200); }
+        .delete-test-item:last-child { border-bottom: none; }
+        .delete-btn-icon { background: none; border: none; color: var(--text-subtle); cursor: pointer; font-size: 1.2rem; }
+        .delete-btn-icon:hover { color: var(--error-red); }
         
-        /* Professional hover effects */
-        .dashboard-title-icon:hover i {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.2);
-        }
-        
-        /* Modern Professional Dashboard Header */
-        .simple-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding: 24px 32px;
-            background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%);
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .simple-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
-        }
-        
-        .header-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .simple-header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: white;
-            margin: 0 0 8px 0;
-            letter-spacing: -0.02em;
-        }
-        
-        .header-subtitle {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin: 0;
-            font-weight: 400;
-        }
-
-        /* Logout Button Styling */
-        .logout-button {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 3;
-        }
-        
-        .logout-button:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Enhanced Professional Summary Cards */
-        .dashboard-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-        
-        .summary-card {
-            background: white;
-            padding: 28px 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .summary-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-medium) 100%);
-        }
-        
-        .summary-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
-            border-color: var(--primary-blue-light);
-        }
-        
-        .summary-card h3 {
-            color: var(--text-tertiary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .summary-card p {
-            color: var(--primary-blue-dark);
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin: 0;
-            line-height: 1;
-        }
-        
-        /* Professional Controls Section */
-        .dashboard-controls {
-            background: var(--bg-primary);
-            padding: 20px 24px;
-            border-radius: 12px;
-            border: 1px solid var(--border-subtle);
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .dashboard-controls select {
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 2px solid var(--border-subtle);
-            font-family: inherit;
-            font-size: 1rem;
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            min-width: 200px;
-            transition: border-color 0.2s ease;
-        }
-        
-        .dashboard-controls select:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-        
-        /* Modern Dashboard Layout */
-        .dashboard-main {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 32px;
-            margin-bottom: 40px;
-        }
-        
-        /* Professional Section Cards */
-        .recent-sessions-section,
-        .session-details-section {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-        
-        .section-title {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin: 0;
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-        
-        /* Professional Session List */
-        .session-list {
-            padding: 20px;
-            max-height: 450px;
-            overflow-y: auto;
-        }
-        
-        .list-item {
-            background: var(--bg-secondary);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .list-item:hover {
-            background: var(--primary-blue-lightest);
-            border-color: var(--primary-blue-light);
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
-        }
-        
-        .list-item.selected {
-            background: var(--primary-blue-lightest);
-            border-color: var(--primary-blue);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-        }
-        
-        .list-item h4 {
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0 0 6px 0;
-        }
-        
-        .list-item p {
-            color: var(--text-tertiary);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-        
-        /* Professional Session Details */
-        #sessionDetailsSection {
-            padding: 20px;
-        }
-        
-        .detail-item {
-            background: var(--bg-secondary);
-            padding: 18px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border-left: 4px solid var(--primary-blue);
-        }
-        
-        .detail-item h4 {
-            color: var(--primary-blue-dark);
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0 0 10px 0;
-        }
-        
-        /* Professional Test Management Section */
-        .test-management-section {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-top: 32px;
-            overflow: hidden;
-        }
-        
-        .test-management-section h2 {
-            background: var(--primary-blue-dark);
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin: 0;
-            padding: 20px 24px;
-        }
-        
-        .test-management-content {
-            padding: 24px;
-        }
-        
-        .test-management-buttons {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 12px 24px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-        }
-        
-        .btn-primary {
-            background: var(--primary-blue);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-blue-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
-        }
-        
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-subtle);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--primary-blue-lightest);
-            border-color: var(--primary-blue-light);
-            transform: translateY(-2px);
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .dashboard-main {
-                grid-template-columns: 1fr;
-            }
-            
-            .simple-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 16px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .dashboard-summary {
-                grid-template-columns: 1fr;
-            }
-            
-            .test-management-buttons {
-                flex-direction: column;
-            }
-        }
+        /* Student Management Styles */
+        .student-management-tabs { display: flex; gap: 0; margin-bottom: 2rem; border-bottom: 2px solid var(--light-gray-200); }
+        .tab-btn { flex: 1; padding: 1rem; background: none; border: none; color: var(--text-subtle); font-weight: 600; cursor: pointer; transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: var(--primary-accent-blue-500); border-bottom-color: var(--primary-accent-blue-500); background: var(--primary-blue-lightest); }
+        .tab-btn:hover { color: var(--primary-accent-blue-500); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .students-list { max-height: 400px; overflow-y: auto; }
+        .student-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid var(--light-gray-200); }
+        .student-item:last-child { border-bottom: none; }
+        .student-info h4 { margin: 0 0 0.25rem 0; color: var(--text-heading); font-size: 1.1rem; }
+        .student-info p { margin: 0; color: var(--text-subtle); font-size: 0.9rem; }
+        .delete-student-btn { background: none; border: none; color: var(--error-red); cursor: pointer; font-size: 1.1rem; padding: 0.5rem; border-radius: 4px; transition: all 0.3s ease; }
+        .delete-student-btn:hover { background: var(--error-red); color: white; }
+        .loading-indicator { text-align: center; padding: 2rem; color: var(--text-subtle); }
+        .empty-state-message { text-align: center; padding: 2rem; color: var(--text-subtle); background: var(--light-gray-50); border-radius: 8px; border: 2px dashed var(--light-gray-200); }
     </style>
 </head>
 <body>
     <div class="admin-dashboard-container">
-        <!-- Modern Professional Header -->
         <div class="simple-header">
-            <div class="header-content">
-                <h1>Proctoring Dashboard</h1>
-                <p class="header-subtitle">Monitor and manage exam sessions</p>
+             <div class="header-content"><h1>Admin Dashboard</h1><p>Monitor exams and manage tests</p></div>
+             <button class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <main class="dashboard-main-content">
+            <div class="dashboard-summary">
+                <div class="summary-card"><h3>Active Sessions</h3><p id="activeSessionsCount">--</p></div>
+                <div class="summary-card"><h3>Pending Alerts</h3><p id="pendingAlertsCount">--</p></div>
             </div>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <button class="logout-button" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </button>
+            <section class="test-management-section">
+                <h2>Test Management</h2>
+                <div class="test-management-content">
+                    <p>Create new tests for students, delete existing ones, or review submissions.</p>
+                    <div class="test-management-buttons">
+                        <button class="btn btn-primary" id="createTestBtn"><i class="fas fa-plus-circle"></i> Create New Test</button>
+                        <button class="btn btn-danger" id="deleteTestBtn"><i class="fas fa-trash-alt"></i> Delete Test</button>
+                        <button class="btn btn-secondary" id="viewPastAnswersBtn"><i class="fas fa-history"></i> View Past Answers</button>
+                        <button class="btn btn-secondary" id="manageStudentsBtn"><i class="fas fa-users"></i> Manage Students</button>
+                    </div>
+                </div>
+            </section>
+            <section id="pastAnswersSection" class="past-answers-view"></section>
+        </main>
+    </div>
+
+    <div id="createTestModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Create a New Test</h2>
+                <button id="closeModalBtn" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createTestForm">
+                    <div class="form-group"><label for="testTitle">Test Title</label><input type="text" id="testTitle" required></div>
+                    <div class="form-group"><label for="testDuration">Duration (minutes)</label><input type="number" id="testDuration" required></div>
+                    <div class="form-group"><label for="testSchedule">Schedule Date & Time (Optional)</label><input type="datetime-local" id="testSchedule"></div>
+                    <div class="questions-container">
+                        <h3>Questions</h3>
+                        <div id="questionsList"></div>
+                        <button type="button" id="addQuestionBtn" class="btn btn-secondary" style="margin-top: 1rem;"><i class="fas fa-plus"></i> Add Question</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelModalBtn" class="btn btn-secondary">Cancel</button>
+                <button type="submit" form="createTestForm" class="btn btn-primary">Save Test</button>
             </div>
         </div>
-
-        <main class="dashboard-main-content">
-             <div class="dashboard-summary">
-                 <div class="summary-card">
-                     <h3>Active Sessions</h3>
-                     <p id="activeSessionsCount">12</p> <!-- Added ID -->
-                 </div>
-                 <div class="summary-card">
-                      <h3>Pending Alerts</h3>
-                     <p class="alert-count" id="pendingAlertsCount">5</p> <!-- Added ID -->
-                 </div>
-             </div>
-
-            <div class="dashboard-controls">
-                <select id="courseFilterSelect"> <!-- Added ID for JS -->
-                    <option value="">All Courses</option>
-                    <option value="course-a">Course A</option>
-                    <option value="course-b">Course B</option>
-                     <!-- Options will be loaded by JS from backend -->
-                </select>
-                 <!-- Optional: Add other controls like date range picker -->
+    </div>
+    
+    <div id="deleteTestModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Delete a Test</h2>
+                <button id="closeDeleteModalBtn" class="modal-close-btn">&times;</button>
             </div>
-
-
-            <div class="dashboard-main">
-                <section class="recent-sessions-section">
-                    <h2 class="section-title">Recent Sessions</h2>
-                    <div id="sessionsLoadingIndicator" class="loading-indicator">
-                         <i class="fas fa-spinner fa-spin"></i> Loading sessions...
-                    </div>
-                     <div id="noSessionsMessage" class="empty-state-message" style="display: none;">
-                         No active sessions found.
-                    </div>
-                    <div class="session-list" id="sessionList">
-                        <!-- Sample Sessions for Demo -->
-                        <div class="list-item">
-                            <h4>John Smith - Advanced Mathematics</h4>
-                            <p>Started: 10:30 AM • Duration: 1h 45m • Status: Active</p>
-                        </div>
-                        <div class="list-item">
-                            <h4>Sarah Johnson - Computer Science</h4>
-                            <p>Started: 09:15 AM • Duration: 2h 10m • Status: Active</p>
-                        </div>
-                        <div class="list-item">
-                            <h4>Michael Brown - Physics</h4>
-                            <p>Started: 11:00 AM • Duration: 1h 30m • Status: Active</p>
-                        </div>
-                        <div class="list-item">
-                            <h4>Emily Davis - Chemistry</h4>
-                            <p>Started: 08:45 AM • Duration: 2h 00m • Status: Completed</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="session-details-section" id="sessionDetailsSection">
-                     <h2 class="section-title">Session Details</h2>
-                     <!-- Content for selected session details will be loaded here by JS -->
-                     <div id="selectSessionMessage" style="text-align: center; color: var(--text-medium); padding: 20px;">
-                         Select a session from the list to view details.
-                    </div>
-                     
-                     <div id="detailsLoadingIndicator" class="loading-indicator">
-                         <i class="fas fa-spinner fa-spin"></i> Loading details...
-                    </div>
-
-                     <div id="selectedSessionDetailsContent" style="display: none;"> <!-- Container for loaded details -->
-                         <div class="detail-item" id="detailsBasicInfo">
-                             <h4><span id="detailStudentName"></span></h4>
-                             <p style="font-size: 0.9em; color: var(--text-medium);"><span id="detailExamName"></span> - <span id="detailExamTime"></span></p>
-                         </div>
-
-                         <div class="detail-item" id="detailsAlerts">
-                             <h4>Alerts (<span id="detailAlertCount">0</span>)</h4>
-                              <ul class="alert-list" id="detailAlertList">
-                                   <!-- Alerts will be loaded here by JS -->
-                              </ul>
-                              <div id="noAlertsMessage" class="empty-state-message" style="display: none; padding: 10px; margin-top: 10px;">No alerts for this session.</div>
-                         </div>
-
-                         <div class="detail-item" id="detailsDownloads">
-                             <h4>Downloads</h4>
-                             <ul class="download-items" id="detailDownloadList">
-                                  <!-- Download links will be loaded here by JS -->
-                             </ul>
-                              <div id="noDownloadsMessage" class="empty-state-message" style="display: none; padding: 10px; margin-top: 10px;">No downloads available.</div>
-                         </div>
-
-                         <div class="session-actions-detail" id="detailsActions">
-                             <button class="btn btn-primary" id="reviewSessionBtn"><i class="fas fa-play-circle"></i> Review Session</button>
-                             <button class="btn btn-secondary" id="flagSessionBtn"><i class="fas fa-flag"></i> Flag for Review</button>
-                         </div>
-                     </div>
-                </section>
+            <div class="modal-body">
+                <p>Select a test to permanently delete it and all its submissions. This action cannot be undone.</p>
+                <ul id="deleteTestList" class="delete-test-list"></ul>
             </div>
+        </div>
+    </div>
 
-             <!-- Professional Test Management Section -->
-             <section class="test-management-section">
-                 <h2>Test Management</h2>
-                 <div class="test-management-content">
-                     <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px; line-height: 1.6;">
-                         Create new tests, manage existing assessments, and review student submissions.
-                     </p>
-                     <div class="test-management-buttons">
-                         <button class="btn btn-primary" id="createTestBtn">
-                             <i class="fas fa-plus-circle"></i> Create New Test
-                         </button>
-                         <button class="btn btn-secondary" id="viewPastAnswersBtn">
-                             <i class="fas fa-history"></i> View Past Answers
-                         </button>
-                     </div>
-                 </div>
-             </section>
-
-
-        </main>
-
-         <footer style="margin-top: 40px; text-align: center; font-size: 0.9em; color: #777;">
-            <p>© 2023 SecureExamLite</p>
-        </footer>
-
-    </div> <!-- End admin-dashboard-container -->
-
-    <!-- Link Admin Dashboard JS -->
-     <script src="../static/js/admin.js"></script>
+    <div id="manageStudentsModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Manage Students</h2>
+                <button id="closeManageStudentsModalBtn" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="student-management-tabs">
+                    <button class="tab-btn active" data-tab="add-student">Add Student</button>
+                    <button class="tab-btn" data-tab="view-students">View Students</button>
+                </div>
+                
+                <div id="add-student-tab" class="tab-content active">
+                    <form id="addStudentForm">
+                        <div class="form-group">
+                            <label for="newStudentId">Student ID *</label>
+                            <input type="text" id="newStudentId" required placeholder="e.g., STU001">
+                        </div>
+                        <div class="form-group">
+                            <label for="newStudentName">Full Name *</label>
+                            <input type="text" id="newStudentName" required placeholder="e.g., John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="newStudentEmail">Email (Optional)</label>
+                            <input type="email" id="newStudentEmail" placeholder="e.g., john.doe@email.com">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="cancelAddStudentBtn" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Student</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="view-students-tab" class="tab-content">
+                    <div id="studentsLoadingIndicator" class="loading-indicator" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Loading students...
+                    </div>
+                    <div id="noStudentsMessage" class="empty-state-message" style="display: none;">
+                        No students found.
+                    </div>
+                    <div id="studentsList" class="students-list">
+                        <!-- Students will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Add logout functionality
-        document.addEventListener('DOMContentLoaded', () => {
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    // Confirm logout
-                    if (confirm('Are you sure you want to logout?')) {
-                        console.log('Admin logging out...');
-                        // Redirect to homepage
-                        window.location.href = 'homepage.html';
-                    }
-                });
-            }
+    document.addEventListener('DOMContentLoaded', () => {
+        const createTestModal = document.getElementById('createTestModal');
+        const createTestBtn = document.getElementById('createTestBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+        const addQuestionBtn = document.getElementById('addQuestionBtn');
+        const questionsList = document.getElementById('questionsList');
+        const createTestForm = document.getElementById('createTestForm');
+        let questionCounter = 0;
+
+        const openModal = () => createTestModal.classList.add('active');
+        const closeModal = () => {
+            createTestModal.classList.remove('active');
+            createTestForm.reset();
+            questionsList.innerHTML = '';
+            questionCounter = 0;
+        };
+
+        createTestBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelModalBtn.addEventListener('click', closeModal);
+
+        addQuestionBtn.addEventListener('click', () => {
+            questionCounter++;
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+            questionCard.id = `question-${questionCounter}`;
+            questionCard.innerHTML = `
+                <h4>Question ${questionCounter}</h4>
+                <div class="form-group"><label>Type</label><select class="question-type-select"><option value="mcq">Multiple Choice</option><option value="subjective">Subjective</option></select></div>
+                <div class="form-group"><label>Question Text</label><textarea class="question-text" rows="3" required></textarea></div>
+                <div class="mcq-options-container">
+                    <label>Options (Select the correct answer)</label>
+                    <div class="mcq-options">
+                        <div class="mcq-option-item"><input type="radio" name="correct-answer-${questionCounter}" required><input type="text" placeholder="Option A" required></div>
+                        <div class="mcq-option-item"><input type="radio" name="correct-answer-${questionCounter}" required><input type="text" placeholder="Option B" required></div>
+                        <div class="mcq-option-item"><input type="radio" name="correct-answer-${questionCounter}" required><input type="text" placeholder="Option C" required></div>
+                        <div class="mcq-option-item"><input type="radio" name="correct-answer-${questionCounter}" required><input type="text" placeholder="Option D" required></div>
+                    </div>
+                </div>`;
+            questionsList.appendChild(questionCard);
+            const typeSelect = questionCard.querySelector('.question-type-select');
+            const mcqContainer = questionCard.querySelector('.mcq-options-container');
+            typeSelect.addEventListener('change', (e) => {
+                mcqContainer.style.display = e.target.value === 'mcq' ? 'block' : 'none';
+            });
         });
         
-        // The basic placeholder JS block can be kept or removed as logic moves to admin.js
-        // document.addEventListener('DOMContentLoaded', () => {
-        //     console.log('Admin Dashboard page loaded (inline script).');
-        // });
+        createTestForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const questions = [];
+            let formIsValid = true;
+            document.querySelectorAll('.question-card').forEach((card, index) => {
+                if (!formIsValid) return;
+                const type = card.querySelector('.question-type-select').value;
+                const text = card.querySelector('.question-text').value;
+                let questionData = { type, text };
+                if (type === 'mcq') {
+                    const options = [];
+                    const answerInputs = card.querySelectorAll('.mcq-option-item');
+                    let correctAnswer = null;
+                    answerInputs.forEach(item => {
+                        const radio = item.querySelector('input[type="radio"]');
+                        const textInput = item.querySelector('input[type="text"]');
+                        if (textInput.value) options.push(textInput.value);
+                        if (radio.checked) correctAnswer = textInput.value;
+                    });
+                    if (!correctAnswer) {
+                        alert(`Please select a correct answer for Question ${index + 1}.`);
+                        formIsValid = false;
+                    }
+                    questionData.options = options;
+                    questionData.answer = correctAnswer;
+                }
+                questions.push(questionData);
+            });
+
+            if (!formIsValid) return;
+            
+            const scheduleInput = document.getElementById('testSchedule').value;
+            const testData = {
+                title: document.getElementById('testTitle').value,
+                duration: parseInt(document.getElementById('testDuration').value),
+                scheduled_datetime: scheduleInput ? new Date(scheduleInput).toISOString() : null,
+                questions: questions
+            };
+            
+            try {
+                const response = await fetch('/api/admin/create_test', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(testData) });
+                if (response.ok) { alert('Test created!'); closeModal(); } 
+                else { alert('Error creating test.'); }
+            } catch (error) { alert('An error occurred.'); }
+        });
+
+        const deleteTestModal = document.getElementById('deleteTestModal');
+        const deleteTestBtn = document.getElementById('deleteTestBtn');
+        const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
+        const deleteTestList = document.getElementById('deleteTestList');
+
+        const openDeleteModal = async () => {
+            try {
+                const response = await fetch('/api/admin/exams');
+                const data = await response.json();
+                if (!response.ok) throw new Error('Failed to fetch tests');
+                deleteTestList.innerHTML = '';
+                data.exams.forEach(test => {
+                    if (test.id && test.id !== 'dummy-test-01') {
+                        const li = document.createElement('li');
+                        li.className = 'delete-test-item';
+                        li.innerHTML = `<span>${test.name}</span><button class="delete-btn-icon" data-testid="${test.id}" title="Delete Test"><i class="fas fa-trash-alt"></i></button>`;
+                        deleteTestList.appendChild(li);
+                    }
+                });
+                deleteTestModal.classList.add('active');
+            } catch (error) { alert('Could not load tests to delete.'); }
+        };
+        const closeDeleteModal = () => deleteTestModal.classList.remove('active');
+
+        deleteTestBtn.addEventListener('click', openDeleteModal);
+        closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
+
+        deleteTestList.addEventListener('click', async (e) => {
+            const deleteButton = e.target.closest('.delete-btn-icon');
+            if (deleteButton) {
+                const testId = deleteButton.dataset.testid;
+                const testName = deleteButton.previousElementSibling.textContent;
+                if (confirm(`Are you sure you want to delete "${testName}"? This will also delete all student submissions for this test.`)) {
+                    try {
+                        const response = await fetch(`/api/admin/test/${testId}`, { method: 'DELETE' });
+                        const result = await response.json();
+                        if (response.ok) { alert(result.message); openDeleteModal(); } 
+                        else { throw new Error(result.message); }
+                    } catch (error) { alert(`Error: ${error.message}`); }
+                }
+            }
+        });
+
+        // Student Management Modal
+        const manageStudentsModal = document.getElementById('manageStudentsModal');
+        const manageStudentsBtn = document.getElementById('manageStudentsBtn');
+        const closeManageStudentsModalBtn = document.getElementById('closeManageStudentsModalBtn');
+        const cancelAddStudentBtn = document.getElementById('cancelAddStudentBtn');
+        const addStudentForm = document.getElementById('addStudentForm');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const studentsList = document.getElementById('studentsList');
+        const studentsLoadingIndicator = document.getElementById('studentsLoadingIndicator');
+        const noStudentsMessage = document.getElementById('noStudentsMessage');
+
+        const openManageStudentsModal = () => {
+            manageStudentsModal.classList.add('active');
+            loadStudents();
+        };
+        const closeManageStudentsModal = () => {
+            manageStudentsModal.classList.remove('active');
+            addStudentForm.reset();
+        };
+
+        manageStudentsBtn.addEventListener('click', openManageStudentsModal);
+        closeManageStudentsModalBtn.addEventListener('click', closeManageStudentsModal);
+        cancelAddStudentBtn.addEventListener('click', closeManageStudentsModal);
+
+        // Tab switching
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.dataset.tab;
+                
+                // Update active tab button
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update active tab content
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`${targetTab}-tab`).classList.add('active');
+                
+                // Load students when switching to view tab
+                if (targetTab === 'view-students') {
+                    loadStudents();
+                }
+            });
+        });
+
+        // Add student form
+        addStudentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const studentId = document.getElementById('newStudentId').value.trim();
+            const fullName = document.getElementById('newStudentName').value.trim();
+            const email = document.getElementById('newStudentEmail').value.trim();
+
+            try {
+                const response = await fetch('/api/admin/students', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ student_id: studentId, full_name: fullName, email: email })
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(result.message);
+                    addStudentForm.reset();
+                    // Switch to view students tab and reload
+                    document.querySelector('[data-tab="view-students"]').click();
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        });
+
+        // Load students
+        async function loadStudents() {
+            if (studentsLoadingIndicator) studentsLoadingIndicator.style.display = 'block';
+            if (studentsList) studentsList.innerHTML = '';
+            if (noStudentsMessage) noStudentsMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/admin/students');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    if (studentsLoadingIndicator) studentsLoadingIndicator.style.display = 'none';
+                    
+                    if (data.students.length === 0) {
+                        if (noStudentsMessage) noStudentsMessage.style.display = 'block';
+                    } else {
+                        if (studentsList) {
+                            data.students.forEach(student => {
+                                const studentItem = document.createElement('div');
+                                studentItem.className = 'student-item';
+                                studentItem.innerHTML = `
+                                    <div class="student-info">
+                                        <h4>${student.full_name}</h4>
+                                        <p>ID: ${student.user_id}${student.email ? ` | Email: ${student.email}` : ''}</p>
+                                    </div>
+                                    <button class="delete-student-btn" data-student-id="${student.user_id}" data-student-name="${student.full_name}" title="Delete Student">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                `;
+                                studentsList.appendChild(studentItem);
+                            });
+                        }
+                    }
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                if (studentsLoadingIndicator) studentsLoadingIndicator.style.display = 'none';
+                if (noStudentsMessage) {
+                    noStudentsMessage.textContent = `Error loading students: ${error.message}`;
+                    noStudentsMessage.style.display = 'block';
+                }
+            }
+        }
+
+        // Delete student
+        studentsList.addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.delete-student-btn');
+            if (deleteBtn) {
+                const studentId = deleteBtn.dataset.studentId;
+                const studentName = deleteBtn.dataset.studentName;
+                
+                if (confirm(`Are you sure you want to delete "${studentName}"? This will also delete all their exam submissions.`)) {
+                    try {
+                        const response = await fetch(`/api/admin/students/${studentId}`, { method: 'DELETE' });
+                        const result = await response.json();
+                        
+                        if (response.ok) {
+                            alert(result.message);
+                            loadStudents(); // Reload the list
+                        } else {
+                            throw new Error(result.message);
+                        }
+                    } catch (error) {
+                        alert(`Error: ${error.message}`);
+                    }
+                }
+            }
+        });
+    });
     </script>
+    <script src="../static/js/admin.js"></script>
 </body>
 </html>
