@@ -1,0 +1,7 @@
+student_id,session_id,timestamp,type,message
+student123,sess123,2025-07-22T10:30:05Z,info,Exam started
+student123,sess123,2025-07-22T10:45:10Z,warning,Multiple faces detected (2).
+student123,sess123,2025-07-22T11:05:20Z,warning,Head movement: Looking Left.
+student456,sess456,2025-07-22T11:00:05Z,info,Exam started
+student123,sess789,2025-07-22T09:00:05Z,info,Exam started
+student123,sess789,2025-07-22T09:45:00Z,warning,No face detected in camera view.

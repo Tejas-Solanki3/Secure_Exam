@@ -1,0 +1,18 @@
+{
+  "id": "9c8b399b",
+  "name": "maths",
+  "code": "M-9C8B",
+  "duration": 3000,
+  "questions": [
+    {
+      "id": "q1",
+      "type": "mcq",
+      "text": "sdfds",
+      "options": [
+        "10",
+        "20"
+      ],
+      "correct_answer": "A"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+flask
+Flask-Cors
+pymongo[srv]
+python-dotenv
+opencv-python
+numpy
+werkzeug
